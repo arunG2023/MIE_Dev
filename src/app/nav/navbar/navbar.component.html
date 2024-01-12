@@ -1,0 +1,34 @@
+<nav class="navbar navbar-expand-lg navbar-transparent  navbar-absolute fixed-top">
+    <div class="container-fluid">
+        <div class="navbar-wrapper">
+          <a class="navbar-brand" href="javascript:void(0)">{{getTitle()}}</a>
+        </div>
+        <button mat-raised-button class="navbar-toggler" type="button" (click)="sidebarToggle()">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="navbar-toggler-icon icon-bar"></span>
+            <span class="navbar-toggler-icon icon-bar"></span>
+            <span class="navbar-toggler-icon icon-bar"></span>
+        </button>
+        <div class="collapse navbar-collapse justify-content-end" id="navigation">
+
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <!-- <a class="nav-link" href="javascript:void(0)">
+                        <i class="material-icons">person</i>
+                        <p>
+                            <span class="d-lg-none d-md-block">Account</span>
+                        </p>
+                    </a> -->
+
+                   <i [matMenuTriggerFor]="menu" class="material-icons pointer">person</i>
+                    <mat-menu #menu="matMenu">
+                        <button (click)="logOut()" mat-menu-item>Log Out</button>
+                       <!-- <span> <i class="material-icons">power_settings_new_icon</i>Log Out</span> -->
+                    <!-- <button mat-menu-item>Log Out</button> -->
+                    </mat-menu>
+
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>

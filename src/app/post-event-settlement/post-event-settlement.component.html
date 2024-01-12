@@ -1,0 +1,204 @@
+<div class="main-content">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="card">
+            <div class="card-header card-header-danger">
+                <h4 class="card-title">Post Event Settlement request</h4>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                  <div class="col-md-12">
+                      <div class="card ">
+                          <div class="card-body">
+                           
+                              <div class="row" >
+
+                            
+                                <div class="d-flex justify-content-between">
+                                    <div class="col-3 border">
+                                        <b>Event ID:</b>
+                                        
+                                        <div><p style="color: red;">comes from sheet</p></div>
+                                        
+                                    </div>
+                                    <div class="col-3 border">
+                                        <b>Event Name:</b>
+                                        <p style="color: red;">comes from sheet</p>
+                                    </div>
+                                    <div class="col-3 border">
+                                        <b>Event Type:</b>
+                                        <p style="color: red;">comes from sheet</p>
+                                </div>
+                               
+                                <div class="col-3 border">
+                                    <b>Event Venue:</b>
+                                    <p style="color: red;">comes from sheet</p>
+                                </div>
+                                 
+                                <div class="col-3 border">
+                                    <b>Event Date & Time:</b>
+                                    <p style="color: red;">comes from sheet</p>
+        
+                                </div>
+                            </div> 
+
+           
+                            
+                            <form >
+                                <div class="col-6 mt-2 ">
+                                    <mat-label><b>More than 30 days since event?</b></mat-label>
+                                    <mat-radio-group>
+                                        <div class="mt-2">
+                                        <mat-radio-button value="Yes">Yes</mat-radio-button>
+                                        <mat-radio-button value="No" class="m-2" >No</mat-radio-button>
+                                    </div>
+                                    </mat-radio-group>
+                                  </div>
+
+                                  <div class="col-6 mt-2" >
+                                    <div class="w50 " >
+                                        <mat-label><b>Upload Deviation if more than 30 days yes</b></mat-label>
+                                        <mat-form-field >
+                                            <input  type="file">
+                                        </mat-form-field>
+                                  </div>
+                                  </div>
+                         
+                         
+
+                           
+
+
+                                  <div class="container ">
+                                    <table class="table table-bordered table-sm">
+                                        <thead>
+                                            <tr >
+                                                <th  style="font-size: 16px;"><b>S.no</b></th>
+                                                <th  style="font-size: 16px;" class="w-13" ><b>Invitees</b></th>
+                                                <th  style="font-size: 16px;" class="w-13" ><b>Expense Type</b></th>
+                                                <th  style="font-size: 16px;" ><b>BTE/BTC</b></th>
+                                                <th  style="font-size: 16px;" class="w-13" ><b>Budget Amount</b></th>
+                                                <th  style="font-size: 16px;"><b>Actual Amount</b></th>
+                                                <th  style="font-size: 16px;" ><b>Invoice Attached</b></th>
+                                            </tr>
+                                        </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <th scope="row">1</th>
+                                                    <td>comes from pre event</td>
+                                                    <td>comes from pre event</td>
+                                                    <td>comes from pre event</td>
+                                                    <td>comes from pre event</td>
+                                                    <td>
+                                                        <input type="text" placeholder="mention amount" class="w-100">
+
+                                                    </td>
+                                                    <td>
+                                                        <div class=" d-flex justify-content-center" >
+                                                            <input type="file" class="w-85">
+                                                    </div>
+                                                    </td>
+                        
+                                                </tr>
+                                            </tbody>
+                                       
+                                         </table>
+                                  </div>
+
+                                  <div class="col-6 mt-2">
+                                    <mat-label><b>Do you want to add new Expense?</b></mat-label>
+                                    <mat-radio-group >
+                                        <div class="mt-2">
+                                        <mat-radio-button value="Yes" >Yes</mat-radio-button>
+                                        <mat-radio-button value="No" class="m-2">No</mat-radio-button>
+                                    </div>
+                                    </mat-radio-group>
+                                  </div>
+                                  <div class="col-6 mt-2">
+                                    <mat-label><b>Is it Company’s BTC / BTE ?</b></mat-label>
+                                    <mat-radio-group >
+                                        <div class="mt-2">
+                                        <mat-radio-button value="Yes" >Yes</mat-radio-button>
+                                        <mat-radio-button value="No" class="m-2">No</mat-radio-button>
+                                    </div>
+                                    </mat-radio-group>
+                                  </div>
+                                  <div class="col-6">
+                                    <mat-form-field >
+                                        <mat-label><b>Expense</b></mat-label>
+                                        <select matNativeControl required >
+                                            <option value="select event ">select Expense</option>
+                                          <option value="Expense1">Expense1</option>
+                                          <option value="Expense2">Expense2</option>
+                                        </select>
+                                      </mat-form-field>
+                          
+                                </div>
+                                <div class="col-6">
+                                    <mat-label><b>Calculate cost per participant</b></mat-label>
+                                    <mat-radio-group >
+                                        <div class="mt-2">
+                                        <mat-radio-button value="Yes">Yes</mat-radio-button>
+                                        <mat-radio-button value="No" class="m-2">No</mat-radio-button>
+                                    </div>
+                                    </mat-radio-group>
+                                </div>
+                                <div class="col-6" >
+                                    <mat-form-field >
+                                        <mat-label><b>Amount</b></mat-label>
+                                        <input matInput type="number" class="example-right-align" placeholder="auto populated" >
+                                    
+                                      </mat-form-field>
+                                 </div>
+                                 <div class="col-6">
+                                    <mat-label><b>Cost per participant is above 1500 INR?</b></mat-label>
+                                    <mat-radio-group >
+                                        <div class="mt-2">
+                                        <mat-radio-button value="Yes">Yes</mat-radio-button>
+                                        <mat-radio-button value="No" class="m-2">No</mat-radio-button>
+                                    </div>
+                                    </mat-radio-group>
+                                </div>
+
+                                <div class="col-6">
+                                    <mat-label><b>Is it including GST?</b></mat-label>
+                                    <mat-radio-group >
+                                        <div class="mt-2">
+                                        <mat-radio-button value="Yes">Yes</mat-radio-button>
+                                        <mat-radio-button value="No" class="m-2">No</mat-radio-button>
+                                    </div>
+                                    </mat-radio-group>
+                                </div>
+                                <div class="col-6">
+                                    <mat-label><b>Upload Deviation if yes in GST</b></mat-label>
+                                    <mat-form-field >
+                                        <input  type="file" >
+                                    </mat-form-field>
+                                </div>
+
+                                <div class="col-12 d-flex justify-content-end">
+                                    <button type="submit" class="btn btn-sm btn-primary"> Reset </button> 
+                                    
+                                    <button type="submit" class="btn btn-sm btn-warning"> Submit </button> 
+        
+                                 </div>
+                            </form>
+                            </div>
+                     
+                        </div>
+                    </div>
+                 </div>
+             </div>
+         </div>
+    </div>
+  </div>
+</div>
+</div>
+</div>
+        
+        
+
+
+                                
+            

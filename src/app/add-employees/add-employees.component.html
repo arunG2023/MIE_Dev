@@ -1,0 +1,166 @@
+<div class="main-content">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="card">
+            <div class="card-header card-header-danger">
+                <h4 class="card-title">Adding Roles</h4>
+            </div>
+
+            
+           
+            <div class="card-body">
+              <div class="row">
+                <div class="col-md-12">
+                    <div class="card ">
+                        <div class="card-body">
+                            <form [formGroup]="addUserFrom" (ngSubmit)="submit()">
+                            <div class="row" >
+                                
+                                <div class="col">
+                                    <mat-form-field appearance="outline">
+                                        <mat-label>Role Name</mat-label>
+                                        <!-- <input matInput placeholder="Placeholder"> -->
+                                        <mat-select formControlName="roleName">
+                                            <mat-option *ngFor="let role of roleDetails" value={{role.RoleId}}>{{role.RoleName}}</mat-option>
+                                          
+                                        </mat-select>
+                                    </mat-form-field>
+                                </div>
+                                <div class="col">
+                                    <mat-form-field appearance="outline">
+                                        <mat-label>Event Type</mat-label>
+                                        <!-- <input matInput placeholder="Placeholder"> -->
+                                        <mat-select formControlName="eventType">
+                                            <mat-option *ngFor="let event of eventDetails" value={{event.EventTypeId}}>{{event.EventType}}</mat-option>
+                                        </mat-select>
+                                       
+                                        <!-- <mat-hint>Hint</mat-hint> -->
+                                      </mat-form-field>
+                                </div>
+                                <div class="col">
+                                    <mat-form-field appearance="outline">
+                                        <mat-label>Email</mat-label>
+                                        <input matInput placeholder="Enter User Name" formControlName="email"  [matAutocomplete]="auto">
+
+                                        <mat-autocomplete #auto="matAutocomplete">
+                                            <mat-option *ngFor="let a of filteredOptions" value={{a.EmailId}} >{{a.EmailId}}</mat-option>
+                                        </mat-autocomplete>
+                                       
+                                        <!-- <mat-hint>Hint</mat-hint> -->
+                                      </mat-form-field>
+                                </div>
+                            </div>
+                            <div class="row" >
+                                <div class="col">
+                                    <mat-form-field appearance="outline">
+                                        <mat-label>First Name</mat-label>
+                                        <input disabled matInput placeholder="Prepopulate from Sheet" [value]="firstName">
+                                       
+                                       
+                                        <!-- <mat-hint>Hint</mat-hint> -->
+                                      </mat-form-field>
+                                </div>
+                                <div class="col">
+                                    <mat-form-field appearance="outline">
+                                        <mat-label>Last Name</mat-label>
+                                        <input disabled matInput placeholder="Prepopulate from Sheet" [value]="lastName">
+                                       
+                                        <!-- <mat-hint>Hint</mat-hint> -->
+                                      </mat-form-field>
+                                </div>
+                                <div class="col">
+                                    <mat-form-field appearance="outline">
+                                        <mat-label>User Name</mat-label>
+                                        <input disabled matInput placeholder="Prepopulate from Sheet" [value]="userName">
+                                       
+                                        <!-- <mat-hint>Hint</mat-hint> -->
+                                      </mat-form-field>
+                                     
+                                </div>
+                                
+                               
+                            </div>
+                            <div class="d-flex justify-content-center align-items-center" ><button type="submit" mat-flat-button color="warn">ADD</button></div>
+
+                            <div class="row" >
+                                <div class="table-responsive">
+                                    <table class="table text-center">
+                                        <thead class="text-primary">
+                                            <th>
+                                                S.NO
+                                            </th>
+                                            <th>
+                                                First Name
+                                            </th>
+                                            <th>
+                                                Last Name
+                                            </th>
+                                            <th>
+                                                Email Id
+                                            </th>
+                                            <th>
+                                                Role Name
+                                            </th>
+                                            <th>
+                                                Actions
+                                            </th>
+                                        </thead>
+                                        <tbody  *ngIf="showTable" >
+                                            <tr *ngFor="let row of tableDetails ; index as i " id={{i+1}}>
+                                                <td>
+                                                    {{i+1}}
+                                                </td>
+                                                <td>
+                                                    {{row.FirstName}}
+                                                </td>
+                                                <td>
+                                                    {{row.LastName}}
+                                                </td>
+                                                <td>
+                                                    {{row.Email}}
+                                                </td>
+                                                <td>
+                                                    {{row.RoleName}}
+                                                </td>
+                                                <td style="cursor: pointer;">
+                                                    <i  (click)="openModal(row)"  class="material-icons" style="margin-right: 5px;">edit</i>
+                                                    <i (click)="delete(i+1,row)" class="material-icons">delete</i>
+                                                </td>
+                                            </tr> 
+                                           <!-- <tr *ngFor="let detail of tableDetails">
+                                                <td>
+                                                    {{detail.id}}
+                                                </td>
+                                                <td>
+                                                    {{detail.FirstName}}
+                                                </td>
+                                                <td>
+                                                    {{detail.LastName}}
+                                                </td>
+                                                <td>
+                                                   {{detail.Email}}
+                                                </td>
+                                                <td>
+                                                    {{detail.RoleId}}
+                                                </td>
+                                                <td style="cursor: pointer;">
+                                                    <i class="material-icons" style="margin-right: 5px;">edit</i>
+                                                    <i class="material-icons">delete</i>
+                                                </td>
+                                           </tr> -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                                  
+                                  
+                            </div>
+                        </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

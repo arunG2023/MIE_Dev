@@ -1,0 +1,168 @@
+<div class="main-content">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="card">
+            <div class="card-header card-header-danger">
+                <h4 class="card-title">Honorarium Payment Request</h4>
+            </div>
+
+           
+  
+            <div class="card-body">
+                <div class="row" >
+                    <div class="col border">
+                        <b>Event ID:</b>
+                        <div><p style="color: red;">comes from sheet</p></div>
+                        
+                    </div>
+                    <div class="col border">
+                        <b>Event Name:</b>
+                        <p style="color: red;">comes from sheet</p>
+                    </div>
+                    <div class="col border">
+                        <b>Event Type:</b>
+                        <p style="color: red;">comes from sheet</p>
+                    </div>
+               
+                    <div class="col border">
+                        <b>Event Venue:</b>
+                        <p style="color: red;">comes from sheet</p>
+                    </div>
+                 
+                    <div class="col border">
+                        <b>Event Date & Time:</b>
+                        <p style="color: red;">comes from sheet</p>
+
+                    </div>
+                </div>
+                
+                           
+                    <div class="row">
+                        
+                        <div class="col">
+                            <form [formGroup]="honorarium" >
+                                <!-- <mat-form-field color="accent" appearance="outline">
+                                    <mat-label>Name as per PAN</mat-label>
+                                    <input matInput placeholder="Name as per PAN pre populated" >
+                                  </mat-form-field> -->
+                                <div class="row">
+                                    <div class="col m-3">
+                                        <mat-label><b>Is there only 2 working days after event?</b></mat-label>
+                                        <mat-radio-group formControlName="isAfter2Days">
+                                            <div class="mt-2 ">
+                                            <mat-radio-button value="Yes" >Yes</mat-radio-button>
+                                            <mat-radio-button value="No" class="m-1">No</mat-radio-button>
+                                        </div>
+                                        </mat-radio-group>
+                                    </div>
+    
+                                    <div class="col m-3 " *ngIf="show2DaysUpload">
+                                        <mat-label><b>Upload Deviation</b></mat-label><br>
+                                        
+                                            <input  type="file" formControlName="uploadDeviation">
+                                        
+                                    </div>
+    
+                                </div>
+    
+                                <div class="row">
+                                    <div class="col-6">
+                                        <div class="m-2" >
+                                         <mat-label><b>Upload Speaker Agreement</b></mat-label><br>
+                                         
+                                             <input  type="file" formControlName="uploadSpeakerAgreement">
+                                         
+                                        </div>
+                                    </div>
+    
+                                </div>
+                                <div class="row">
+                                    <div class="col-6">
+                                        <div class="m-2" >
+                                            <mat-label><b>Upload Photos</b></mat-label><br>                                          
+                                                <input type="file" formControlName="uploadPhotos">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-6">
+                                        <div class="m-2" >
+                                            <mat-label><b>Upload Final Honorarium Details</b></mat-label><br>                                          
+                                            <input  type="file" formControlName="uploadFinalHonorariumDetails">
+                                           
+                                        </div>
+                                    </div>
+                                </div>
+    
+                                <div class="row">
+                                    <div class="col m-3">
+                                        <mat-label><b>Is it including GST?</b></mat-label>
+                                        <mat-radio-group formControlName="isItIncludingGST">
+                                            <div class="mt-2 ">
+                                            <mat-radio-button value="Yes" >Yes</mat-radio-button>
+                                            <mat-radio-button value="No" class="m-1">No</mat-radio-button>
+                                        </div>
+                                        </mat-radio-group>
+                                        
+                                    </div>
+    
+                                    <div class="col m-3 " *ngIf="showGSTUpload">
+                                        <mat-label><b>Upload GST Certificate</b></mat-label><br>                                      
+                                            <input  type="file" formControlName="uploadDetails">
+                                      
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col m-3">
+                                        <mat-label><b>Is Invitees less than 5?</b></mat-label>
+                                        <mat-radio-group formControlName="isInviteeslessthan5">
+                                        <div class="mt-2">
+                                        <mat-radio-button value="Yes">Yes</mat-radio-button>
+                                        <mat-radio-button value="No" class="m-2">No</mat-radio-button>
+                                    </div>
+                                    </mat-radio-group>
+                                    </div>
+    
+                                    <div class="col m-3 " *ngIf="showLessThan5">
+                                        <mat-label><b>Upload Deviation</b></mat-label><br>
+                                        <input  type="file" formControlName="UploadDetails1">
+                                    </div>
+    
+                                </div>
+    
+                                
+    
+                                 
+        
+                                 <div class="col-12 d-flex justify-content-end">
+                                    <button type="submit" class="btn btn-sm btn-primary"> Reset </button> 
+                                    
+                                    <button type="submit" class="btn btn-sm btn-warning"> Submit </button> 
+        
+                                 </div>
+                              
+                            </form>
+
+                        </div>
+                        
+                        
+        
+                       
+                        
+                   
+
+
+                    </div>
+                
+                </div>
+                </div>
+                </div>
+                </div>
+                </div>
+</div>
+
+
+
+

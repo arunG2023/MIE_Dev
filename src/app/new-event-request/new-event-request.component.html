@@ -1,0 +1,45 @@
+<!-- Page Header -->
+<div class="main-content">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="card">
+            <div class="card-header card-header-danger">
+                <h4 class="card-title">New Event Request</h4>
+            </div>
+
+            <!-- Page Body -->
+            <div class="card-body">
+                <div class="row">
+                  <div class="col-md-12">
+                      <div class="card">
+                         
+                          <div class="card-body">
+                            <!-- DropDown to select the event type -->
+                              <div class="row"  *ngIf="selectedEvent=='select'">
+                                  <div class="col-md-6">
+                                      <mat-form-field color="accent" appearance="outline" class="example-full-width" >
+                                          <mat-label>Select Event Type</mat-label>
+                                          <mat-select required [(ngModel)]="selectedEvent">
+                                            <mat-option *ngFor="let event of eventList" value="{{event.EventTypeId}}">{{event.EventType}}</mat-option>
+                                           
+                                          </mat-select>
+                                        </mat-form-field>                                      
+                                    </div>
+                              </div>
+
+                              <app-class1-event-request *ngIf="selectedEvent == 'EVT1'"></app-class1-event-request>
+
+                              <div *ngIf="selectedEvent !== 'select' && selectedEvent !=='EVT1'">
+                                OOPS!!!! No other Event Forms yet developed
+                              </div>
+                      </div>
+                  </div>
+              </div>      
+              
+                
+        </div>
+          
+        </div>
+    </div>
+</div>

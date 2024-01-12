@@ -1,0 +1,23 @@
+<div class="logo">
+    <a href="#" class="simple-text">
+        <div class="logo-img">
+            <img src="/assets/img/menarini-logo.png"/>
+        </div>        
+    </a>
+</div>
+<div class="sidebar-wrapper">
+    <ul class="nav">
+        <li routerLinkActive="active" *ngFor="let menuItem of menuItems" class="{{menuItem.class}} nav-item">
+            <a class="nav-link" [routerLink]="[menuItem.path]">
+                <i class="material-icons">{{menuItem.icon}}</i>
+                <p class="limit-text-to-1-lines">{{menuItem.title}}</p>
+            </a>
+        </li>
+        <li *ngIf="isMobileMenu()">
+            <a class="nav-link" (click)="logOut()">
+                <i class="material-icons">power_settings_new_icon</i>
+                <p>Log Out</p>
+            </a>
+        </li>
+    </ul>
+</div>
