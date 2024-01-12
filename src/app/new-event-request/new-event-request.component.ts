@@ -15,6 +15,7 @@ export class NewEventRequestComponent implements OnInit {
 
   constructor(private utility: UtilityService) { 
     
+    
     utility.getEventTypes().subscribe(
       res => {
         // console.log(res)
@@ -25,6 +26,8 @@ export class NewEventRequestComponent implements OnInit {
       }
 
     )
+
+    utility.getPreviousEventsFast();
   }
 
 

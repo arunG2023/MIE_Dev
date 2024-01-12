@@ -14,6 +14,8 @@ export class UserServiceService {
 
   constructor(private http: HttpClient) { }
 
+ 
+
   // Creating a New User
   createUser(data:any): Observable<any>{
     return this.http.post(this.baseApiUrl+"/LoginAndRegister/RegisterNew",data);

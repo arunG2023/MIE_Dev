@@ -12,6 +12,21 @@ export class UtilityService {
 
   constructor(private http : HttpClient) { }
 
+  previousEvents : any;
+
+  getPreviousEventsFast(){
+    this.http.get(this.baseAPIUrl+'/Class1/GetEventData').subscribe(
+      res => {
+        this.previousEvents = res;
+      }
+    )
+  }
+
+   // Get Previous Event Details
+   getPreviousEvents(){
+    return this.previousEvents;
+  }
+
   // TO get event types
   getEventTypes(): Observable<any>{
     return this.http.get(this.baseAPIUrl+"/MasterSheets/GetEventData")

@@ -10,32 +10,52 @@ import { UtilityService } from 'src/app/services/utility.service';
   styleUrls: ['./class1-event-request.component.css']
 })
 
-// declare const $: any;
 export class Class1EventRequestComponent implements OnInit {
   eventInitiation1 : FormGroup;
   eventInitiation2 : FormGroup;
   eventInitiation3 : FormGroup;
   eventInitiation4 : FormGroup;
+    eventInitiation4Speaker : FormGroup;
+    eventInitiation4Other : FormGroup;
+    eventInitiation4Trainer : FormGroup;
+
   eventInitiation5 : FormGroup;
   eventInitiation6 : FormGroup;
   eventInitiation7 : FormGroup;
 
   // Data From sheet:
+  previousEvent : any;
   eventDetails : any;
   hcpRoles : any
+  vendorDetails : any;
+  
  
 
   // Upload Deviationn
-  toUploadDeviation1: boolean = false
-  toUploadDeviation2: boolean = false
+  show30DaysUploaDeviation: boolean = false
+  show7DaysUploadDeviation: boolean = false
 
 
   // For Stepper Validation
-  isLinear: boolean = true;
+  isLinear: boolean = false;
   orientation : string ;
+  pageLoaded : boolean = false
 
   constructor(private utilityService : UtilityService, private auth : AuthService, private router : Router) {
     this.isMobileMenu();
+    // Get Previous Events:
+    // utilityService.getPreviousEvents().subscribe(
+    //   res => {
+    //     // this.previousEvent = res;
+    //     console.log(res);
+    //     this.filterEventsWithIn30Days(res);
+    //   },
+    //   err => {
+    //     alert("Previous Event not got")
+    //   }
+    // )
+     this.filterEventsWithIn30Days(utilityService.getPreviousEvents());
+
     // Getting event types
     utilityService.getEventTypes().subscribe(
       res => {
@@ -95,17 +115,15 @@ export class Class1EventRequestComponent implements OnInit {
     )
     
     this.eventInitiation1 = new FormGroup({
-      withIn30days : new FormControl('',Validators.required),
-      uploadDeviation1 : new FormControl('', ),
-      withIn7days : new FormControl('',Validators.required),
-      uploadDeviation2 : new FormControl('')
-     
+      withIn30DaysDeviation : new FormControl(''),
+      eventDate : new FormControl('',Validators.required),
+      next7DaysDeviation : new FormControl('')
     })
 
     this.eventInitiation2 = new FormGroup({
       // eventType : new FormControl('EVT1',[Validators.required]),
       eventTopic : new FormControl('', [Validators.required]),
-      eventDate : new FormControl('',[Validators.required]),
+      // eventDate : new FormControl('',[Validators.required]),
       startTime : new FormControl('',[Validators.required]),
       endTime : new FormControl('',endTimeValidator),
       venueName : new FormControl('', [Validators.required]),
@@ -124,7 +142,7 @@ export class Class1EventRequestComponent implements OnInit {
     this.eventInitiation4 = new FormGroup({
       hcpRole : new FormControl('',[Validators.required]),
       // hcpRoleWritten : new FormControl('',[Validators.required]),
-      misCode : new FormControl('', MISValidator),
+      // misCode : new FormControl('', MISValidator),
       // speakerName : new FormControl('',[Validators.required]),
       // speakerCode : new FormControl('',[Validators.required]),
       // speaciality : new FormControl('',[Validators.required]),
@@ -132,6 +150,22 @@ export class Class1EventRequestComponent implements OnInit {
       // goNonGo : new FormControl('',[Validators.required])
     })
 
+    this.eventInitiation4Speaker = new FormGroup({
+      speakerName : new FormControl('',[Validators.required]),
+      speakerMisCode : new FormControl('', MISValidator),
+    })
+
+    this.eventInitiation4Other = new FormGroup({
+      otherName : new FormControl('',Validators.required),
+      otherMisCode : new FormControl('',MISValidator),
+    })
+
+    this.eventInitiation4Trainer = new FormGroup({
+      trainerName : new FormControl('',Validators.required),
+      trainerMisCode : new FormControl('',Validators.required)
+    })
+
+    /*
     this.eventInitiation5 = new FormGroup({
       presentationDuration : new FormControl(0,[Validators.required]),
       panelSessionPreparation : new FormControl(0,[Validators.required]),
@@ -173,19 +207,20 @@ export class Class1EventRequestComponent implements OnInit {
       bteTotalAmount : new FormControl('',[Validators.required]),
       uploadAgenda : new FormControl('',[Validators.required]),
       uploadInvitation : new FormControl('',[Validators.required])
-    })
+    }) */
   }
 
   ngOnInit(): void {
 
    
     this.event1FormPrepopulate();
-    this.event4FormPrepopulate();
-    this.event6FormPrepopulate();
     this.event2FormPrepopulate();
     this.event3FormPrepopulate();
-    this.event5FormPrepopulate();
-    this.event7FormPrepopulate();
+    this.event4FormPrepopulate();
+    this.event4FormSpeakerPrepopulate();
+    // this.event5FormPrepopulate();
+    // this.event6FormPrepopulate();
+    // this.event7FormPrepopulate();
     
   }
 
@@ -195,32 +230,62 @@ export class Class1EventRequestComponent implements OnInit {
  
 
   event1FormPrepopulate(){
-   
     this.eventInitiation1.valueChanges.subscribe(changes => {
-      // Class1EventRequestComponent.upload1 = changes.uploadDeviation1;
-      // if(changes.uploadDeviation1){
-      //   // console.log(changes.uploadDeviation1)
-      //   // Class1EventRequestComponent.upload1 = changes.uploadDeviation1;
-      //   // Step1Validator(changes.uploadDeviation1);
-       
-      // }
-      // console.log(this.eventInitiation1.controls.uploadDeviation1.valid)
-      this.toUploadDeviation1 = (changes.withIn30days == 'Yes')? true : false;
-      this.toUploadDeviation2 = (changes.withIn7days == 'Yes')? true : false;
-      if(this.toUploadDeviation1) Class1EventRequestComponent.withIn30Days = true;
-      else Class1EventRequestComponent.withIn30Days = false;
-      // if(this.toUploadDeviation1) this.eventInitiation1.controls.uploadDeviation1.addValidators([Validators.required])
-      // else {
-      //     this.eventInitiation1.controls.uploadDeviation1.setValidators(null)
-      //     // this.eventInitiation1.controls.uploadDeviation1.setValue('aa')
-      //     // this.eventInitiation1.
-      //     // this.eventInitiation1.controls.uploadDeviation1.reset();
-      //     // console.log(this.eventInitiation1.controls.uploadDeviation1.valid)
-          
-      // }
-      // if(this.toUploadDeviation2) this.eventInitiation1.controls.uploadDeviation2.addValidators([Validators.required])
+      if(changes.eventDate){
+        // console.log(changes.eventDate)
+        let today : any = new Date();
+        let eventDate = new Date(changes.eventDate);
+
+        let Difference_In_Time = eventDate.getTime() - today.getTime();
+
+        let Difference_In_Days = Math.round(Difference_In_Time / (1000 * 3600 * 24));
+
+        this.eventDate = changes.eventDate
+
+        if(Difference_In_Days <= 7){
+          this.show7DaysUploadDeviation = true;
+        }
+        else this.show7DaysUploadDeviation = false
+
+      }
+    })
+   
+    
+  }
+
+  // Filter Events within 30 days
+  eventsWithin30Days: any[] =[] ;
+  filterEventsWithIn30Days(eventList:any){
+    eventList.forEach(event => {
+      let today : any = new Date();
+      // console.log(event.EventDate)
+      if(event.EventDate){
+        let eventDate : any = new Date(event.EventDate);
+        if(eventDate > today){
+         
+          let Difference_In_Time = eventDate.getTime() - today.getTime();
+ 
+          // To calculate the no. of days between two dates
+          let Difference_In_Days = Math.round(Difference_In_Time / (1000 * 3600 * 24));
+
+          if(Difference_In_Days <= 30){
+            this.eventsWithin30Days.push(event)
+          }
+        }
+        // console.log(new Date(event.EventDate))
+
+        // console.log(event.EventDate)
+      }
      
     })
+
+    // this.pageLoaded = true
+    if(this.eventsWithin30Days.length > 0){
+      this.show30DaysUploaDeviation = true;
+    }
+    console.log(this.eventsWithin30Days)
+    
+
   }
 
   // Event Initiation Form2 Control
@@ -232,6 +297,7 @@ export class Class1EventRequestComponent implements OnInit {
 
   // New Values
   eventType : string = 'EVT1'
+  eventDate : string ;
 
   event2FormPrepopulate(){
     this.eventInitiation2.valueChanges.subscribe(changes => {
@@ -333,27 +399,53 @@ export class Class1EventRequestComponent implements OnInit {
 
 
   // Event Initiation Form4 Control
-  showHCPRoleNameTextBox : boolean = false;
+  
   approvedSpeakers : any;
   filteredspeakers : any;
 
-  speakerName: string = '';
-  speakerCode : string = '';
-  speciality : string = '';
-  tier : string = '';
-  goNonGo : string = '';
-  hcpRoleWritten : string = '';
+  showOtherHCPRoleTextBox : boolean = false;
+  showSpeakerForm : boolean = false;
+  showTrainerForm : boolean = false;
+  showOthersForm : boolean = false;
+
+ 
 
   event4FormPrepopulate(){
     
     this.eventInitiation4.valueChanges.subscribe(changes => {
-      console.log(changes)
-      if(changes.hcpRole == "H6"){
-        this.showHCPRoleNameTextBox = true;
+      // console.log(changes)
+      if(changes.hcpRole == "H6" ){
+        this.showOthersForm = true;
+        this.showOtherHCPRoleTextBox = true;
+      }
+      
+      else{
+        this.showOthersForm = false;
+        this.showOtherHCPRoleTextBox = false;
+      }
+
+      if(changes.hcpRole !== "H1" && changes.hcpRole !== "H2"){
+        this.showOthersForm = true;
+
       }
       else{
-        this.showHCPRoleNameTextBox = false;
+        this.showOthersForm = false;
       }
+
+      if(changes.hcpRole == 'H1'){
+        this.showSpeakerForm = true;
+      }
+      else{
+        this.showSpeakerForm = false;
+      }
+
+      if(changes.hcpRole == 'H2'){
+        this.showTrainerForm = true;
+
+      }
+      else { this.showTrainerForm = false;}
+
+    
 
       // if(changes.goNonGo == "GO"){
       //   this.showUploadNOC = true;
@@ -364,54 +456,89 @@ export class Class1EventRequestComponent implements OnInit {
       //   this.showRationale = false;
       // }
 
-      if(changes.misCode !== ''){
-        // console.log(this._filter(changes.misCode))
-        this.filteredspeakers = this._filter(changes.misCode);
+      
+    })
+  }
 
-        if(this.eventInitiation4.controls.misCode.valid){
-          // console.log("MIS Valli")
-          // console.log(this._getFilteredSpeaker(changes.misCode))
-          const filteredSpeaker = this._getFilteredSpeaker(changes.misCode);
-          // console.log(filteredSpeaker)
-          if(filteredSpeaker){
-            this.speakerName  = filteredSpeaker.SpeakerName;
-            this.speakerCode = filteredSpeaker.SpeakerCode;
-            this.speciality = filteredSpeaker.Speciality;
-            this.goNonGo = (filteredSpeaker.isNonGO == "yes")? 'Non GO' : 'GO';
-            this.tier = filteredSpeaker.TierType;  
+  speakerName: string = '';
+  speakerCode : string = '';
+  speakerSpeciality : string = '';
+  speakerTier : string = '';
+  speakerGoNonGo : string = '';
+  hcpRoleWritten : string = '';
+  misCode : string = '';
 
-            this.getRemuneration(this.speciality,this.tier);
-          }
-          else{
-            this.speakerName  = "";
-            this.speakerCode = "";
-            this.speciality = "";
-            this.goNonGo = "";
-            this.tier = "";
-          }
-         
-          if(this.goNonGo == "GO"){
-            this.showUploadNOC = true;
-            this.showRationale = true;
-          }
-          else{
-            this.showUploadNOC = false;
-            this.showRationale = false;
+  event4FormSpeakerPrepopulate(){
+    this.eventInitiation4Speaker.valueChanges.subscribe(
+      changes => {
+        if(changes.speakerName !== ''){
+          // console.log(this._filter(changes.misCode))
+          this.filteredspeakers = this._filter(changes.speakerName);
+  
+          if(this.eventInitiation4Speaker.controls.speakerName.valid){
+            // console.log("MIS Valli")
+            // console.log(this._getFilteredSpeaker(changes.misCode))
+            const filteredSpeaker = this._getFilteredSpeaker(changes.speakerName);
+            // console.log(filteredSpeaker)
+            if(filteredSpeaker){
+              this.speakerName  = filteredSpeaker.SpeakerName;
+              this.speakerCode = filteredSpeaker.SpeakerCode;
+              this.speakerSpeciality = filteredSpeaker.Speciality;
+              this.speakerGoNonGo = (filteredSpeaker.isNonGO == "yes")? 'Non GO' : 'GO';
+              this.speakerTier = filteredSpeaker.TierType;  
+              // this.eventInitiation4.controls.misCode.setValue(filteredSpeaker.MISCode)
+  
+              this.getRemuneration(this.speakerSpeciality,this.speakerTier);
+            }
+            else{
+              this.speakerName  = "";
+              this.speakerCode = "";
+              this.speakerSpeciality = "";
+              this.speakerGoNonGo = "";
+              this.speakerTier = "";
+            }
+           
+            if(this.speakerGoNonGo == "GO"){
+              // this.showUploadNOC = true;
+              // this.showRationale = true;
+            }
+            else{
+              // this.showUploadNOC = false;
+              // this.showRationale = false;
+            }
           }
         }
       }
-    })
+    )
+  }
+
+  otherSpeciality : string = '';
+  otherTier : string = '';
+  otherGoNonGo : string = '';
+
+
+  event4FormOtherPrepopulate(){
+
+  }
+
+  trainerCode : string = '';
+  trainerSpeciality : string = '';
+  trainerTier : string = '';
+  trainerGoNonGo : string = '';
+
+  event4FormTrainerPrepopulate(){
+
   }
 
   private _filter(value: string): string[] {
     // console.log(this.employeeDetails)
     const filterValue = value.toLowerCase();
-    return this.approvedSpeakers.filter(emp => emp.MISCode.toLowerCase().includes(filterValue));
+    return this.approvedSpeakers.filter(emp => emp.SpeakerName.toLowerCase().includes(filterValue));
   }
 
-  private _getFilteredSpeaker(misCode){
+  private _getFilteredSpeaker(speakerName){
     return this.approvedSpeakers.find(speaker => {
-      return speaker.MISCode === misCode
+      return speaker.SpeakerName === speakerName
     })
 
   }
@@ -448,7 +575,7 @@ export class Class1EventRequestComponent implements OnInit {
     )
   }
 
-
+/*
   // Event Initiation Form6 Control
   showUploadNOC : boolean = false;
   showRationale :boolean = false;
@@ -580,7 +707,7 @@ export class Class1EventRequestComponent implements OnInit {
       invitee : 'aa'
     };
 
-  }
+  }  
   
   
 
@@ -660,6 +787,7 @@ export class Class1EventRequestComponent implements OnInit {
     // console.log(class1FinalData2)
   }
 
+  */
 
   @HostListener('window:resize',['$event'])
     onResize(event:Event){
@@ -699,11 +827,6 @@ export class Class1EventRequestComponent implements OnInit {
 
   //Min Date
   today:string = new Date().toISOString().split('T')[0];
- 
-  
-
-
-
 }
 
 
