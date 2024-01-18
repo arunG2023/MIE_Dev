@@ -15,9 +15,14 @@ export class Class1EventRequestComponent implements OnInit {
   eventInitiation2 : FormGroup;
   eventInitiation3 : FormGroup;
   eventInitiation4 : FormGroup;
+    eventInitiation4Sub : FormGroup;
+    eventInitiatio4Honararium : FormGroup;
     eventInitiation4Speaker : FormGroup;
     eventInitiation4Other : FormGroup;
     eventInitiation4Trainer : FormGroup;
+    panalselectionstandard:FormGroup;
+    eventInitiation4Travel : FormGroup;
+    eventInitiation4Accomodation : FormGroup;
 
   eventInitiation5 : FormGroup;
   eventInitiation6 : FormGroup;
@@ -141,13 +146,34 @@ export class Class1EventRequestComponent implements OnInit {
 
     this.eventInitiation4 = new FormGroup({
       hcpRole : new FormControl('',[Validators.required]),
-      // hcpRoleWritten : new FormControl('',[Validators.required]),
-      // misCode : new FormControl('', MISValidator),
-      // speakerName : new FormControl('',[Validators.required]),
-      // speakerCode : new FormControl('',[Validators.required]),
-      // speaciality : new FormControl('',[Validators.required]),
-      // tier : new FormControl('',[Validators.required]),
-      // goNonGo : new FormControl('',[Validators.required])
+      // New Columns
+     
+    })
+
+    this.eventInitiation4Sub = new FormGroup({
+      uploadFCPA : new FormControl(''),
+      isTravelRequired : new FormControl(''),
+      isLocalConveyance : new FormControl(''),
+      isHonararium : new FormControl(''),
+      isAccomRequired : new FormControl(''),
+      localConveyanceAmount : new FormControl(''),
+    })
+
+    this.eventInitiatio4Honararium = new FormGroup({
+      presentationDuration : new FormControl(0,[Validators.required]),
+      panelSessionPreparation : new FormControl(0,[Validators.required]),
+      qaSession : new FormControl(0,[Validators.required]),
+      honorariumAmount : new FormControl(0,),
+      briefingDuration : new FormControl(0,[Validators.required]),
+      panelDiscussionDuration : new FormControl(0,[Validators.required]),
+
+      isHonararium : new FormControl('No',[Validators.required]),
+      currency : new FormControl('',),
+      uploadNOC : new FormControl('',),
+      rationale : new FormControl('',),
+      bankAccountNumber : new FormControl('',),
+      benificiaryName : new FormControl(''),
+     
     })
 
     this.eventInitiation4Speaker = new FormGroup({
@@ -163,6 +189,51 @@ export class Class1EventRequestComponent implements OnInit {
     this.eventInitiation4Trainer = new FormGroup({
       trainerName : new FormControl('',Validators.required),
       trainerMisCode : new FormControl('',Validators.required)
+    })
+
+    this.eventInitiation4Travel = new FormGroup({
+      travelType : new FormControl(''),
+      travelAmount : new FormControl(''),
+      travelBTC : new FormControl('')
+    })
+
+    this.eventInitiation4Accomodation = new FormGroup({
+      accomBTC : new FormControl(''),
+      accomAmount : new FormControl('')
+    })
+
+    this.panalselectionstandard = new FormGroup({
+      uploadFCPA: new FormControl('',[Validators.required]),
+      isHonararium:new FormControl('',[Validators.required]),
+      honorariumAmount:new FormControl('',),
+      uploadNOC : new FormControl('',),
+      rationale : new FormControl('',),
+      isTravelRequired:new FormControl('',[Validators.required]),
+      travelAmount : new FormControl(''),
+    
+      travelType : new FormControl(''),
+      travelamount:new FormControl('',[Validators.required]),
+      isBTCBTE:new FormControl('',[Validators.required]),
+      isAccomRequired: new FormControl('',[Validators.required]),
+      accomAmount:new FormControl('',[Validators.required]),
+      
+      isBTCBTE1:new FormControl('',[Validators.required]),
+      localConveyance:new FormControl('',[Validators.required]),
+      localAmount:new FormControl('',[Validators.required]),
+      timecalculationhonorariumifYes:new FormControl('',Validators.required),
+      presentationDuration:new FormControl('',[Validators.required]),
+      panelSessionPreparation:new FormControl('',[Validators.required]),
+      qaSession:new FormControl('',[Validators.required]),
+      briefingDuration:new FormControl('',[Validators.required]),
+      panelDiscussionDuration:new FormControl('',[Validators.required]),
+      localConveyanceinvitees:new FormControl('',[Validators.required]),
+      localInviteeAmount:new FormControl('',[Validators.required]),
+      localBTCBTE:new FormControl('',[Validators.required]),
+      InviteeName:new FormControl('',[Validators.required]),
+      InviteeEmail:new FormControl('',[Validators.required]),
+      BTCTotalAmount:new FormControl('',[Validators.required]),
+      BTETotalAmount:new FormControl('',[Validators.required]),
+      BudgetAmount:new FormControl('',[Validators.required])
     })
 
     /*
@@ -218,6 +289,8 @@ export class Class1EventRequestComponent implements OnInit {
     this.event3FormPrepopulate();
     this.event4FormPrepopulate();
     this.event4FormSpeakerPrepopulate();
+    this.eventInitiatio4HonarariumPrepopulate()
+    this.event4FormSubPrepopulate();
     // this.event5FormPrepopulate();
     // this.event6FormPrepopulate();
     // this.event7FormPrepopulate();
@@ -466,7 +539,10 @@ export class Class1EventRequestComponent implements OnInit {
   speakerTier : string = '';
   speakerGoNonGo : string = '';
   hcpRoleWritten : string = '';
-  misCode : string = '';
+  speakerMisCode : string = '';
+
+  filteredSpeakerLength : number = 0;
+  speakersWithSameName : any;
 
   event4FormSpeakerPrepopulate(){
     this.eventInitiation4Speaker.valueChanges.subscribe(
@@ -479,16 +555,26 @@ export class Class1EventRequestComponent implements OnInit {
             // console.log("MIS Valli")
             // console.log(this._getFilteredSpeaker(changes.misCode))
             const filteredSpeaker = this._getFilteredSpeaker(changes.speakerName);
+            // console.log('Check1',filteredSpeaker)
+            // console.log()
+            this.filteredSpeakerLength = filteredSpeaker.length;
             // console.log(filteredSpeaker)
-            if(filteredSpeaker){
-              this.speakerName  = filteredSpeaker.SpeakerName;
-              this.speakerCode = filteredSpeaker.SpeakerCode;
-              this.speakerSpeciality = filteredSpeaker.Speciality;
-              this.speakerGoNonGo = (filteredSpeaker.isNonGO == "yes")? 'Non GO' : 'GO';
-              this.speakerTier = filteredSpeaker.TierType;  
-              // this.eventInitiation4.controls.misCode.setValue(filteredSpeaker.MISCode)
-  
-              this.getRemuneration(this.speakerSpeciality,this.speakerTier);
+            
+            if(filteredSpeaker && filteredSpeaker.length == 1 ){
+              // console.log('Check2')
+              this.speakerName  = filteredSpeaker[0].SpeakerName;
+              this.speakerCode = filteredSpeaker[0].SpeakerCode;
+              this.speakerSpeciality = filteredSpeaker[0].Speciality;
+              this.speakerGoNonGo = (filteredSpeaker[0].isNonGO == "yes")? 'Non GO' : 'GO';
+              this.speakerTier = filteredSpeaker[0].TierType;  
+              this.speakerMisCode = filteredSpeaker[0].MISCode;
+              
+            }
+            else if (this.filteredSpeakerLength && this.filteredSpeakerLength > 1){
+              // console.log('Check3')
+              this.speakersWithSameName = filteredSpeaker;
+              this.filteredSpeakerLength = filteredSpeaker.length;
+              this.fillSpeakerByMISCode();
             }
             else{
               this.speakerName  = "";
@@ -512,6 +598,31 @@ export class Class1EventRequestComponent implements OnInit {
     )
   }
 
+  fillSpeakerByMISCode(){
+    this.eventInitiation4Speaker.valueChanges.subscribe(
+      changes => {
+        let filteredSpeaker: any = [];
+        if(changes.speakerMisCode){
+          // console.log(changes.speakerMisCode)
+          filteredSpeaker.push(this.speakersWithSameName.find(
+            speaker => speaker.MISCode == changes.speakerMisCode
+          ))
+        }
+
+        this.filteredSpeakerLength = filteredSpeaker.length;
+        // console.log(this.filteredSpeakerLength)
+        if(this.filteredSpeakerLength && this.filteredSpeakerLength == 1 ){
+          this.speakerName  = filteredSpeaker[0].SpeakerName;
+          this.speakerCode = filteredSpeaker[0].SpeakerCode;
+          this.speakerSpeciality = filteredSpeaker[0].Speciality;
+          this.speakerGoNonGo = (filteredSpeaker[0].isNonGO == "yes")? 'Non GO' : 'GO';
+          this.speakerTier = filteredSpeaker[0].TierType;  
+          this.speakerMisCode = filteredSpeaker[0].MISCode;
+        }
+      }
+    )
+  }
+
   otherSpeciality : string = '';
   otherTier : string = '';
   otherGoNonGo : string = '';
@@ -530,6 +641,54 @@ export class Class1EventRequestComponent implements OnInit {
 
   }
 
+  showTravelForm : boolean = false;
+  showAccomForm : boolean = false;
+  showLocalConveyance : boolean = false;
+
+  event4FormSubPrepopulate(){
+    this.eventInitiation4Sub.valueChanges.subscribe(
+      changes => {
+        if(changes.isHonararium == "Yes"){
+          this.isHonararium = true;
+        }
+        else{
+          this.isHonararium = false;
+        }
+        if(changes.isTravelRequired == "Yes"){
+          this.showTravelForm = true;
+        }
+        else{
+          this.showTravelForm = false;
+        }
+
+        if(changes.isAccomRequired == "Yes"){
+          this.showAccomForm = true;
+        }
+        else{
+          this.showAccomForm = false;
+        }
+
+        if(changes.isLocalConveyance == "Yes"){
+          this.showLocalConveyance = true;
+        }
+        else{
+          this.showLocalConveyance = false;
+        }
+      }
+    )
+  }
+
+  isHonarariumYes:boolean=true
+  isTravelYes : boolean = true
+  isAccomYes:boolean=true
+  isLocalYes:boolean=true
+  timecalculationhonorariumifYes:boolean=true
+  invitesslocalyes:boolean=true
+
+  event4FormPanelSelectionPrepopuate(){
+
+  }
+
   private _filter(value: string): string[] {
     // console.log(this.employeeDetails)
     const filterValue = value.toLowerCase();
@@ -537,12 +696,38 @@ export class Class1EventRequestComponent implements OnInit {
   }
 
   private _getFilteredSpeaker(speakerName){
-    return this.approvedSpeakers.find(speaker => {
-      return speaker.SpeakerName === speakerName
+    const filteredSpeaker : any = [];
+
+    this.approvedSpeakers.forEach(speaker => {
+      if(speaker.SpeakerName === speakerName){
+        filteredSpeaker.push(speaker);
+      }
     })
+
+    return filteredSpeaker;
 
   }
 
+  hcpTableDetails : any[] = [];
+
+  addHCPTable(){
+   
+    const HcpData  = {
+      hcpRole : this.eventInitiation4.value.hcpRole,
+      hcpName : this.speakerName,
+      misCode : this.speakerMisCode,
+      goNonGo : this.speakerGoNonGo,
+      honararium : this.eventInitiation4Sub.value.isHonararium,
+      honarariumAmount : this.eventInitiatio4Honararium.value.honorariumAmount,
+      travelAmount : this.eventInitiation4Travel.value.travelAmount,
+      localConveyanceAmount : this.eventInitiation4Sub.value.localConveyanceAmount,
+      accomAmount : this.eventInitiation4Accomodation.value.accomAmount,
+      finalAmount : parseInt(this.eventInitiatio4Honararium.value.honorariumAmount)+ parseInt(this.eventInitiation4Travel.value.travelAmount)+
+                  parseInt( this.eventInitiation4Sub.value.localConveyanceAmount)+parseInt(this.eventInitiation4Accomodation.value.accomAmount)
+    }
+    console.log(HcpData)
+    this.hcpTableDetails.push(HcpData);
+  }
   // Event Initiation Form5 Control
   totalHours : any;
   remuneration : any;
@@ -575,13 +760,13 @@ export class Class1EventRequestComponent implements OnInit {
     )
   }
 
-/*
+
   // Event Initiation Form6 Control
   showUploadNOC : boolean = false;
   showRationale :boolean = false;
   showOtherCurrencyTextBox : boolean = false;
 
-  vendorDetails : any ;
+  // vendorDetails : any ;
   filteredAccounts : any;
 
   isHonararium : boolean = false;
@@ -599,9 +784,15 @@ export class Class1EventRequestComponent implements OnInit {
   uploadPAN : any = '';
   uploadCheque : any = '';
 
-  event6FormPrepopulate(){
-    this.eventInitiation6.valueChanges.subscribe(
+  eventInitiatio4HonarariumPrepopulate(){
+    this.eventInitiatio4Honararium.valueChanges.subscribe(
       changes => {
+
+        this.totalHours = ((changes.presentationDuration + changes.panelDiscussionDuration + 
+                  changes.panelSessionPreparation + changes.qaSession + changes.briefingDuration)/60).toFixed(2);
+        if(this.totalHours >= 8){
+        alert("Max of 8 hours only")
+        }
         console.log(changes)
         if(changes.currency == 'other'){
           this.showOtherCurrencyTextBox = true;
@@ -609,26 +800,16 @@ export class Class1EventRequestComponent implements OnInit {
         else{
           this.showOtherCurrencyTextBox = false
         }
-        if(changes.isHonararium == "Yes"){
-          this.isHonararium = true;
-          // this.eventInitiation6.get('bankAccountNumber').enable();
+        // console.log(changes.benificiaryName)
+        if(changes.benificiaryName){
           
-        }
-        else{
-          this.isHonararium = false
-          this.bankAccountNumber = '';
-          this.nameAsPan = '';
-          this.panCardNumber = '';
-          this.ifscCode = '';
-          this.emailId = '';
-        }
-        if(changes.bankAccountNumber){
-          // console.log(changes.bankAccountNumber)
           // console.log(this._filterBankAccounts(changes.bankAccountNumber))
-          this.filteredAccounts = this._filterBankAccounts(changes.bankAccountNumber);
-          if(this.eventInitiation6.controls.bankAccountNumber.valid){
+          this.filteredAccounts = this._filterBankAccounts(changes.benificiaryName);
+          // console.log(this.filteredAccounts)
+          if(this.eventInitiatio4Honararium.controls.bankAccountNumber.valid){
             // console.log(this._getSelectedBankDetails(changes.bankAccountNumber))
-            const filteredVendor = this._getSelectedBankDetails(changes.bankAccountNumber);
+            const filteredVendor = this._getSelectedBankDetails(changes.benificiaryName);
+            console.log(filteredVendor)
             if(filteredVendor){
               this.isVendorPresent = true;
               this.bankAccountNumber = filteredVendor.BankAccountNumber;
@@ -639,15 +820,17 @@ export class Class1EventRequestComponent implements OnInit {
             }
           }
         }
+
+        
       }
     )
   }
   private _getSelectedBankDetails(acctNumber : any){
     return this.vendorDetails.find(ven => {
-      if(ven.BankAccountNumber){
+      if(ven.BeneficiaryName){
         // console.log(typeof ven.BankAccountNumber);
         // console.log(typeof acctNumber)
-        return ven.BankAccountNumber == acctNumber
+        return ven.BeneficiaryName == acctNumber
       }
     })
   }
@@ -658,15 +841,16 @@ export class Class1EventRequestComponent implements OnInit {
     
     return this.vendorDetails.filter(ven =>{
       
-      if(ven.BankAccountNumber){
-        const bannAccNum = ven.BankAccountNumber.toString();
+      if(ven.BeneficiaryName){
+        const benName = ven.BeneficiaryName.toLowerCase();
         
-        return bannAccNum.includes(filterValue);
+        return benName.includes(filterValue);
       }
       
     })
   }
 
+/*
   // Event Inititaion Form7 COntrol
   showExpenseTextBox : boolean = false;
   showTotalExpense : boolean = false;
@@ -846,7 +1030,7 @@ function endTimeValidator(control : AbstractControl): ValidationErrors | null{
 }
 
 function MISValidator(control : AbstractControl): ValidationErrors | null{
-  console.log(control.value)
+  // console.log(control.value)
   if(control.value && control.value.startsWith('MS')){
     // console.log("No")
     return null
