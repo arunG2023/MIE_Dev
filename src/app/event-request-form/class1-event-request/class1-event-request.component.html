@@ -188,10 +188,8 @@
 
         </div>
 
-        <div class="col-12 d-flex justify-content-center">
+        <div class="col-12 d-flex justify-content-start">
           <button type="button" class="btn btn-primary btn-sm" (click)="addToBrandTable()">AddNew</button>
-          <button type="button" class="btn btn-success btn-sm" (click)="sendBrandDetails()">Save</button>
-          <button type="button" class="btn btn-warning btn-sm">Reset</button>
         </div>
 
         <div class="container table-responsive">
@@ -220,6 +218,12 @@
             </tbody>
 
           </table>
+        </div>
+
+          
+        <div class="col-12 d-flex justify-content-center">
+          <button type="button" class="btn btn-success btn-sm" (click)="sendBrandDetails()">Save</button>
+          <button type="button" class="btn btn-warning btn-sm">Reset</button>
         </div>
 
         <div class="container d-flex justify-content-end">
@@ -1055,6 +1059,139 @@
 </div>
 
   </mat-step>
+  <mat-step label="Invitees-Selection">
+    <form [formGroup]="inviteeSelectionForm">
+      <div class="row">
+        <div class="col">
+          <mat-form-field color="accent" appearance="outline">
+            <mat-label>Invitees From</mat-label>
+            <mat-select formControlName="inviteesFrom">
+              <mat-option value="hcpMaster">from HCP master</mat-option>
+              <mat-option value="menarini">from Menarini</mat-option>
+              <mat-option value="other">Other</mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <mat-form-field color="accent" appearance="outline">
+            <mat-label>Enter Invitee Name</mat-label>
+            <input matInput type="text" formControlName="inviteeName" [matAutocomplete]="autoInvitee">
+
+            <mat-autocomplete #autoInvitee="matAutocomplete">
+                    <mat-option *ngFor="let a of filteredHCPMasterInvitees" value={{a.HCPName}} >{{a.HCPName}}</mat-option>
+                  </mat-autocomplete>
+          </mat-form-field>
+          
+
+
+
+          <div *ngIf="showInviteeLocalConveyance">
+            <mat-label><b>Is BTC / BTE?</b></mat-label>
+            <mat-radio-group formControlName="inviteeBTC">
+                  <div class="mt-2 ">
+                  <mat-radio-button value="BTC" >BTC</mat-radio-button>
+                  <mat-radio-button value="BTE" class="m-1" [checked]="true">BTE</mat-radio-button>
+              </div>
+            </mat-radio-group>
+          </div>
+
+        </div>
+        <div class="col">
+          <mat-form-field *ngIf="hideInviteeMisCode" color="accent" appearance="outline">
+            <mat-label>Enter Invitee MIS Code</mat-label>
+            <input matInput type="text" disabled [value]="filteredInviteeMisCode || ''"  >
+          </mat-form-field>
+
+          <mat-form-field *ngIf="!hideInviteeMisCode" color="accent" appearance="outline">
+            <mat-label>Enter Invitee MIS Code</mat-label>
+            <mat-select formControlName="inviteeMisCode">
+              <mat-option *ngFor="let invitee of filteredInviteeMisCodeSelect" value={{invitee.MISCode}}>{{invitee.MISCode}}</mat-option>
+              
+            </mat-select>
+            <!-- <input matInput type="text" [value]="filteredInviteeMisCode"  > -->
+          </mat-form-field>
+          
+         
+          <mat-label><b>Is Local Conveyance applicable?</b></mat-label>
+          <mat-radio-group formControlName="isInviteeLocalConveyance">
+              <div class="mt-2 ">
+              <mat-radio-button value="Yes" >Yes</mat-radio-button>
+              <mat-radio-button value="No" class="m-1">No</mat-radio-button>
+              </div>
+          </mat-radio-group>
+
+          <mat-form-field *ngIf="showInviteeLocalConveyance" color="accent" appearance="outline">
+            <mat-label>Enter Local Conveyance Amount</mat-label>
+            <input matInput type="number" formControlName="inviteeLocalConveyanceAmount" >
+          </mat-form-field>
+
+          
+
+        </div>
+      </div>
+    </form>
+
+       <div class="col-12 d-flex justify-content-start">
+         <button type="button" class="btn btn-primary btn-sm" (click)="addToInviteeTable()">AddNew</button>
+         <button type="button" class="btn btn-success btn-sm" >Save</button>
+         <button type="button" class="btn btn-warning btn-sm">Reset</button>
+       </div>
+ 
+ 
+     <div class="container table-responsive">
+       <table class="table text-center">
+         <thead>
+           <tr>
+             <th>S.no</th>
+             <th>Invitees</th>
+             <th>localConveyance</th>
+             <th>BTC/BTE</th>
+             <th>LC Amount</th>
+             <th>Actions</th>
+           </tr>
+         </thead>
+         <tbody >
+           <tr *ngFor="let invitee of inviteeTableDetails; index as i" >
+              <td>{{i+1}}</td>
+              <td>{{invitee.inviteeName}}</td>
+              <td>{{invitee.localConveyance}}</td>
+              <td>{{invitee.btc}}</td>
+              <td>{{invitee.localConveyanceAmount}}</td>
+              <td style="cursor: pointer;">
+                <i class="material-icons" style="margin-right: 5px;">edit</i>
+                <i class="material-icons">delete</i>
+              </td>
+ 
+            
+           </tr>
+         </tbody>
+ 
+       </table>
+     </div>
+ 
+     <div class="col-6">
+     
+       <mat-label><b>Upload Agenda</b></mat-label>
+       <div>
+       <input type="file"> 
+         </div>
+ </div>
+         <div class="col-6">
+     
+           <mat-label><b>Upload Invitation</b></mat-label>
+           <div>
+           <input type="file">
+         </div>
+              
+               
+             </div>
+  
+    
+     <div class="container d-flex justify-content-end">
+       <button mat-raised-button color="accent" class="m-1" matStepperPrevious>Previous</button>
+       <button mat-raised-button color="primary" class="m-1" matStepperNext>Next</button>
+     </div>
+ 
+   </mat-step>
 </mat-stepper>
 
 

@@ -24,6 +24,7 @@ export class Class1EventRequestComponent implements OnInit {
     eventInitiation4Travel : FormGroup;
     eventInitiation4Accomodation : FormGroup;
 
+  inviteeSelectionForm : FormGroup;
   eventInitiation5 : FormGroup;
   eventInitiation6 : FormGroup;
   eventInitiation7 : FormGroup;
@@ -117,6 +118,11 @@ export class Class1EventRequestComponent implements OnInit {
     // Get Vendor Details
     utilityService.getVendorDetails().subscribe(
       res => this.vendorDetails = res
+    )
+
+    // Get Invitees From HCP Master 
+    utilityService.getEmployeesFromHCPMaster().subscribe(
+      res => this.inviteesFromHCPMaster = res
     )
     
     this.eventInitiation1 = new FormGroup({
@@ -236,6 +242,15 @@ export class Class1EventRequestComponent implements OnInit {
       BudgetAmount:new FormControl('',[Validators.required])
     })
 
+    this.inviteeSelectionForm = new FormGroup({
+      inviteesFrom : new FormControl(''),
+      inviteeName : new FormControl(''),
+      inviteeMisCode : new FormControl(''),
+      isInviteeLocalConveyance : new FormControl('No'),
+      inviteeLocalConveyanceAmount : new FormControl(''),
+      inviteeBTC : new FormControl('') 
+    })
+
     /*
     this.eventInitiation5 = new FormGroup({
       presentationDuration : new FormControl(0,[Validators.required]),
@@ -291,6 +306,7 @@ export class Class1EventRequestComponent implements OnInit {
     this.event4FormSpeakerPrepopulate();
     this.eventInitiatio4HonarariumPrepopulate()
     this.event4FormSubPrepopulate();
+    this.inviteeSelectionFormPrePopulate();
     // this.event5FormPrepopulate();
     // this.event6FormPrepopulate();
     // this.event7FormPrepopulate();
@@ -848,6 +864,90 @@ export class Class1EventRequestComponent implements OnInit {
       }
       
     })
+  }
+
+  showInviteeLocalConveyance : boolean = false;
+
+  inviteesFromHCPMaster : any ;
+
+  filteredHCPMasterInvitees : any;
+  filteredInviteeLength : number = 0;
+
+  filteredInviteeMisCode : string ;
+  hideInviteeMisCode : boolean = true;
+  filteredInviteeMisCodeSelect : any[] = [];
+  inviteeSelectionFormPrePopulate(){
+    this.inviteeSelectionForm.valueChanges.subscribe(
+      changes => {
+        if(changes.isInviteeLocalConveyance == 'Yes'){
+          this.showInviteeLocalConveyance = true;
+        }
+        else{
+          this.showInviteeLocalConveyance = false;
+        }
+        if(changes.inviteesFrom == 'hcpMaster'){
+          // console.log(this.inviteesFromHCPMaster)
+        }
+        // console.log(this.inviteeSelectionForm.controls.inviteesFrom)
+        if(changes.inviteeName !=''){
+          if(this.inviteeSelectionForm.controls.inviteesFrom.touched && changes.inviteesFrom == 'hcpMaster'){
+            // console.log(this.filterHCPMasterInvitees(changes.inviteeName))
+            this.filteredHCPMasterInvitees = this.filterHCPMasterInvitees(changes.inviteeName);
+            // console.log(this.getHCPMasterInviteeWithName(changes.inviteeName));
+            const filteredInvitee = this.getHCPMasterInviteeWithName(changes.inviteeName);
+
+            if(filteredInvitee && filteredInvitee.length == 1){
+              this.hideInviteeMisCode = true;
+              this.filteredInviteeMisCode = filteredInvitee[0].MISCode;
+            }
+            else{
+              this.hideInviteeMisCode = false
+              this.filteredInviteeMisCodeSelect = filteredInvitee
+            }
+           
+            
+
+          }
+          else{
+            
+            // alert("Select Invitees From")
+          }
+         
+        }
+      }
+    )
+  }
+
+  filterHCPMasterInvitees(name : string){
+    return this.inviteesFromHCPMaster.filter(invitee => invitee['HCPName'].toLowerCase().includes(name.toLocaleLowerCase()));
+    // return this.inviteesFromHCPMaster.find(invitee => invitee['HCP Name'].includes(name))
+  }
+
+  getHCPMasterInviteeWithName(name : string){
+    const invitees : any[] = [];
+    
+      this.inviteesFromHCPMaster.forEach(invitee => {
+        if(invitee['HCPName'].toLowerCase() === name.toLowerCase()) invitees.push(invitee)
+      }
+    )
+    return invitees;
+  }
+
+  inviteeTableDetails : any[] = [];
+  addToInviteeTable(){
+    console.log(this.inviteeSelectionForm.value)
+    const inviteeData = {
+      inviteeName : this.inviteeSelectionForm.value.inviteeName,
+      localConveyance : this.inviteeSelectionForm.value.isInviteeLocalConveyance,
+      btc : (this.inviteeSelectionForm.value.inviteeBTC)? this.inviteeSelectionForm.value.inviteeBTC : 'NIL',
+      localConveyanceAmount : (this.inviteeSelectionForm.value.isInviteeLocalConveyance=='Yes')? this.inviteeSelectionForm.value.inviteeLocalConveyanceAmount : 0,
+    }
+    this.inviteeTableDetails.push(inviteeData)
+    console.log(this.inviteeSelectionForm.controls)
+    this.inviteeSelectionForm.reset();
+    console.log(this.inviteeSelectionForm.controls)
+    this.hideInviteeMisCode = true;
+    this.filteredInviteeMisCode = '';
   }
 
 /*

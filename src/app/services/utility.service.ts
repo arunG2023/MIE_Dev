@@ -108,4 +108,8 @@ export class UtilityService {
     return this.http.post(this.baseAPIUrl+"/EventRequestBrandsList/AddDataList",brands)
   }
 
+  // Getting Employees From HCP Master
+  getEmployeesFromHCPMaster(){
+    return this.http.get(this.baseAPIUrl+"/MasterSheets/HcpMaster");
+  }
 }
