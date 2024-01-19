@@ -1,0 +1,12 @@
+table.table-bordered > thead > tr > th {
+    border:1px solid black;
+  }
+  table.table-bordered > tbody > tr > th,td {
+    border:1px solid red;
+  }
+  table.table-striped > thead > tr > th {
+    border:1px solid black;
+  }
+  table.table-striped > tbody > tr > th,td {
+    border:1px solid red;
+  }
