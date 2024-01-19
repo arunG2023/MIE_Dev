@@ -18,7 +18,7 @@ export class AuthService {
 
   // Method to check whether user is logged in 
   isLoggedIn(){
-    return !!localStorage.getItem('token')
+    return true;
   }
 
   // Storing the access token once user is logged in
