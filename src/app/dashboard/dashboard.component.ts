@@ -10,17 +10,17 @@ import * as Chartist from 'chartist';
 export class DashboardComponent implements OnInit {
 
   userPayload: any;
-  role: string;
-  userEmail : string;
+  role: string = "Role";
+  userEmail : string = "Email";
 
   
 
   constructor(private auth: AuthService) { 
-    this.userPayload = auth.decodeToken();
-    console.log(this.userPayload)
+    // this.userPayload = auth.decodeToken();
+    // console.log(this.userPayload)
 
-    this.role = this.userPayload.role;
-    this.userEmail = this.userPayload['unique_name']
+    // this.role = this.userPayload.role;
+    // this.userEmail = this.userPayload['unique_name']
     
   }
  
