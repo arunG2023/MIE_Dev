@@ -78,6 +78,11 @@ export class UtilityService {
     return this.http.get(this.baseAPIUrl+'/Test/GetApprovedSpeakersData');
   }
 
+  // Get Approved Trainer
+  getApprovedTrainers(){
+    return this.http.get(this.baseAPIUrl+"/MasterSheets/GetApprovedTrainersData");
+  }
+
   // Get All States
   getAllStates(){
     return this.http.get(this.baseAPIUrl+'/MasterSheets/GetStateNameData')

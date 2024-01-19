@@ -103,6 +103,11 @@ export class Class1EventRequestComponent implements OnInit {
       }
     )
 
+    // Get Approved Trainers
+    utilityService.getApprovedTrainers().subscribe(
+      res => this.approvedTrainers = res
+    )
+
     // Get All States
     utilityService.getAllStates().subscribe(
       res => {
@@ -304,6 +309,8 @@ export class Class1EventRequestComponent implements OnInit {
     this.event3FormPrepopulate();
     this.event4FormPrepopulate();
     this.event4FormSpeakerPrepopulate();
+    this.event4FormTrainerPrepopulate();
+    this.event4FormOtherPrepopulate();
     this.eventInitiatio4HonarariumPrepopulate()
     this.event4FormSubPrepopulate();
     this.inviteeSelectionFormPrePopulate();
@@ -385,7 +392,7 @@ export class Class1EventRequestComponent implements OnInit {
   filteredCity : any;
 
   // New Values
-  eventType : string = 'EVT1'
+  eventType : string = 'EVTC1'
   eventDate : string ;
 
   event2FormPrepopulate(){
@@ -530,6 +537,12 @@ export class Class1EventRequestComponent implements OnInit {
 
       if(changes.hcpRole == 'H2'){
         this.showTrainerForm = true;
+        this.trainerMisCode = '';
+        this.hideTrainerMisCode = true;
+        this.trainerCode = '';
+        this.trainerSpeciality = '';
+        this.trainerTier = '';
+        this.trainerGoNonGo = '';
 
       }
       else { this.showTrainerForm = false;}
@@ -560,58 +573,71 @@ export class Class1EventRequestComponent implements OnInit {
   filteredSpeakerLength : number = 0;
   speakersWithSameName : any;
 
+  hideSpeakerMisCode : boolean = true;
+
   event4FormSpeakerPrepopulate(){
     this.eventInitiation4Speaker.valueChanges.subscribe(
       changes => {
         if(changes.speakerName !== ''){
-          // console.log(this._filter(changes.misCode))
+         
           this.filteredspeakers = this._filter(changes.speakerName);
-  
-          if(this.eventInitiation4Speaker.controls.speakerName.valid){
-            // console.log("MIS Valli")
-            // console.log(this._getFilteredSpeaker(changes.misCode))
-            const filteredSpeaker = this._getFilteredSpeaker(changes.speakerName);
-            // console.log('Check1',filteredSpeaker)
-            // console.log()
-            this.filteredSpeakerLength = filteredSpeaker.length;
-            // console.log(filteredSpeaker)
+          // console.log(this.filteredspeakers.length)
+
+          
+          
+          if(this.filteredspeakers.length == 1){
             
-            if(filteredSpeaker && filteredSpeaker.length == 1 ){
-              // console.log('Check2')
-              this.speakerName  = filteredSpeaker[0].SpeakerName;
-              this.speakerCode = filteredSpeaker[0].SpeakerCode;
-              this.speakerSpeciality = filteredSpeaker[0].Speciality;
-              this.speakerGoNonGo = (filteredSpeaker[0].isNonGO == "yes")? 'Non GO' : 'GO';
-              this.speakerTier = filteredSpeaker[0].TierType;  
-              this.speakerMisCode = filteredSpeaker[0].MISCode;
-              
-            }
-            else if (this.filteredSpeakerLength && this.filteredSpeakerLength > 1){
-              // console.log('Check3')
-              this.speakersWithSameName = filteredSpeaker;
-              this.filteredSpeakerLength = filteredSpeaker.length;
-              this.fillSpeakerByMISCode();
-            }
-            else{
-              this.speakerName  = "";
-              this.speakerCode = "";
-              this.speakerSpeciality = "";
-              this.speakerGoNonGo = "";
-              this.speakerTier = "";
-            }
-           
-            if(this.speakerGoNonGo == "GO"){
-              // this.showUploadNOC = true;
-              // this.showRationale = true;
-            }
-            else{
-              // this.showUploadNOC = false;
-              // this.showRationale = false;
-            }
+            this.hideSpeakerMisCode = true;
+
+              this.speakerName  = this.filteredspeakers[0].SpeakerName;
+              this.speakerCode = this.filteredspeakers[0].SpeakerCode;
+              this.speakerSpeciality = this.filteredspeakers[0].Speciality;
+              this.speakerGoNonGo = (this.filteredspeakers[0].isNonGO == "yes")? 'Non GO' : 'GO';
+              this.speakerTier = this.filteredspeakers[0].TierType;  
+              this.speakerMisCode = this.filteredspeakers[0].MISCode;
           }
+          else{
+            this.hideSpeakerMisCode = false;
+
+            this.speakerName  = '';
+            this.speakerCode = '';
+            this.speakerSpeciality = '';
+            this.speakerGoNonGo = '';
+            this.speakerTier = '';  
+            this.speakerMisCode = '';
+          }
+  
+          
+        }
+
+        if(changes.speakerMisCode){
+          // console.log(this._getFilteredSpeaker(changes.speakerMisCode))
+          if(!this.hideSpeakerMisCode){
+            const filteredSpeaker = this._getFilteredSpeaker(changes.speakerMisCode);
+            this.speakerName  = filteredSpeaker.SpeakerName;
+            this.speakerCode = filteredSpeaker.SpeakerCode;
+            this.speakerSpeciality = filteredSpeaker.Speciality;
+            this.speakerGoNonGo = (filteredSpeaker.isNonGO == "yes")? 'Non GO' : 'GO';
+            this.speakerTier = filteredSpeaker.TierType; 
+
+          }
+           
+
+          // this.filteredspeakers = this._getFilteredSpeaker(changes.speakerMisCode);
+
         }
       }
     )
+  }
+
+  private _filter(value: string): string[] {
+    // console.log(this.employeeDetails)
+    
+    return this.approvedSpeakers.filter(emp => emp.SpeakerName.toLowerCase().includes(value.toLowerCase()));
+  }
+
+  private _getFilteredSpeaker(misCode : string){
+    return this.approvedSpeakers.find(speaker => speaker.MISCode.toLowerCase() == misCode.toLowerCase())
   }
 
   fillSpeakerByMISCode(){
@@ -642,9 +668,33 @@ export class Class1EventRequestComponent implements OnInit {
   otherSpeciality : string = '';
   otherTier : string = '';
   otherGoNonGo : string = '';
+  otherMisCode :string = '';
 
+  hideOtherMisCode : boolean = true;
+
+  filteredOthers : any;
 
   event4FormOtherPrepopulate(){
+    this.eventInitiation4Other.valueChanges.subscribe(
+      changes => {
+        if(changes.otherName){
+          // console.log(this.filterHCPMasterInvitees(changes.otherName))
+          this.filteredOthers = this.filterHCPMasterInvitees(changes.otherName);
+
+          if(this.filteredOthers.length == 1){
+            this.hideOtherMisCode = true;
+
+            this.otherSpeciality = this.filteredOthers[0].Speciality
+            this.otherGoNonGo = this.filteredOthers[0]['GO/Non-GO'];
+            this.otherMisCode = this.filteredOthers[0].MISCode
+          }
+          else{
+            this.hideOtherMisCode = false;
+          }
+
+        }
+      }
+    )
 
   }
 
@@ -652,9 +702,67 @@ export class Class1EventRequestComponent implements OnInit {
   trainerSpeciality : string = '';
   trainerTier : string = '';
   trainerGoNonGo : string = '';
+  trainerMisCode : string = '';
 
+  hideTrainerMisCode : boolean = true;
+
+  // Data From Sheet
+  approvedTrainers : any;
+
+  filteredTrainerOption : any;
+  filteredTrainerMisCodeOption : any;
   event4FormTrainerPrepopulate(){
+    this.eventInitiation4Trainer.valueChanges.subscribe(
+      changes => {
+       
+        if(changes.trainerName !==''){
+          this.filteredTrainerOption = this._filterTrainer(changes.trainerName)
 
+          if(this.filteredTrainerOption.length == 1){
+            this.hideTrainerMisCode = true
+
+            this.trainerCode = this.filteredTrainerOption[0].TrainerCode;
+            this.trainerSpeciality = this.filteredTrainerOption[0].Speciality;
+            this.trainerTier = this.filteredTrainerOption[0].TierType;
+            this.trainerGoNonGo = (this.filteredTrainerOption[0].Is_NONGO == "yes")?'Non Go':'Go';
+            this.trainerMisCode = this.filteredTrainerOption[0].MISCode;
+          }
+          else{
+            this.hideTrainerMisCode = false;
+            this.trainerCode = '';
+            this.trainerSpeciality = '';
+            this.trainerTier = '';
+            this.trainerGoNonGo = '';
+            this.trainerMisCode = '';
+          }
+        }
+        if(changes.trainerMisCode){
+          if(!this.hideTrainerMisCode){
+            const filteredTrainer = this._filterTrainerByMisCode(changes.trainerMisCode);
+
+            this.trainerCode = filteredTrainer.TrainerCode;
+            this.trainerSpeciality = filteredTrainer.Speciality;
+            this.trainerTier = filteredTrainer.TierType;
+            this.trainerGoNonGo = (filteredTrainer.Is_NONGO == "yes")?'Non Go':'Go';
+
+          }
+          
+
+        }
+      }
+    )
+  }
+
+  private _filterTrainer(name:string){
+    return this.approvedTrainers.filter(trainer => trainer.TrainerName.toLowerCase().includes(name.toLowerCase()))
+  }
+
+  private _filterTrainerByMisCode(misCode : string){
+    return this.approvedTrainers.find(trainer => trainer.MISCode.toLowerCase() == misCode.toLowerCase())
+  }
+
+  private _getFilteredTrainer(name:string){
+    // return this.approvedSpeakers.
   }
 
   showTravelForm : boolean = false;
@@ -705,24 +813,20 @@ export class Class1EventRequestComponent implements OnInit {
 
   }
 
-  private _filter(value: string): string[] {
-    // console.log(this.employeeDetails)
-    const filterValue = value.toLowerCase();
-    return this.approvedSpeakers.filter(emp => emp.SpeakerName.toLowerCase().includes(filterValue));
-  }
+  
 
-  private _getFilteredSpeaker(speakerName){
-    const filteredSpeaker : any = [];
+  // private _getFilteredSpeaker(speakerName){
+  //   const filteredSpeaker : any = [];
 
-    this.approvedSpeakers.forEach(speaker => {
-      if(speaker.SpeakerName === speakerName){
-        filteredSpeaker.push(speaker);
-      }
-    })
+  //   this.approvedSpeakers.forEach(speaker => {
+  //     if(speaker.SpeakerName === speakerName){
+  //       filteredSpeaker.push(speaker);
+  //     }
+  //   })
 
-    return filteredSpeaker;
+  //   return filteredSpeaker;
 
-  }
+  // }
 
   hcpTableDetails : any[] = [];
 
@@ -866,6 +970,16 @@ export class Class1EventRequestComponent implements OnInit {
     })
   }
 
+
+  // SideKit Selection:
+  hideUploadFile : boolean = false;
+  sideKitBrand(id:number){
+    // console.log(id)
+    console.log(document.getElementsByClassName('.brand-dropdown')[id])
+    
+   
+    this.hideUploadFile = true;
+  }
   showInviteeLocalConveyance : boolean = false;
 
   inviteesFromHCPMaster : any ;
@@ -885,11 +999,14 @@ export class Class1EventRequestComponent implements OnInit {
         else{
           this.showInviteeLocalConveyance = false;
         }
-        if(changes.inviteesFrom == 'hcpMaster'){
+        if(changes.inviteesFrom){
+          this.filteredHCPMasterInvitees = null;
+          this.filteredInviteeMisCode = '';
           // console.log(this.inviteesFromHCPMaster)
         }
         // console.log(this.inviteeSelectionForm.controls.inviteesFrom)
         if(changes.inviteeName !=''){
+          
           if(this.inviteeSelectionForm.controls.inviteesFrom.touched && changes.inviteesFrom == 'hcpMaster'){
             // console.log(this.filterHCPMasterInvitees(changes.inviteeName))
             this.filteredHCPMasterInvitees = this.filterHCPMasterInvitees(changes.inviteeName);
@@ -919,7 +1036,7 @@ export class Class1EventRequestComponent implements OnInit {
   }
 
   filterHCPMasterInvitees(name : string){
-    return this.inviteesFromHCPMaster.filter(invitee => invitee['HCPName'].toLowerCase().includes(name.toLocaleLowerCase()));
+    return this.inviteesFromHCPMaster.filter(invitee => invitee['HCPName'].toLowerCase().includes(name.toLowerCase()));
     // return this.inviteesFromHCPMaster.find(invitee => invitee['HCP Name'].includes(name))
   }
 
@@ -948,6 +1065,7 @@ export class Class1EventRequestComponent implements OnInit {
     console.log(this.inviteeSelectionForm.controls)
     this.hideInviteeMisCode = true;
     this.filteredInviteeMisCode = '';
+    this.filteredHCPMasterInvitees = null;
   }
 
 /*

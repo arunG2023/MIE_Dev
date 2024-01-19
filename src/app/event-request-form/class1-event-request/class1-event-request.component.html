@@ -1,5 +1,5 @@
 <mat-stepper  [linear]="isLinear" #stepper orientation={{orientation}} labelPosition="bottom" >
-  <mat-step  [stepControl]="eventInitiation1" label="Step 1">
+  <mat-step  [stepControl]="eventInitiation1" label="Pre Event Check">
     <p class="text-danger h5">Previous Events that are within 30 days from today</p>
     <div class="container table-responsive">
       <table class="table text-center table-striped" >
@@ -92,7 +92,7 @@
     </form>
   </mat-step>
 
-  <mat-step [stepControl]="eventInitiation2" label="Step 2">
+  <mat-step [stepControl]="eventInitiation2" label="Event-Details">
     <form [formGroup]="eventInitiation2">
       <div class="row">
         <div class="col">
@@ -157,7 +157,7 @@
       </div>
     </form>
   </mat-step>
-  <mat-step [stepControl]="eventInitiation3" label="Step 3">
+  <mat-step [stepControl]="eventInitiation3" label="Brand Allocation">
     <form [formGroup]="eventInitiation3">
       <div class="row">
 
@@ -234,7 +234,7 @@
       </div>
     </form>
   </mat-step>
-  <mat-step [stepControl]="eventInitiation4" label="Step 4">
+  <mat-step [stepControl]="eventInitiation4" label="Panel Selection">
     
       
           <form [formGroup]="eventInitiation4">
@@ -266,31 +266,39 @@
                   <input matInput  type="text" placeholder="Speaker/Trainer Name prepopulated" formControlName="otherName" [matAutocomplete]="auto">
       
                   <mat-autocomplete #auto="matAutocomplete">
-                    <mat-option *ngFor="let a of filteredspeakers" value={{a.SpeakerName}} >{{a.SpeakerName}}</mat-option>
+                    <mat-option *ngFor="let a of filteredOthers" value={{a.HCPName}} >{{a.HCPName}}</mat-option>
                   </mat-autocomplete>
                 </mat-form-field>
 
-                <mat-form-field color="accent" appearance="outline">
+                <mat-form-field *ngIf="hideOtherMisCode" color="accent" appearance="outline">
                   <mat-label>MIS Code</mat-label>
-                  <input matInput type="text" formControlName="otherMisCode" >
-                  <mat-error>MIS Code is invalid</mat-error>
+                  <input matInput type="text" disabled [value]="otherMisCode" >
+                </mat-form-field>
+
+                <mat-form-field *ngIf="!hideOtherMisCode" color="accent" appearance="outline">
+                  <mat-label>MIS Code</mat-label>
+                  <mat-select formControlName="otherMisCode">
+                    <mat-option *ngFor="let a of filteredOthers" value=""></mat-option>
+                  </mat-select>
+                </mat-form-field>
+
+                
+              </div>
+
+              <div class="col">
+                <!-- <mat-form-field color="accent" appearance="outline">
+                  <mat-label>Tier</mat-label>
+                  <input matInput type="text" placeholder="Tier prepopulated" disabled [value]="otherTier">
+                </mat-form-field> -->
+      
+                <mat-form-field color="accent" appearance="outline">
+                  <mat-label>Go/N-Go</mat-label>
+                  <input matInput type="text" placeholder="Go/N-Go prepopulated" disabled [value]="otherGoNonGo">
                 </mat-form-field>
 
                 <mat-form-field color="accent" appearance="outline">
                   <mat-label>Speciality</mat-label>
                   <input matInput type="text" placeholder="Speciality prepopulated" disabled [value]="otherSpeciality">
-                </mat-form-field>
-              </div>
-
-              <div class="col">
-                <mat-form-field color="accent" appearance="outline">
-                  <mat-label>Tier</mat-label>
-                  <input matInput type="text" placeholder="Tier prepopulated" disabled [value]="otherTier">
-                </mat-form-field>
-      
-                <mat-form-field color="accent" appearance="outline">
-                  <mat-label>Go/N-Go</mat-label>
-                  <input matInput type="text" placeholder="Go/N-Go prepopulated" disabled [value]="otherGoNonGo">
                 </mat-form-field>
               </div>
             </div>
@@ -309,16 +317,16 @@
                   </mat-autocomplete>
                 </mat-form-field>
 
-                <mat-form-field *ngIf="filteredSpeakerLength <= 1" color="accent" appearance="outline">
+                <mat-form-field *ngIf="hideSpeakerMisCode" color="accent" appearance="outline">
                   <mat-label>MIS Code</mat-label>
-                  <input matInput type="text" [value]="speakerMisCode" disabled >
+                  <input matInput type="text" [value]="speakerMisCode || ''" disabled >
                   <mat-error>MIS Code is invalid</mat-error>
                 </mat-form-field>
 
-                <mat-form-field *ngIf="filteredSpeakerLength > 1"  color="accent" appearance="outline">
+                <mat-form-field *ngIf="!hideSpeakerMisCode"  color="accent" appearance="outline">
                   <mat-label>MIS Code</mat-label>
                   <mat-select formControlName="speakerMisCode">
-                    <mat-option *ngFor="let speaker of speakersWithSameName" value={{speaker.MISCode}}>{{speaker.MISCode}}</mat-option>
+                    <mat-option *ngFor="let speaker of filteredspeakers" value={{speaker.MISCode}}>{{speaker.MISCode}}</mat-option>
                   </mat-select>
                 </mat-form-field>
 
@@ -356,18 +364,26 @@
                   <input matInput  type="text" placeholder="Speaker/Trainer Name prepopulated" formControlName="trainerName" [matAutocomplete]="auto">
       
                   <mat-autocomplete #auto="matAutocomplete">
-                    <mat-option *ngFor="let a of filteredspeakers" value={{a.SpeakerName}} >{{a.SpeakerName}}</mat-option>
+                    <mat-option *ngFor="let a of filteredTrainerOption" value={{a.TrainerName}} >{{a.TrainerName}}</mat-option>
                   </mat-autocomplete>
                 </mat-form-field>
 
-                <mat-form-field color="accent" appearance="outline">
+                <mat-form-field *ngIf="hideTrainerMisCode" color="accent" appearance="outline">
                   <mat-label>MIS Code</mat-label>
-                  <input matInput type="text" formControlName="trainerMisCode" >
-                  <mat-error>MIS Code is invalid</mat-error>
+                  <input matInput type="text" disabled [value]="trainerMisCode || ''">
+                  
+                </mat-form-field>
+
+                <mat-form-field *ngIf="!hideTrainerMisCode" color="accent" appearance="outline">
+                  <mat-label>MIS Code</mat-label>
+                  <mat-select formControlName="trainerMisCode">
+                    <mat-option *ngFor="let trainer of filteredTrainerOption" value={{trainer.MISCode}}>{{trainer.MISCode}}</mat-option>
+                  </mat-select>
+                  
                 </mat-form-field>
 
                 <mat-form-field color="accent" appearance="outline">
-                  <mat-label>Speaker Code</mat-label>
+                  <mat-label>Trainer Code</mat-label>
                   <input matInput type="text" placeholder="Speaker/Trainer Code prepopulated" disabled [value]="trainerCode">
                 </mat-form-field>
               </div>
@@ -661,8 +677,6 @@
 
           <div class="col-12 d-flex justify-content-start">
             <button type="button" class="btn btn-primary btn-sm" (click)="addHCPTable()">AddNew</button>
-            <button type="button" class="btn btn-success btn-sm" (click)="sendBrandDetails()">Save</button>
-            <button type="button" class="btn btn-warning btn-sm">Reset</button>
           </div>
 
           <div class="container table-responsive">
@@ -705,6 +719,11 @@
               </tbody>
   
             </table>
+          </div>
+
+          <div class="col-12 d-flex justify-content-center">
+            <button type="button" class="btn btn-success btn-sm" (click)="sendBrandDetails()">Save</button>
+            <button type="button" class="btn btn-warning btn-sm">Reset</button>
           </div>
   
           <!-- <form [formGroup]="panalselectionstandard">
@@ -1026,18 +1045,26 @@
               <td>{{s.hcpName}}</td>
               <td>{{s.misCode}}</td>
               <td>GO</td>
-            <td style="width: 100px;">
-              
-                <mat-radio-group >
-                <mat-radio-button value="Select slide kit from Company"  >Select slide kit from Company</mat-radio-button>
-                <mat-radio-button value="HCP slidekit approved by company" >HCP slidekit approved by company</mat-radio-button>
-                <mat-radio-button value="others" >others</mat-radio-button>
-                </mat-radio-group >
-           
+              <td>
+                
+                <mat-radio-group>
+                  <mat-radio-button id={{i+1}} (click)="sideKitBrand(i)" value="Select slide kit from Company">Select slide kit from Company</mat-radio-button>
+                  <mat-radio-button value="HCP slidekit approved by company">HCP slidekit approved by company</mat-radio-button>
+                  <mat-radio-button value="others">others</mat-radio-button>
+                </mat-radio-group>
               </td>
-            <td style="width: 200px;">
-            <input type="file" class="w-50">
-            </td>
+              <td>
+                <mat-form-field appearance="outline" color="accent" class="brand-dropdown" style="visibility: hidden;">
+                  <mat-label>Brands</mat-label>
+                  <mat-select >
+                    <mat-option  value="op1">op1</mat-option>
+                  </mat-select>
+                </mat-form-field>
+
+                <input type="file" *ngIf="!hideUploadFile">
+                
+                
+              </td>
             <td style="cursor: pointer;">
               <i class="material-icons" style="margin-right: 5px;">edit</i>
               <i class="material-icons">delete</i>
