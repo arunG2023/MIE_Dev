@@ -25,6 +25,15 @@ export class ModalComponent implements OnInit {
 
   text : string = "closed";
 
+  // Brand Details
+  brandUpdateForm : FormGroup;
+  showBrandForm : boolean = false;
+
+  brandDetails : any;
+  brandName : string;
+  percentageAllocation : number;
+  projectId : string;
+
   constructor(public dialogRef : MatDialogRef<AddEmployeesComponent>,
     @Inject(MAT_DIALOG_DATA) public data,
     private utilityService : UtilityService){
@@ -40,14 +49,31 @@ export class ModalComponent implements OnInit {
       )
     
     // this.fName = data.name
-    this.roleId = data.RoleId;
-    this.firstName = data.FirstName;
-    this.lastName = data.LastName;
-    this.userName = data.CreatedBy;
-    this.roleName = data.RoleName;
+  
    
+    console.log(data);
+    if(data.BrandName){
+      console.log(data);
+      this.brandDetails = data;
+      this.showBrandForm = true;
+      this.brandName = data.BrandName;
+      this.percentageAllocation = data.PercentAllocation;
+      this.projectId = data.ProjectId;
+    }
+    else{
+      this.showBrandForm = false;
+      this.roleId = data.RoleId;
+      this.firstName = data.FirstName;
+      this.lastName = data.LastName;
+      this.userName = data.CreatedBy;
+      this.roleName = data.RoleName;
+    }
 
-    console.log(data)
+    this.brandUpdateForm = new FormGroup({
+      brandName : new FormControl({value: this.brandName, disabled: true}),
+      percentageAllocation : new FormControl(this.percentageAllocation),
+      projectId : new FormControl({value: this.projectId, disabled: true})
+    })
 
     this.updateForm = new FormGroup({
       firstName : new FormControl(this.firstName,[Validators.required]),
@@ -83,6 +109,13 @@ export class ModalComponent implements OnInit {
 
       this.dialogRef.close(this.data)
     }
+
+  }
+
+  updateBrand(){
+    this.brandDetails.PercentAllocation = this.brandUpdateForm.controls.percentageAllocation.value;
+    // console.log(this.brandDetails)
+    this.dialogRef.close(this.brandDetails)
 
   }
 

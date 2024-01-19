@@ -238,14 +238,10 @@ export class AddEmployeesComponent implements OnInit {
  
    // Update Modal Implementation
    openModal(data:any){
-    
-     
      const dialogRef =  this.dialog.open(ModalComponent,{
        width: '600px',
        data : data
      })
- 
- 
      let updatedData;
      dialogRef.afterClosed().subscribe(res => {
        

@@ -1,4 +1,4 @@
-<form [formGroup]="updateForm"  >
+<form [formGroup]="updateForm" *ngIf="!showBrandForm" >
     <mat-form-field appearance="outline">
         <mat-label>First Name</mat-label>
         <input  matInput placeholder="Prepopulate from Sheet" formControlName="firstName" >
@@ -13,7 +13,7 @@
     </mat-form-field>
     <mat-form-field appearance="outline">
         <mat-label>Role Name</mat-label>
-        <!-- <input matInput placeholder="Placeholder"> -->
+       
         <mat-select formControlName="roleName" >
             <mat-option *ngFor="let role of roleDetails" value={{role.RoleId}}>{{role.RoleName}}</mat-option>
         </mat-select>
@@ -23,4 +23,25 @@
         <button mat-raised-button color="primary" (click)="submit()" type="submit" class="mr-2" >Update</button>
         <button mat-raised-button color="warn"  (click)="close()">Cancel</button>
     </div>
+</form>
+
+<form [formGroup]="brandUpdateForm"  *ngIf="showBrandForm">
+    <mat-form-field appearance="outline">
+        <mat-label>Brand Name</mat-label>
+        <input  matInput placeholder="Prepopulate from Sheet" formControlName="brandName" >
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+        <mat-label>Percentage Allocation</mat-label>
+        <input  matInput placeholder="Prepopulate from Sheet" formControlName="percentageAllocation" >
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+        <mat-label>Project Id</mat-label>
+        <input  matInput placeholder="Prepopulate from Sheet" formControlName="projectId" >
+    </mat-form-field>
+
+    <div class="d-flex justify-content-center align-items-center">
+        <button mat-raised-button color="primary" (click)="updateBrand()" type="submit" class="mr-2" >Update</button>
+        <button mat-raised-button color="warn"  (click)="close()">Cancel</button>
+    </div>
+    
 </form>

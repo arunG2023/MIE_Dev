@@ -1,8 +1,10 @@
 import { Component, HostListener, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, FormControl, FormControlName, FormGroup, ValidationErrors, Validators } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { AuthService } from 'src/app/services/auth.service';
 import { UtilityService } from 'src/app/services/utility.service';
+import { ModalComponent } from 'src/app/utility/modal/modal.component';
 
 @Component({
   selector: 'app-class1-event-request',
@@ -25,6 +27,7 @@ export class Class1EventRequestComponent implements OnInit {
     eventInitiation4Accomodation : FormGroup;
 
   inviteeSelectionForm : FormGroup;
+  expenseSelectionForm : FormGroup;
   eventInitiation5 : FormGroup;
   eventInitiation6 : FormGroup;
   eventInitiation7 : FormGroup;
@@ -47,7 +50,10 @@ export class Class1EventRequestComponent implements OnInit {
   orientation : string ;
   pageLoaded : boolean = false
 
-  constructor(private utilityService : UtilityService, private auth : AuthService, private router : Router) {
+  constructor(private utilityService : UtilityService, 
+              private auth : AuthService, 
+              private router : Router,
+              private dialog : MatDialog) {
     this.isMobileMenu();
     // Get Previous Events:
     // utilityService.getPreviousEvents().subscribe(
@@ -256,6 +262,14 @@ export class Class1EventRequestComponent implements OnInit {
       inviteeBTC : new FormControl('') 
     })
 
+    this.expenseSelectionForm = new FormGroup({
+      expenseType : new FormControl('',Validators.required),
+      expenseAmount : new FormControl('',Validators.required),
+      isExcludingTax : new FormControl('',Validators.required),
+      isExpenseBtc : new FormControl('',Validators.required),
+      uploadExpenseDeviation : new FormControl('')
+    })
+
     /*
     this.eventInitiation5 = new FormGroup({
       presentationDuration : new FormControl(0,[Validators.required]),
@@ -314,6 +328,7 @@ export class Class1EventRequestComponent implements OnInit {
     this.eventInitiatio4HonarariumPrepopulate()
     this.event4FormSubPrepopulate();
     this.inviteeSelectionFormPrePopulate();
+    this.expenseSelectionFormPrePopulate();
     // this.event5FormPrepopulate();
     // this.event6FormPrepopulate();
     // this.event7FormPrepopulate();
@@ -431,6 +446,8 @@ export class Class1EventRequestComponent implements OnInit {
   projectId : string = '';
   eventCode : string = this.eventType;
 
+  totalPercent : number = 0;
+
   
   filterBrandDetailsForClass1(){
     this.brandNames = this.brandNames.filter(brand => {
@@ -448,18 +465,27 @@ export class Class1EventRequestComponent implements OnInit {
       // this.brandTableDetails.push(this.eventInitiation3.value);
       // this.showBrandTable = true;
       // 
-      const brand = {
-        BrandName : this.brandNames.find(brand => brand.BrandId == this.eventInitiation3.value.brandName).BrandName,
-        PercentAllocation : this.percentageAllocation+"",
-        ProjectId : this.projectId
+      this.totalPercent = this.totalPercent + this.percentageAllocation;
+      // console.log(this.totalPercent)
+      if(this.totalPercent <= 100){
+        const brand = {
+          BrandName : this.brandNames.find(brand => brand.BrandId == this.eventInitiation3.value.brandName).BrandName,
+          PercentAllocation : this.percentageAllocation+"",
+          ProjectId : this.projectId
+        }
+        
+        // console.log(this.totalPercent)
+        this.brandTableDetails.push(brand);
+        this.showBrandTable = true;
+        this.eventInitiation3.reset();
+        this.percentageAllocation = 0;
+        this.projectId = '';
+        this.eventCode = this.eventType;
       }
-      this.brandTableDetails.push(brand);
-      this.showBrandTable = true;
-      this.eventInitiation3.reset();
-      this.percentageAllocation = 0;
-      this.projectId = '';
-      this.eventCode = this.eventType;
-
+      else{
+        this.totalPercent = this.totalPercent - this.percentageAllocation;
+        alert("Percentage Allocation Should be less than 100")
+      }
     }
   }
 
@@ -480,16 +506,44 @@ export class Class1EventRequestComponent implements OnInit {
     return this.brandNames.find(brand => brand.BrandId == brandId)
   }
 
-  sendBrandDetails(){
-    console.log(this.brandTableDetails)
-    this.utilityService.postBrandNames(this.brandTableDetails).subscribe(
-      res => {
-        console.log(res)
-      },
-      err => {
-        alert("Brands not added")
+  openBrandUpdateModal(brand:any){
+    const dialogRef =  this.dialog.open(ModalComponent,{
+      width: '600px',
+      data : brand
+    });
+
+    dialogRef.afterClosed().subscribe(
+      res => { 
+        // console.log(this.brandTableDetails)
+        let updatedPercent:number = 0;
+        this.brandTableDetails.forEach(brand => {
+          updatedPercent += parseInt(brand.PercentageAllocation)
+        })
+        // console.log(updatedPercent)
+        if(updatedPercent >= 100){
+          alert("Percentage Allocation Should be less than or equal to 100");
+        }
+
       }
     )
+  }
+
+  deleteBrand(brand, id){
+    // delete this.brandTableDetails[id];
+    this.brandTableDetails.splice(id,1); 
+    this.totalPercent -= +brand.PercentAllocation;    
+  }
+
+  sendBrandDetails(){
+    console.log(this.brandTableDetails)
+    // this.utilityService.postBrandNames(this.brandTableDetails).subscribe(
+    //   res => {
+    //     console.log(res)
+    //   },
+    //   err => {
+    //     alert("Brands not added")
+    //   }
+    // )
   }
 
 
@@ -574,6 +628,7 @@ export class Class1EventRequestComponent implements OnInit {
   speakersWithSameName : any;
 
   hideSpeakerMisCode : boolean = true;
+  showRationale :boolean = true;
 
   event4FormSpeakerPrepopulate(){
     this.eventInitiation4Speaker.valueChanges.subscribe(
@@ -622,6 +677,10 @@ export class Class1EventRequestComponent implements OnInit {
 
           }
            
+        if(this.speakerGoNonGo == 'GO'){
+          this.showRationale = true;
+        }
+        else this.showRationale = false;
 
           // this.filteredspeakers = this._getFilteredSpeaker(changes.speakerMisCode);
 
@@ -690,13 +749,38 @@ export class Class1EventRequestComponent implements OnInit {
           }
           else{
             this.hideOtherMisCode = false;
+            this.otherSpeciality = ''
+            this.otherGoNonGo = ''
+            this.otherMisCode = ''
+          }
+
+          if(changes.otherMisCode){
+            if(!this.hideOtherMisCode){
+              console.log(this._getFilteredOther(changes.otherMisCode))
+              const filteredOther = this._getFilteredOther(changes.otherMisCode);
+              this.otherSpeciality = filteredOther.Speciality
+              this.otherGoNonGo = filteredOther['GO/Non-GO'];
+
+            }
           }
 
         }
+        if(this.otherGoNonGo == 'GO'){
+          this.showRationale = true;
+        }
+        else this.showRationale = false;
+
+
+        // console.log(this.eventInitiation4Other.controls.otherName.touched)
       }
     )
-
   }
+
+  private _getFilteredOther(misCode : string){
+    return this.inviteesFromHCPMaster.find(invitee => invitee.MISCode.toLowerCase() == misCode.toLowerCase())
+  }
+
+
 
   trainerCode : string = '';
   trainerSpeciality : string = '';
@@ -749,6 +833,11 @@ export class Class1EventRequestComponent implements OnInit {
           
 
         }
+
+        if(this.trainerGoNonGo == 'GO'){
+          this.showRationale = true;
+        }
+        else this.showRationale = false;
       }
     )
   }
@@ -883,7 +972,7 @@ export class Class1EventRequestComponent implements OnInit {
 
   // Event Initiation Form6 Control
   showUploadNOC : boolean = false;
-  showRationale :boolean = false;
+  
   showOtherCurrencyTextBox : boolean = false;
 
   // vendorDetails : any ;
@@ -1066,6 +1155,54 @@ export class Class1EventRequestComponent implements OnInit {
     this.hideInviteeMisCode = true;
     this.filteredInviteeMisCode = '';
     this.filteredHCPMasterInvitees = null;
+  }
+
+
+  // Expesne Form PrePopulate
+
+  showExpenseDeviation : boolean = false;
+
+  expenseTableDetails : any = [];
+
+  expenseSelectionFormPrePopulate(){
+    this.expenseSelectionForm.valueChanges.subscribe(
+      changes => {
+        if(changes.expenseType == 'foodAndBeverages'){
+          if(changes.expenseAmount >= 1500){
+            this.showExpenseDeviation = true;
+          }
+          else{
+            this.showExpenseDeviation = false;
+          }
+        }
+        
+      }
+    )
+  }
+
+  addToExpenseTable(){
+    if(this.expenseSelectionForm.valid){
+      this.expenseTableDetails.push((this.expenseSelectionForm.value));
+      this.expenseSelectionForm.reset();
+      console.log(this.expenseTableDetails);
+    }
+  }
+
+  // Submitting Form
+  submitForm(){
+    const class1 = {
+      EventTopic : this.eventInitiation2.value.eventTopic,
+      EventType : this.eventDetails.find(event => event.EventTypeId == this.eventCode ).EventType,
+      EventDate : new Date(this.eventInitiation1.value.eventDate),
+      StartTime : this.eventInitiation2.value.startTime,
+      EndTime : this.eventInitiation2.value.endTime,
+      VenueName : this.eventInitiation2.value.venueName,
+      State : this.allStates.find(state => state.StateId == this.eventInitiation2.value.state).StateName,
+      City : this.allCity.find(city => city.CityId == this.eventInitiation2.value.city).CityName,
+    }
+
+    console.log(class1)
+    console.log(this.brandTableDetails)
   }
 
 /*
