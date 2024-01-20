@@ -169,11 +169,11 @@ export class Class1EventRequestComponent implements OnInit {
 
     this.eventInitiation4Sub = new FormGroup({
       uploadFCPA : new FormControl(''),
-      isTravelRequired : new FormControl(''),
-      isLocalConveyance : new FormControl(''),
-      isHonararium : new FormControl(''),
-      isAccomRequired : new FormControl(''),
-      localConveyanceAmount : new FormControl(''),
+      isTravelRequired : new FormControl('No',Validators.required),
+      isLocalConveyance : new FormControl('No',Validators.required),
+      isHonararium : new FormControl('No',Validators.required),
+      isAccomRequired : new FormControl('No',Validators.required),
+      localConveyanceAmount : new FormControl(0,Validators.required),
     })
 
     this.eventInitiatio4Honararium = new FormGroup({
@@ -210,13 +210,13 @@ export class Class1EventRequestComponent implements OnInit {
 
     this.eventInitiation4Travel = new FormGroup({
       travelType : new FormControl(''),
-      travelAmount : new FormControl(''),
+      travelAmount : new FormControl(0),
       travelBTC : new FormControl('')
     })
 
     this.eventInitiation4Accomodation = new FormGroup({
       accomBTC : new FormControl(''),
-      accomAmount : new FormControl('')
+      accomAmount : new FormControl(0)
     })
 
     this.panalselectionstandard = new FormGroup({
@@ -627,6 +627,8 @@ export class Class1EventRequestComponent implements OnInit {
   filteredSpeakerLength : number = 0;
   speakersWithSameName : any;
 
+  filteredSpeakerByName : any
+
   hideSpeakerMisCode : boolean = true;
   showRationale :boolean = true;
 
@@ -653,7 +655,8 @@ export class Class1EventRequestComponent implements OnInit {
           }
           else{
             this.hideSpeakerMisCode = false;
-
+            this.filteredSpeakerByName = this._getFilteredSpeakerByName(changes.speakerName);
+            console.log(this.filteredSpeakerByName)
             this.speakerName  = '';
             this.speakerCode = '';
             this.speakerSpeciality = '';
@@ -699,30 +702,19 @@ export class Class1EventRequestComponent implements OnInit {
     return this.approvedSpeakers.find(speaker => speaker.MISCode.toLowerCase() == misCode.toLowerCase())
   }
 
-  fillSpeakerByMISCode(){
-    this.eventInitiation4Speaker.valueChanges.subscribe(
-      changes => {
-        let filteredSpeaker: any = [];
-        if(changes.speakerMisCode){
-          // console.log(changes.speakerMisCode)
-          filteredSpeaker.push(this.speakersWithSameName.find(
-            speaker => speaker.MISCode == changes.speakerMisCode
-          ))
-        }
+  private _getFilteredSpeakerByName(name : string){
+    let speakers : any[] = [];
 
-        this.filteredSpeakerLength = filteredSpeaker.length;
-        // console.log(this.filteredSpeakerLength)
-        if(this.filteredSpeakerLength && this.filteredSpeakerLength == 1 ){
-          this.speakerName  = filteredSpeaker[0].SpeakerName;
-          this.speakerCode = filteredSpeaker[0].SpeakerCode;
-          this.speakerSpeciality = filteredSpeaker[0].Speciality;
-          this.speakerGoNonGo = (filteredSpeaker[0].isNonGO == "yes")? 'Non GO' : 'GO';
-          this.speakerTier = filteredSpeaker[0].TierType;  
-          this.speakerMisCode = filteredSpeaker[0].MISCode;
-        }
+    this.approvedSpeakers.forEach(speaker => {
+      if(speaker.SpeakerName.toLowerCase() == name.toLowerCase()){
+        speakers.push(speaker);
       }
-    )
+    })
+
+    return speakers;
   }
+
+  
 
   otherSpeciality : string = '';
   otherTier : string = '';
@@ -732,6 +724,7 @@ export class Class1EventRequestComponent implements OnInit {
   hideOtherMisCode : boolean = true;
 
   filteredOthers : any;
+  filteredOthersByName : any;
 
   event4FormOtherPrepopulate(){
     this.eventInitiation4Other.valueChanges.subscribe(
@@ -749,6 +742,7 @@ export class Class1EventRequestComponent implements OnInit {
           }
           else{
             this.hideOtherMisCode = false;
+            this.filteredOthersByName = this.getHCPMasterInviteeWithName(changes.otherName);
             this.otherSpeciality = ''
             this.otherGoNonGo = ''
             this.otherMisCode = ''
@@ -780,6 +774,10 @@ export class Class1EventRequestComponent implements OnInit {
     return this.inviteesFromHCPMaster.find(invitee => invitee.MISCode.toLowerCase() == misCode.toLowerCase())
   }
 
+  
+
+
+
 
 
   trainerCode : string = '';
@@ -794,6 +792,7 @@ export class Class1EventRequestComponent implements OnInit {
   approvedTrainers : any;
 
   filteredTrainerOption : any;
+  filteredTrainerOptionByName : any;
   filteredTrainerMisCodeOption : any;
   event4FormTrainerPrepopulate(){
     this.eventInitiation4Trainer.valueChanges.subscribe(
@@ -813,6 +812,8 @@ export class Class1EventRequestComponent implements OnInit {
           }
           else{
             this.hideTrainerMisCode = false;
+            this.filteredTrainerOptionByName = this._getFilteredTrainer(changes.trainerName);
+            console.log(this.filteredTrainerOptionByName)
             this.trainerCode = '';
             this.trainerSpeciality = '';
             this.trainerTier = '';
@@ -823,7 +824,7 @@ export class Class1EventRequestComponent implements OnInit {
         if(changes.trainerMisCode){
           if(!this.hideTrainerMisCode){
             const filteredTrainer = this._filterTrainerByMisCode(changes.trainerMisCode);
-
+        
             this.trainerCode = filteredTrainer.TrainerCode;
             this.trainerSpeciality = filteredTrainer.Speciality;
             this.trainerTier = filteredTrainer.TierType;
@@ -851,7 +852,13 @@ export class Class1EventRequestComponent implements OnInit {
   }
 
   private _getFilteredTrainer(name:string){
-    // return this.approvedSpeakers.
+    let filteredTrainerByName : any[] = [];
+    this.approvedTrainers.forEach(trainer => {
+        if(trainer.TrainerName.toLowerCase() === name.toLowerCase()){
+          filteredTrainerByName.push(trainer);
+        }
+    })
+    return filteredTrainerByName;
   }
 
   showTravelForm : boolean = false;
@@ -904,39 +911,64 @@ export class Class1EventRequestComponent implements OnInit {
 
   
 
-  // private _getFilteredSpeaker(speakerName){
-  //   const filteredSpeaker : any = [];
 
-  //   this.approvedSpeakers.forEach(speaker => {
-  //     if(speaker.SpeakerName === speakerName){
-  //       filteredSpeaker.push(speaker);
-  //     }
-  //   })
-
-  //   return filteredSpeaker;
-
-  // }
 
   hcpTableDetails : any[] = [];
 
   addHCPTable(){
-   
-    const HcpData  = {
-      hcpRole : this.eventInitiation4.value.hcpRole,
-      hcpName : this.speakerName,
-      misCode : this.speakerMisCode,
-      goNonGo : this.speakerGoNonGo,
-      honararium : this.eventInitiation4Sub.value.isHonararium,
-      honarariumAmount : this.eventInitiatio4Honararium.value.honorariumAmount,
-      travelAmount : this.eventInitiation4Travel.value.travelAmount,
-      localConveyanceAmount : this.eventInitiation4Sub.value.localConveyanceAmount,
-      accomAmount : this.eventInitiation4Accomodation.value.accomAmount,
-      finalAmount : parseInt(this.eventInitiatio4Honararium.value.honorariumAmount)+ parseInt(this.eventInitiation4Travel.value.travelAmount)+
-                  parseInt( this.eventInitiation4Sub.value.localConveyanceAmount)+parseInt(this.eventInitiation4Accomodation.value.accomAmount)
+    let HCPValidity : number = 0;
+
+    if(!this.eventInitiation4.valid){
+      alert("Speaker Details are missing")
     }
-    console.log(HcpData)
-    this.hcpTableDetails.push(HcpData);
+    if(this.eventInitiation4Sub.value.isHonararium == "Yes" && this.eventInitiatio4Honararium.value.honorariumAmount == 0){
+      alert("Honararium AMount is missing")
+    }
+
+    if(HCPValidity == 0){
+      let hcpname : string = '';
+      let hcpMisCode : string = '';
+      let hcpgoNonGo : string = '';
+      if(this.showSpeakerForm && this.speakerName !== ''){
+        hcpname = this.speakerName;
+        hcpMisCode = this.speakerMisCode;
+        hcpgoNonGo =  this.speakerGoNonGo;
+      }
+      if(this.showTrainerForm && this.eventInitiation4Trainer.controls.trainerName.value !== ''){
+        hcpname = this.eventInitiation4Trainer.controls.trainerName.value;
+        hcpMisCode = this.trainerMisCode;
+        hcpgoNonGo = this.trainerGoNonGo;
+      }
+      if(this.showOthersForm && this.eventInitiation4Other.controls.otherName.value !==''){
+        hcpname = this.eventInitiation4Other.controls.otherName.value;
+        hcpMisCode = this.otherMisCode;
+        hcpgoNonGo = this.otherGoNonGo;
+      }
+      const HcpData  = {
+        HcpRole : this.eventInitiation4.value.hcpRole,
+        HcpName : hcpname,
+        MisCode : hcpMisCode,
+        GoNonGo : hcpgoNonGo,
+        Honararium : this.eventInitiation4Sub.value.isHonararium,
+        HonarariumAmount : this.eventInitiatio4Honararium.value.honorariumAmount,
+        TravelAmount : this.eventInitiation4Travel.value.travelAmount,
+        LocalConveyanceAmount : this.eventInitiation4Sub.value.localConveyanceAmount,
+        AccomAmount : this.eventInitiation4Accomodation.value.accomAmount,
+        FinalAmount : parseInt(this.eventInitiatio4Honararium.value.honorariumAmount)+ parseInt(this.eventInitiation4Travel.value.travelAmount)+
+                    parseInt( this.eventInitiation4Sub.value.localConveyanceAmount)+parseInt(this.eventInitiation4Accomodation.value.accomAmount)
+      }
+      console.log(HcpData)
+      this.hcpTableDetails.push(HcpData);
+    }
   }
+
+  openHCPTableUpdateModal(hcpData:any){
+    const dialogRef =  this.dialog.open(ModalComponent,{
+      width: '600px',
+      data : hcpData
+    });
+  }
+
   // Event Initiation Form5 Control
   totalHours : any;
   remuneration : any;

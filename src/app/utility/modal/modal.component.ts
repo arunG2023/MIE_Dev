@@ -34,6 +34,20 @@ export class ModalComponent implements OnInit {
   percentageAllocation : number;
   projectId : string;
 
+  // HCP Update
+  showHCPForm : boolean = false;
+
+  hcpUpdateForm : FormGroup;
+
+  hcpRole : string;
+  hcpname : string;
+  misCode : string;
+  goNonGo : string;
+  honarariumAmount : string;
+  travelAmount : string;
+  localconveyanceAount : string;
+  accomAmount : string;
+
   constructor(public dialogRef : MatDialogRef<AddEmployeesComponent>,
     @Inject(MAT_DIALOG_DATA) public data,
     private utilityService : UtilityService){
@@ -60,8 +74,12 @@ export class ModalComponent implements OnInit {
       this.percentageAllocation = data.PercentAllocation;
       this.projectId = data.ProjectId;
     }
+    else if(data.hcpRole){
+      this.showHCPForm = true;
+    }
     else{
       this.showBrandForm = false;
+      this.showHCPForm = false
       this.roleId = data.RoleId;
       this.firstName = data.FirstName;
       this.lastName = data.LastName;
@@ -73,6 +91,15 @@ export class ModalComponent implements OnInit {
       brandName : new FormControl({value: this.brandName, disabled: true}),
       percentageAllocation : new FormControl(this.percentageAllocation),
       projectId : new FormControl({value: this.projectId, disabled: true})
+    })
+
+    this.hcpUpdateForm = new FormGroup({
+      hcpRole : new FormControl(this.hcpRole),
+      hcpName : new FormControl(this.hcpname),
+      goNonGo : new FormControl(this.goNonGo),
+      honarariumAmount : new FormControl(this.honarariumAmount),
+      travelAmount : new FormControl(this.travelAmount),
+      accomAmount : new FormControl(this.accomAmount)
     })
 
     this.updateForm = new FormGroup({

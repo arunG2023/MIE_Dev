@@ -278,7 +278,7 @@
                 <mat-form-field *ngIf="!hideOtherMisCode" color="accent" appearance="outline">
                   <mat-label>MIS Code</mat-label>
                   <mat-select formControlName="otherMisCode">
-                    <mat-option *ngFor="let a of filteredOthers" value={{a.MISCode}}>{{a.MISCode}}</mat-option>
+                    <mat-option *ngFor="let a of filteredOthersByName" value={{a.MISCode}}>{{a.MISCode}}</mat-option>
                   </mat-select>
                 </mat-form-field>
 
@@ -326,7 +326,7 @@
                 <mat-form-field *ngIf="!hideSpeakerMisCode"  color="accent" appearance="outline">
                   <mat-label>MIS Code</mat-label>
                   <mat-select formControlName="speakerMisCode">
-                    <mat-option *ngFor="let speaker of filteredspeakers" value={{speaker.MISCode}}>{{speaker.MISCode}}</mat-option>
+                    <mat-option *ngFor="let speaker of filteredSpeakerByName" value={{speaker.MISCode}}>{{speaker.MISCode}}</mat-option>
                   </mat-select>
                 </mat-form-field>
 
@@ -377,7 +377,7 @@
                 <mat-form-field *ngIf="!hideTrainerMisCode" color="accent" appearance="outline">
                   <mat-label>MIS Code</mat-label>
                   <mat-select formControlName="trainerMisCode">
-                    <mat-option *ngFor="let trainer of filteredTrainerOption" value={{trainer.MISCode}}>{{trainer.MISCode}}</mat-option>
+                    <mat-option *ngFor="let trainer of filteredTrainerOptionByName" value={{trainer.MISCode}}>{{trainer.MISCode}}</mat-option>
                   </mat-select>
                   
                 </mat-form-field>
@@ -452,7 +452,7 @@
                 <mat-radio-group formControlName="isHonararium">
                     <div class="mt-2">
                       <mat-radio-button value="Yes" >Yes</mat-radio-button>
-                      <mat-radio-button value="No" class="m-1" [checked]="true">No</mat-radio-button>
+                      <mat-radio-button value="No" class="m-1" >No</mat-radio-button>
                     </div>
                    
                 
@@ -464,7 +464,7 @@
                 <mat-radio-group formControlName="isAccomRequired">
                     <div class="mt-2 ">
                     <mat-radio-button value="Yes" >Yes</mat-radio-button>
-                    <mat-radio-button value="No" class="m-1" [checked]="true">No</mat-radio-button>
+                    <mat-radio-button value="No" class="m-1" >No</mat-radio-button>
                 </div>
                 </mat-radio-group>
                 </div>
@@ -488,7 +488,7 @@
 
                 <mat-form-field  color="accent" appearance="outline">
                   <mat-label>Travel Amount</mat-label>
-                  <input matInput placeholder="Enter Travel Amount" formControlName="travelAmount">
+                  <input matInput type="number" placeholder="Enter Travel Amount" formControlName="travelAmount">
                 </mat-form-field>
 
               </div>
@@ -499,7 +499,7 @@
                     <mat-label>Is BTC/BTE?</mat-label><br>
                      <div class="mt-2">
                       <mat-radio-button value="Yes" >Yes</mat-radio-button>
-                      <mat-radio-button value="No" class="m-1" [checked]="true">No</mat-radio-button>
+                      <mat-radio-button value="No" class="m-1" >No</mat-radio-button>
                      </div>
                   </mat-radio-group>
                 </div>
@@ -525,7 +525,7 @@
               <div class="col">
                 <mat-form-field  color="accent" appearance="outline">
                   <mat-label>Accomodation Amount</mat-label>
-                  <input matInput placeholder="Enter Accomodation Amount" formControlName="accomAmount">
+                  <input matInput type="number" placeholder="Enter Accomodation Amount" formControlName="accomAmount">
                 </mat-form-field>
               </div>
             </div>
@@ -698,18 +698,18 @@
               <tbody >
                 <tr *ngFor="let Hcp of hcpTableDetails; index as i">
                   <th scope="row">{{i+1}}</th>
-                  <td>{{Hcp.hcpRole}}</td>
-                  <td>{{Hcp.hcpName}}</td>
-                  <td>{{Hcp.misCode}}</td>
-                  <td>{{Hcp.goNonGo}}</td>
-                  <td>{{Hcp.honararium}}</td>
-                  <td>{{Hcp.honarariumAmount}}</td>
-                  <td>{{Hcp.travelAmount}}</td>
-                  <td>{{Hcp.accomAmount}}</td>
-                  <td>{{Hcp.localConveyanceAmount}}</td>
-                  <td>{{Hcp.finalAmount}}</td>
+                  <td>{{Hcp.HcpRole}}</td>
+                  <td>{{Hcp.HcpName}}</td>
+                  <td>{{Hcp.MisCode}}</td>
+                  <td>{{Hcp.GoNonGo}}</td>
+                  <td>{{Hcp.Honararium}}</td>
+                  <td>{{Hcp.HonarariumAmount}}</td>
+                  <td>{{Hcp.TravelAmount}}</td>
+                  <td>{{Hcp.AccomAmount}}</td>
+                  <td>{{Hcp.LocalConveyanceAmount}}</td>
+                  <td>{{Hcp.FinalAmount}}</td>
                   <td style="cursor: pointer;">
-                    <i class="material-icons" style="margin-right: 5px;">edit</i>
+                    <i (click)="openHCPTableUpdateModal(Hcp)" class="material-icons" style="margin-right: 5px;">edit</i>
                     <i class="material-icons">delete</i>
                   </td>
   
@@ -719,275 +719,7 @@
             </table>
           </div>
   
-          <!-- <form [formGroup]="panalselectionstandard">
-            <div class="row">
-              <div class="col">
-                <div>
-                  <mat-label><b>Upload FCPA</b></mat-label><br>
-                  <input type="file" formControlName="uploadFCPA">
-                </div>
 
-             
-                <div>
-                  <mat-radio-group  formControlName="isHonararium">
-                    <mat-label><b>Is honorarium applicable?</b></mat-label><br>
-                      <mat-radio-button value="Yes" >Yes</mat-radio-button>
-                      <mat-radio-button value="No" class="m-1" [checked]="true">No</mat-radio-button>
-                  </mat-radio-group>
-                </div>
-                
-                <mat-form-field *ngIf="isHonarariumYes" color="accent" appearance="outline">
-                  <mat-label>Enter Honorarium Amount</mat-label>
-                  <input matInput type="number" formControlName="honorariumAmount" >
-                </mat-form-field>
-
-                <div>
-                  <mat-label>Upload NOC</mat-label><br>
-                  <input type="file" formControlName="uploadNOC">
-                </div>
-
-                <mat-form-field  color="accent" appearance="outline">
-                  <mat-label>Rationale</mat-label>
-                  <input matInput placeholder="Enter Currency" formControlName="rationale">
-                </mat-form-field>
-
-               
-                <div>
-                  <mat-radio-group formControlName="isTravelRequired">
-                    <mat-label>Is Travel allowance applicable?</mat-label><br>
-                    
-                      <mat-radio-button value="Yes" >Yes</mat-radio-button>
-                      <mat-radio-button value="No" class="m-1" [checked]="true">No</mat-radio-button>
-                 
-                  </mat-radio-group>
-                </div>
-
-                <mat-form-field *ngIf="isTravelYes" color="accent" appearance="outline">
-                  <mat-label>Enter Travel Amount</mat-label>
-                  <input matInput type="number" formControlName="travelAmount" >
-                </mat-form-field>
-              </div>
-              <div class="col">
-                <mat-form-field *ngIf="isTravelYes" color="accent" appearance="outline">
-                  <mat-label>Travel selection</mat-label>
-                  <mat-select  formControlName="travelType">
-                      <mat-option value="select event ">select Travel </mat-option>
-                    <mat-option value="Air">Air</mat-option>
-                    <mat-option value="Train">Train</mat-option>
-                  </mat-select>
-                </mat-form-field>
-
-               <div>
-                <mat-label><b>Is BTC / BTE?</b></mat-label><br>
-                <mat-radio-group formControlName="isBTCBTE">
-                 
-                  <mat-radio-button value="Yes" >Yes</mat-radio-button>
-                  <mat-radio-button value="No" class="m-1" [checked]="true">No</mat-radio-button>
-             
-              </mat-radio-group>
-               </div>
-
-              <div>
-                <mat-label><b>Is accomodation allowance applicable?</b></mat-label><br>
-              <mat-radio-group formControlName="isAccomRequired">
-                
-                  <mat-radio-button value="Yes" >Yes</mat-radio-button>
-                  <mat-radio-button value="No" class="m-1" [checked]="true">No</mat-radio-button>
-             
-              </mat-radio-group>
-              </div>
-              <mat-form-field *ngIf="isAccomYes" color="accent" appearance="outline">
-                <mat-label>Enter Accomodation Amount</mat-label>
-                <input matInput type="number" formControlName="accomAmount" >
-              </mat-form-field>
-
-              <div>
-                <mat-label><b>Is BTC / BTE?</b></mat-label><br>
-                <mat-radio-group formControlName="isBTCBTE1">
-                 
-                    <mat-radio-button value="Yes" >Yes</mat-radio-button>
-                    <mat-radio-button value="No" class="m-1" [checked]="true">No</mat-radio-button>
-               
-                </mat-radio-group>
-              </div>
-
-              <div>
-                <mat-label><b>Is Local Conveyance applicable?</b></mat-label><br>
-                <mat-radio-group formControlName="localConveyance">     
-                    <mat-radio-button value="Yes" >Yes</mat-radio-button>
-                    <mat-radio-button value="No" class="m-1" [checked]="true">No</mat-radio-button>
-                </mat-radio-group>
-              </div>
-
-              <mat-form-field *ngIf="isLocalYes" color="accent" appearance="outline">
-                <mat-label>Enter Local ConveyanceAmount</mat-label>
-                <input matInput type="number" formControlName="localAmount" >
-              </mat-form-field>
-
-              </div>
-            </div>
-          </form> -->
-
-                
-            
-            
-               
-                
-              
-              
-            
-            
-        
-            
-            
-             
-            
-                <!-- <div class="row" *ngIf="timecalculationhonorariumifYes">
-                <div class="col-6">
-                  <mat-form-field color="accent" appearance="outline">
-                    <mat-label>Presentation / Speaking / Workshop duration</mat-label>
-                    <input matInput type="number" placeholder="Enter Duration in minutes"
-                      formControlName="presentationDuration">
-                  </mat-form-field>
-                </div>
-            
-                <div class="col-6">
-                  <mat-form-field color="accent" appearance="outline">
-                    <mat-label>Development presentation /Panel session preparation</mat-label>
-                    <input matInput type="number" placeholder="Enter Duration in minutes"
-                      formControlName="panelSessionPreparation">
-                  </mat-form-field>
-                </div>
-                <div class="col-6">
-                  <mat-form-field color="accent" appearance="outline">
-                    <mat-label>Q&A Session</mat-label>
-                    <input matInput type="number" [max]="15" placeholder="Enter Duration in minutes"
-                      formControlName="qaSession">
-                    <mat-hint>(Max 15 minutes)</mat-hint>
-                  </mat-form-field>
-                </div>
-                <div class="col-6">
-                  <mat-form-field color="accent" appearance="outline">
-                    <mat-label>Remuneration(Honararia)</mat-label>
-                    <input matInput type="number" placeholder="Total number of hours prepopulated" disabled [value]="remuneration">
-                  </mat-form-field>
-                </div>
-                <div class="col-6">
-                  <mat-form-field color="accent" appearance="outline">
-                    <mat-label>Speaker/Trainer Briefing</mat-label>
-                    <input matInput type="number" [max]="120" placeholder="Enter Duration in minutes"
-                      formControlName="briefingDuration">
-                    <mat-hint>(Max 120 minutes)</mat-hint>
-                  </mat-form-field>
-                </div>
-                <div class="col-6">
-                  <mat-form-field color="accent" appearance="outline">
-                    <mat-label>Panel Discussion/session duration</mat-label>
-                    <input matInput type="number" placeholder="Panel Discussion/session duration" formControlName="panelDiscussionDuration">
-                  </mat-form-field>
-                </div>
-                <div class="col-6">
-            
-                  <mat-form-field color="accent" appearance="outline">
-                    <mat-label>Total number of hours</mat-label>
-                    <input matInput type="number" placeholder="Total number of hours prepopulated" disabled [value]="totalHours">
-                  </mat-form-field>
-                </div>
-            
-                <div class="col-6">
-                  <mat-form-field color="accent" appearance="outline">
-                    <mat-label>Currency</mat-label>
-                    <mat-select  [value]="currency">
-                      <mat-option value="rupees">Rupees</mat-option>
-                      <mat-option value="dollar">Dollar</mat-option>
-                      <mat-option value="other">Other</mat-option>
-                    </mat-select>
-                  </mat-form-field>
-                </div>
-            
-                <div class="col-6">
-                  <mat-form-field  color="accent" appearance="outline">
-                    <mat-label>Other Currency</mat-label>
-                    <input matInput placeholder="Enter Currency">
-                  </mat-form-field>
-                </div>
-                
-            <div class="col-6">
-              <mat-form-field color="accent" appearance="outline">
-                <mat-label>Selection Of Taxes</mat-label>
-                <mat-select >
-                  <mat-option value="Inclusive">Inclusive of Tax</mat-option>
-                  <mat-option value="Exclusive">Exclusive of Tax</mat-option>
-                  <mat-option value="NA"> N/A</mat-option>
-                </mat-select>
-              </mat-form-field>
-            </div>
-              
-            <div class="col-6">
-              <mat-form-field  color="accent" appearance="outline">
-                <mat-label>Bank Account Number</mat-label>
-                <input matInput placeholder="Enter Bank Account Number" >
-              </mat-form-field>
-            </div>
-               
-            <div class="col-6">
-              <mat-form-field  color="accent" appearance="outline">
-                <mat-label>Bank Account Number</mat-label>
-                <input matInput placeholder="Enter Bank Account Number" formControlName="bankAccountNumber">
-              </mat-form-field>
-            </div>
-               
-            <div class="col-6">
-              <mat-form-field color="accent" appearance="outline">
-                <mat-label>Benificiary Name</mat-label>
-                <input matInput placeholder="Enter Benificiary Name" >
-              </mat-form-field>
-            </div>
-            
-            <div class="col-6">
-              <mat-form-field color="accent" appearance="outline">
-                <mat-label>Name as per PAN</mat-label>
-                <input matInput placeholder="Name as per PAN pre populated" >
-              </mat-form-field>
-            </div>
-               
-            <div class="col-6">
-              <mat-form-field color="accent" appearance="outline">
-                <mat-label>PAN Card Number</mat-label>
-                <input matInput placeholder="PAN Card Number pre populated" >
-              </mat-form-field>
-            </div>
-              
-            <div class="col-6">
-              <mat-form-field color="accent" appearance="outline">
-                <mat-label>IFSC Code </mat-label>
-                <input matInput placeholder="IFSC Code pre populated">
-              </mat-form-field>
-            
-            </div>
-            
-            <div class="col-6">
-              <mat-form-field color="accent" appearance="outline">
-                <mat-label>Email ID (*optional)</mat-label>
-                <input matInput placeholder="Email ID pre populated" >
-              </mat-form-field>
-            </div>
-            
-            <div class="col-6">
-              <div class="m-3">
-                <mat-label>Upload PAN Card</mat-label><br>
-                <input type="file">
-              </div>
-            </div>
-            
-            <div class="col-6">
-              <div class="m-3">
-                <mat-label>Upload Cheque</mat-label><br>
-                <input type="file" >
-              </div>
-            </div>
-              </div> -->
-            
         
 
           <!-- 
@@ -1034,9 +766,9 @@
         <tbody >
           <tr *ngFor="let s of hcpTableDetails; index as i">
               <th scope="row">{{i+1}}</th>
-              <td>{{s.hcpRole}}</td>
-              <td>{{s.hcpName}}</td>
-              <td>{{s.misCode}}</td>
+              <td>{{s.HcpRole}}</td>
+              <td>{{s.HcpName}}</td>
+              <td>{{s.MisCode}}</td>
               <td>GO</td>
               <td>
                 

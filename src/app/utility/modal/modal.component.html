@@ -1,4 +1,4 @@
-<form [formGroup]="updateForm" *ngIf="!showBrandForm" >
+<form [formGroup]="updateForm" *ngIf="!showBrandForm && !showHCPForm" >
     <mat-form-field appearance="outline">
         <mat-label>First Name</mat-label>
         <input  matInput placeholder="Prepopulate from Sheet" formControlName="firstName" >
@@ -43,5 +43,9 @@
         <button mat-raised-button color="primary" (click)="updateBrand()" type="submit" class="mr-2" >Update</button>
         <button mat-raised-button color="warn"  (click)="close()">Cancel</button>
     </div>
+    
+</form>
+
+<form [formGroup]="hcpUpdateForm" *ngIf="showHCPForm">
     
 </form>
