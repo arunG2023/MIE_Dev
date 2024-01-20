@@ -1,4 +1,4 @@
-<form [formGroup]="updateForm" *ngIf="!showBrandForm && !showHCPForm" >
+<form [formGroup]="updateForm" *ngIf="!showBrandForm && !showHCPForm && !showInviteeForm && !showExpenseForm" >
     <mat-form-field appearance="outline">
         <mat-label>First Name</mat-label>
         <input  matInput placeholder="Prepopulate from Sheet" formControlName="firstName" >
@@ -40,12 +40,119 @@
     </mat-form-field>
 
     <div class="d-flex justify-content-center align-items-center">
-        <button mat-raised-button color="primary" (click)="updateBrand()" type="submit" class="mr-2" >Update</button>
+        <button mat-raised-button color="primary" (click)="updateHCP()"  type="submit" class="mr-2" >Update</button>
         <button mat-raised-button color="warn"  (click)="close()">Cancel</button>
     </div>
     
 </form>
 
 <form [formGroup]="hcpUpdateForm" *ngIf="showHCPForm">
-    
+    <div class="row">
+        <div class="col">
+            <mat-form-field appearance="outline">
+                <mat-label>HCP Role</mat-label>
+                <input  matInput placeholder="Prepopulate from Sheet" formControlName="hcpRole" >
+            </mat-form-field>
+        
+            <mat-form-field appearance="outline">
+                <mat-label>HCP Name</mat-label>
+                <input  matInput placeholder="Prepopulate from Sheet" formControlName="hcpName" >
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+                <mat-label>MIS Code</mat-label>
+                <input  matInput placeholder="Prepopulate from Sheet" formControlName="misCode" >
+            </mat-form-field>
+        
+            <mat-form-field appearance="outline">
+                <mat-label>GO/NON GO</mat-label>
+                <input  matInput placeholder="Prepopulate from Sheet" formControlName="goNonGo" >
+            </mat-form-field>
+
+            
+
+        </div>
+        <div class="col">
+            <mat-form-field appearance="outline">
+                <mat-label>Honararium Amount</mat-label>
+                <input  matInput placeholder="Prepopulate from Sheet" formControlName="honarariumAmount" >
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+                <mat-label>Local Conveyance Amount</mat-label>
+                <input  matInput placeholder="Prepopulate from Sheet" formControlName="localConAmount" >
+            </mat-form-field>
+        
+            <mat-form-field appearance="outline">
+                <mat-label>Travel Amount</mat-label>
+                <input  matInput placeholder="Prepopulate from Sheet" formControlName="travelAmount" >
+            </mat-form-field>
+        
+            <mat-form-field appearance="outline">
+                <mat-label>Accomodation Amount</mat-label>
+                <input  matInput placeholder="Prepopulate from Sheet" formControlName="accomAmount" >
+            </mat-form-field>
+
+        </div>
+    </div>
+    <div class="d-flex justify-content-center align-items-center">
+        <button mat-raised-button color="primary" type="submit" class="mr-2" >Update</button>
+        <button mat-raised-button color="warn"  (click)="close()">Cancel</button>
+    </div>
+
+</form>
+
+<form [formGroup]="inviteeUpdateForm" *ngIf="showInviteeForm">
+    <mat-form-field appearance="outline">
+        <mat-label>Invitee Name</mat-label>
+        <input  matInput placeholder="Prepopulate from Sheet" formControlName="inviteeName" >
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+        <mat-label>Is Local Conveyance?</mat-label>
+        <input  matInput placeholder="Prepopulate from Sheet" formControlName="isLocalConveyance" >
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+        <mat-label>BTC/BTE</mat-label>
+        <input  matInput placeholder="Prepopulate from Sheet" formControlName="btc" >
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+        <mat-label>Local Conveyance Amount</mat-label>
+        <input  matInput placeholder="Prepopulate from Sheet" formControlName="lcAmount" >
+    </mat-form-field>
+
+    <div class="d-flex justify-content-center align-items-center">
+        <button mat-raised-button color="primary" (click)="updateInvitee()" type="submit" class="mr-2" >Update</button>
+        <button mat-raised-button color="warn"  (click)="close()">Cancel</button>
+    </div>
+</form>
+
+<form [formGroup]="expenseUpdateForm" *ngIf="showExpenseForm">
+    <mat-form-field appearance="outline">
+        <mat-label>Expense Type</mat-label>
+        <input  matInput placeholder="Prepopulate from Sheet" formControlName="expenseType" >
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+        <mat-label>Expense Amount</mat-label>
+        <input  matInput placeholder="Prepopulate from Sheet" formControlName="expenseAmount" >
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+        <mat-label>Is Excluding Tax</mat-label>
+        <input  matInput placeholder="Prepopulate from Sheet" formControlName="isExclucingTax" >
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+        <mat-label>BTC/BTE</mat-label>
+        <input  matInput placeholder="Prepopulate from Sheet" formControlName="isExpenseBtc" >
+    </mat-form-field>
+
+    <div class="d-flex justify-content-center align-items-center">
+        <button mat-raised-button color="primary" (click)="updateExpense()" type="submit" class="mr-2" >Update</button>
+        <button mat-raised-button color="warn"  (click)="close()">Cancel</button>
+    </div>
+
 </form>

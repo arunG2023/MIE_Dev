@@ -117,4 +117,9 @@ export class UtilityService {
   getEmployeesFromHCPMaster(){
     return this.http.get(this.baseAPIUrl+"/MasterSheets/HcpMaster");
   }
+
+  // Post class1 consolidated data
+  postClass1PreEventRequest(data:any){
+    return this.http.post(this.baseAPIUrl+"/Test/AllObjModelsData", data)
+  }
 }

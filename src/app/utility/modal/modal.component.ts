@@ -39,14 +39,38 @@ export class ModalComponent implements OnInit {
 
   hcpUpdateForm : FormGroup;
 
-  hcpRole : string;
-  hcpname : string;
-  misCode : string;
-  goNonGo : string;
-  honarariumAmount : string;
-  travelAmount : string;
-  localconveyanceAount : string;
-  accomAmount : string;
+
+  private hcpRole : string;
+  private hcpName : string;
+  private misCode : string;
+  private goNonGo : string;
+  private honarariumAmount : string;
+  private travelAmount : string;
+  private localconveyanceAount : string;
+  private accomAmount : string;
+
+
+  
+  // Invitee Update
+  showInviteeForm : boolean = false;
+
+  inviteeUpdateForm : FormGroup;  
+
+  private inviteeName : string;
+  private localConveyance : string;
+  private lcAmount : string;
+  private btc : string;
+
+  // Expense Update
+  showExpenseForm : boolean = false;
+
+  expenseUpdateForm : FormGroup;
+
+  private expenseType : string;
+  private expenseAmount : string;
+  private isExcludingTax : string;
+  private isExpenseBtc : string;
+
 
   constructor(public dialogRef : MatDialogRef<AddEmployeesComponent>,
     @Inject(MAT_DIALOG_DATA) public data,
@@ -65,7 +89,7 @@ export class ModalComponent implements OnInit {
     // this.fName = data.name
   
    
-    console.log(data);
+    // console.log(data);
     if(data.BrandName){
       console.log(data);
       this.brandDetails = data;
@@ -74,12 +98,37 @@ export class ModalComponent implements OnInit {
       this.percentageAllocation = data.PercentAllocation;
       this.projectId = data.ProjectId;
     }
-    else if(data.hcpRole){
+    else if(data.HcpRole){
       this.showHCPForm = true;
+      this.hcpRole = data.HcpRole;
+      this.hcpName = data.HcpName;
+      this.misCode = data.MisCode
+      this.goNonGo = data.GOorNGO;
+      this.honarariumAmount = data.HonarariumAmount;
+      this.localconveyanceAount = data.Travel;
+      this.travelAmount = data.LocalConveyance;
+      this.accomAmount = data.Accomdation;
+    }
+    else if(data.InviteeName){
+      this.showInviteeForm = true;
+      this.inviteeName = data.InviteeName;
+      this.localConveyance = data.LocalConveyance;
+      this.btc = data.BtcorBte;
+      this.lcAmount = data.LcAmount
+    }
+    else if(data.expenseType){
+      this.showExpenseForm = true;
+
+      this.expenseType = data.expenseType;
+      this.expenseAmount = data.expenseAmount;
+      this.isExpenseBtc = data.isExpenseBtc;
+      this.isExcludingTax = data.isExcludingTax;
     }
     else{
       this.showBrandForm = false;
-      this.showHCPForm = false
+      this.showHCPForm = false;
+      this.showInviteeForm = false;
+      this.showExpenseForm = false;
       this.roleId = data.RoleId;
       this.firstName = data.FirstName;
       this.lastName = data.LastName;
@@ -94,12 +143,28 @@ export class ModalComponent implements OnInit {
     })
 
     this.hcpUpdateForm = new FormGroup({
-      hcpRole : new FormControl(this.hcpRole),
-      hcpName : new FormControl(this.hcpname),
-      goNonGo : new FormControl(this.goNonGo),
-      honarariumAmount : new FormControl(this.honarariumAmount),
-      travelAmount : new FormControl(this.travelAmount),
-      accomAmount : new FormControl(this.accomAmount)
+      hcpRole : new FormControl({value:this.hcpRole,disabled:true}),
+      hcpName : new FormControl({value:this.hcpName,disabled:true}),
+      misCode : new FormControl({value:this.misCode,disabled:true}),
+      goNonGo : new FormControl({value:this.goNonGo,disabled:true}),
+      honarariumAmount : new FormControl({value:this.honarariumAmount,disabled:true}),
+      travelAmount : new FormControl({value:this.travelAmount,disabled:true}),
+      localConAmount : new FormControl({value:this.localconveyanceAount,disabled:true}),
+      accomAmount : new FormControl({value:this.accomAmount,disabled:true})
+    })
+
+    this.inviteeUpdateForm = new FormGroup({
+      inviteeName : new FormControl({value:this.inviteeName,disabled:true}),
+      isLocalConveyance : new FormControl({value:this.localConveyance,disabled:true}),
+      btc : new FormControl({value:this.btc,disabled:true}),
+      lcAmount : new FormControl({value:this.lcAmount,disabled:true})
+    })
+
+    this.expenseUpdateForm = new FormGroup({
+      expenseType : new FormControl({value:this.expenseType, disabled: true}),
+      expenseAmount : new FormControl({value: this.expenseAmount, disabled:true}),
+      isExclucingTax : new FormControl({value:this.isExcludingTax,disabled:true}),
+      isExpenseBtc : new FormControl({value:this.isExpenseBtc,disabled:true})
     })
 
     this.updateForm = new FormGroup({
@@ -144,6 +209,18 @@ export class ModalComponent implements OnInit {
     // console.log(this.brandDetails)
     this.dialogRef.close(this.brandDetails)
 
+  }
+
+  updateHCP(){
+
+  }
+
+  updateInvitee(){
+
+  }
+
+  updateExpense(){
+    
   }
 
   ngOnInit(): void {
