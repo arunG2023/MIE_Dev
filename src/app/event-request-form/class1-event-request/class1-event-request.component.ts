@@ -46,7 +46,7 @@ export class Class1EventRequestComponent implements OnInit {
 
 
   // For Stepper Validation
-  isLinear: boolean = false;
+  isLinear: boolean = true;
   orientation : string ;
   pageLoaded : boolean = false
 
@@ -327,8 +327,15 @@ export class Class1EventRequestComponent implements OnInit {
         else this.show7DaysUploadDeviation = false
 
       }
+      if(this.eventInitiation1.valid){
+        this.isStep1Valid = true;
+      }
+      else this.isStep1Valid = false;
     })
+
    
+   
+    
     
   }
 
@@ -389,6 +396,8 @@ export class Class1EventRequestComponent implements OnInit {
       if(changes.state){
         this.filteredCity = this._filterCity(changes.state)
       }
+
+      this.isStep2Valid = (this.eventInitiation2.valid)? true : false;
     })
 
   }
@@ -446,7 +455,7 @@ export class Class1EventRequestComponent implements OnInit {
         
         // console.log(this.totalPercent)
         this.brandTableDetails.push(brand);
-       
+        this.isStep3Valid = (this.brandTableDetails.length > 0)? true : false;
         this.showBrandTable = true;
         this.eventInitiation3.reset();
         this.percentageAllocation = 0;
@@ -503,7 +512,9 @@ export class Class1EventRequestComponent implements OnInit {
   deleteBrand(brand, id){
     // delete this.brandTableDetails[id];
     this.brandTableDetails.splice(id,1); 
-    this.totalPercent -= +brand.PercentAllocation;    
+    this.totalPercent -= +brand.PercentAllocation; 
+    
+    this.isStep3Valid = (this.brandTableDetails.length > 0)? true : false;
   }
 
   sendBrandDetails(){
@@ -997,7 +1008,7 @@ export class Class1EventRequestComponent implements OnInit {
     }
 
     if(hcpValidity == 0){
-     
+      
       const HcpData  = {
         // For API
         EventIdorEventRequestId : " ",
@@ -1037,6 +1048,8 @@ export class Class1EventRequestComponent implements OnInit {
 
       console.log(HcpData)
       this.hcpTableDetails.push(HcpData);
+      this.isStep4Valid = (this.hcpTableDetails.length > 0)? true : false;
+
       hcpname = '';
       hcpgoNonGo = '';
       hcpMisCode = '';
@@ -1103,6 +1116,7 @@ export class Class1EventRequestComponent implements OnInit {
 
   deletHcp(id){
     this.hcpTableDetails.splice(id,1); 
+    this.isStep4Valid = (this.hcpTableDetails.length > 0)? true : false;
 
   }
 
@@ -1235,9 +1249,11 @@ export class Class1EventRequestComponent implements OnInit {
   slideKitDropDownOptions : any[] =[];
 
   slideKitPrePopulate(a:any){
-   console.log(a)
+   this.slideKitDropDown = a;
+   this.isStep5Valid = (Boolean(this.slideKitDropDown))? true : false;
     if(Boolean(this.brandTableDetails) && this.brandTableDetails.length > 0){
       console.log(this.brandTableDetails)
+
 
     }
   }
@@ -1380,8 +1396,14 @@ export class Class1EventRequestComponent implements OnInit {
       alert("Select BTC/BTE");
       inviteeValidity++;
     }
+
+    if(!this.hideInviteeMisCode && !Boolean(this.inviteeSelectionForm.value.inviteeMisCode)){
+      alert("Invitee MIS Code is missing");
+      inviteeValidity++;
+    }
     
     if(inviteeValidity == 0){
+      
       const inviteeData = {
         EventIdOrEventRequestId : ' ',
         MisCode : this.filteredInviteeMisCode,
@@ -1390,7 +1412,8 @@ export class Class1EventRequestComponent implements OnInit {
         BtcorBte : (this.inviteeSelectionForm.value.inviteeBTC)? this.inviteeSelectionForm.value.inviteeBTC : 'NIL',
         LcAmount : (this.showInviteeLocalConveyance)?this.inviteeSelectionForm.value.inviteeLocalConveyanceAmount+'':0+'',
       }
-      this.inviteeTableDetails.push(inviteeData)
+      this.inviteeTableDetails.push(inviteeData);
+      this.isStep6Valid = (this.inviteeTableDetails.length > 0)? true : false;
       // console.log(this.inviteeSelectionForm.controls)
       this.inviteeSelectionForm.reset();
       this.inviteeSelectionForm.controls.isInviteeLocalConveyance.setValue('No')
@@ -1412,6 +1435,7 @@ export class Class1EventRequestComponent implements OnInit {
 
   deleteInvitee(id:number){
     this.inviteeTableDetails.splice(id,1);  
+    this.isStep6Valid = (this.inviteeTableDetails.length > 0)? true : false;
   }
 
 
@@ -1453,6 +1477,7 @@ export class Class1EventRequestComponent implements OnInit {
         BtcorBte : this.expenseSelectionForm.value.isExpenseBtc
       }
       this.expenseTableDetails.push(expense);
+      this.isStep7Valid = (this.expenseTableDetails.length > 0)? true : false;
       this.expenseSelectionForm.reset();
       // console.log(this.expenseTableDetails);
     }
@@ -1471,51 +1496,92 @@ export class Class1EventRequestComponent implements OnInit {
 
   deleteExpense(id:any){
     this.expenseTableDetails.splice(id,1); 
+    this.isStep7Valid = (this.expenseTableDetails.length > 0)? true : false;
   }
 
   // Submitting Form
   submitForm(){
-
-    let class1EventData = {
-      EventTopic : this.eventInitiation2.value.eventTopic,
-      EventType : this.eventDetails.find(event => event.EventTypeId == this.eventCode ).EventType,
-      EventDate : new Date(this.eventInitiation1.value.eventDate),
-      StartTime : this.eventInitiation2.value.startTime,
-      EndTime : this.eventInitiation2.value.endTime,
-      VenueName : this.eventInitiation2.value.venueName,
-      State : this.allStates.find(state => state.StateId == this.eventInitiation2.value.state).StateName,
-      City : this.allCity.find(city => city.CityId == this.eventInitiation2.value.city).CityName,
-      BrandName : " ",
-      PercentAllocation : " ",
-      ProjectId: " ",
-      HcpRole : " ",
-      IsAdvanceRequired: " "
-    }
-    const class1 = {
-      Class1 : class1EventData,
-      // ExpenseDetails : this.expenseTableDetails
-      RequestBrandsList : this.brandTableDetails,
-      EventRequestHcpRole : this.hcpTableDetails,
-      EventRequestInvitees : this.inviteeTableDetails,
-      EventRequestExpenseSheet : this.expenseTableDetails,
-      EventRequestHCPSlideKits : [
-        {
-          EventId : " ",
-          Mis: "MisCode",
-          SlideKitType : " ",
-          SlideKitDocument : " "
-        }
-      ]
+    if(!this.isStep1Valid){
+      alert("Pre Event Check is missing");
     }
 
-    console.log(class1)
-    this.utilityService.postClass1PreEventRequest(class1).subscribe(res => {
-      console.log(res)
-    },
-    err => console.log(err))
+    if(!this.isStep2Valid){
+      alert("Event Details are missing")
+    }
+
+    if(!this.isStep3Valid){
+      alert('Brand Details are Missing');
+    }
+
+    if(!this.isStep4Valid){
+      alert('Panel Selection is missing');
+    }
+
+    if(!this.isStep5Valid){
+      alert("SlideKit selection is missing");
+    }
+
+    if(!this.isStep6Valid){
+      alert("Invitee Selection is missing");
+    }
+
+    if(!this.isStep7Valid){
+      alert("Expense Selection is missing");
+    }
+
+    
+    if(this.isStep1Valid && this.isStep2Valid && this.isStep3Valid && this.isStep4Valid && this.isStep5Valid && this.isStep6Valid && this.isStep7Valid){
+      let class1EventData = {
+        EventTopic : this.eventInitiation2.value.eventTopic,
+        EventType : this.eventDetails.find(event => event.EventTypeId == this.eventCode ).EventType,
+        EventDate : new Date(this.eventInitiation1.value.eventDate),
+        StartTime : this.eventInitiation2.value.startTime,
+        EndTime : this.eventInitiation2.value.endTime,
+        VenueName : this.eventInitiation2.value.venueName,
+        State : this.allStates.find(state => state.StateId == this.eventInitiation2.value.state).StateName,
+        City : this.allCity.find(city => city.CityId == this.eventInitiation2.value.city).CityName,
+        BrandName : " ",
+        PercentAllocation : " ",
+        ProjectId: " ",
+        HcpRole : " ",
+        IsAdvanceRequired: " "
+      }
+      const class1 = {
+        Class1 : class1EventData,
+        // ExpenseDetails : this.expenseTableDetails
+        RequestBrandsList : this.brandTableDetails,
+        EventRequestHcpRole : this.hcpTableDetails,
+        EventRequestInvitees : this.inviteeTableDetails,
+        EventRequestExpenseSheet : this.expenseTableDetails,
+        EventRequestHCPSlideKits : [
+          {
+            EventId : " ",
+            Mis: "MisCode",
+            SlideKitType : " ",
+            SlideKitDocument : " "
+          }
+        ]
+      }
+  
+      console.log(class1)
+      // this.utilityService.postClass1PreEventRequest(class1).subscribe(res => {
+      //   console.log(res)
+      // },
+      // err => console.log(err))
+    }
     // console.log(this.brandTableDetails)
   }
 
+
+  // Step Controls:
+  isStep1Valid : boolean = false;
+  isStep2Valid : boolean = false;
+  isStep3Valid : boolean = false;
+  isStep4Valid : boolean = false;
+  isStep5Valid : boolean = false;
+  isStep6Valid : boolean = false;
+  isStep7Valid : boolean = false;
+  isFormValid : boolean = true;
 /*
   // Event Inititaion Form7 COntrol
   showExpenseTextBox : boolean = false;

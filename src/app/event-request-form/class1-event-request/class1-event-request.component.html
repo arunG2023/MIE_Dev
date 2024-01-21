@@ -54,40 +54,9 @@
           </div>
         </div>
 
-     
-
-          
-     
-      
-
-      <!-- <div class="w-100"></div>
-      <div class="col-md-6">
-        
-
-      </div>
-
-     
-      <div class="row p-1 mb-2">
-
-
-
-        <div class="col-md-6">
-          <mat-label>Is the event within 7 days?</mat-label>
-          <mat-radio-group formControlName="withIn7days">
-            <div style="display: flex; justify-content: start;">
-              <mat-radio-button value="Yes" class="m-2">Yes</mat-radio-button>
-              <mat-radio-button value="No" class="m-2"> No</mat-radio-button>
-            </div>
-          </mat-radio-group>
-        </div>
-        <div class="col-md-6" *ngIf="toUploadDeviation2">
-          <mat-label>Upload Deviation</mat-label><br>
-          <input type="file" formControlName="uploadDeviation2">
-        </div>
-      </div> -->
       <div class="d-flex justify-content-end align-items-center">
         <!-- <button mat-raised-button color="warn" matStepperNext  (click)="stepper.reset()" class="m-1">Reset</button> -->
-        <button mat-raised-button color="primary"  matStepperNext class="m-1">Next</button>
+        <button mat-raised-button color="primary" [disabled]="!isStep1Valid" matStepperNext class="m-1">Next</button>
       </div>
     </form>
   </mat-step>
@@ -150,14 +119,15 @@
 
           <div class="d-flex justify-content-end">
             <button mat-raised-button color="accent" class="m-1" matStepperPrevious>Previous</button>
-            <button mat-raised-button color="primary" class="m-1" matStepperNext>Next</button>
+            <button mat-raised-button color="primary" class="m-1" [disabled]="!isStep2Valid" matStepperNext>Next</button>
           </div>
 
         </div>
       </div>
     </form>
   </mat-step>
-  <mat-step [stepControl]="eventInitiation3" label="Brand Allocation">
+  <!--  [stepControl]="eventInitiation3" -->
+  <mat-step label="Brand Allocation">
     <form [formGroup]="eventInitiation3">
       <div class="row">
 
@@ -228,13 +198,13 @@
 
         <div class="container d-flex justify-content-end">
           <button mat-raised-button color="accent" class="m-1" matStepperPrevious>Previous</button>
-          <button (click)="slideKitBrandMatch()" mat-raised-button color="primary" class="m-1" matStepperNext>Next</button>
+          <button (click)="slideKitBrandMatch()" mat-raised-button color="primary" class="m-1" [disabled]="!isStep3Valid" matStepperNext>Next</button>
         </div>
 
       </div>
     </form>
   </mat-step>
-  <mat-step [stepControl]="eventInitiation4" label="Panel Selection">
+  <mat-step  label="Panel Selection">
     
       
           <form [formGroup]="eventInitiation4">
@@ -741,7 +711,7 @@
 
         <div class="container d-flex justify-content-end">
           <button mat-raised-button color="accent" class="m-1" matStepperPrevious>Previous</button>
-          <button mat-raised-button color="primary" class="m-1" matStepperNext>Next</button>
+          <button mat-raised-button color="primary" class="m-1" [disabled]="!isStep4Valid" matStepperNext>Next</button>
         </div>
       
   
@@ -806,7 +776,7 @@
 
 <div class="container d-flex justify-content-end">
   <button mat-raised-button color="accent" class="m-1" matStepperPrevious>Previous</button>
-  <button  mat-raised-button color="primary" class="m-1" matStepperNext>Next</button>
+  <button  mat-raised-button color="primary" class="m-1" [disabled]="!isStep5Valid" matStepperNext>Next</button>
 </div>
 
   </mat-step>
@@ -942,7 +912,7 @@
     
      <div class="container d-flex justify-content-end">
        <button mat-raised-button color="accent" class="m-1" matStepperPrevious>Previous</button>
-       <button mat-raised-button color="primary" class="m-1" matStepperNext>Next</button>
+       <button mat-raised-button color="primary" class="m-1" [disabled]="!isStep6Valid" matStepperNext>Next</button>
      </div>
  
    </mat-step>
@@ -1053,7 +1023,7 @@
 
       <div class="col-12 d-flex justify-content-end">
         <button class="btn btn-primary btn-sm">Previous</button>
-        <button (click)="submitForm()" class="btn btn-success btn-sm" >Submit</button>
+        <button (click)="submitForm()" class="btn btn-success btn-sm" [disabled]="!isFormValid" >Submit</button>
       </div>
         
     
