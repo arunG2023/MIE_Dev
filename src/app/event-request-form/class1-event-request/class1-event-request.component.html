@@ -228,7 +228,7 @@
 
         <div class="container d-flex justify-content-end">
           <button mat-raised-button color="accent" class="m-1" matStepperPrevious>Previous</button>
-          <button mat-raised-button color="primary" class="m-1" matStepperNext>Next</button>
+          <button (click)="slideKitBrandMatch()" mat-raised-button color="primary" class="m-1" matStepperNext>Next</button>
         </div>
 
       </div>
@@ -409,58 +409,238 @@
 
           <form [formGroup]="eventInitiation4Sub">
             <div class="row">
-              <div class="col">
-                
-                  <mat-label><b>Upload FCPA</b></mat-label><br>
-                  <div class="m-2">
-                    <input type="file" formControlName="uploadFCPA">
-                  </div>
-                
+                <div class="col">
 
-                <div>
-                  <mat-radio-group  formControlName="isTravelRequired">
-                    <mat-label>Is Travel allowance applicable?</mat-label><br>
-                     <div class="mt-2">
-                      <mat-radio-button value="Yes" >Yes</mat-radio-button>
-                      <mat-radio-button value="No" class="m-1" [checked]="true">No</mat-radio-button>
-                     </div>
-                  </mat-radio-group>
-                </div>
-
-
-                <div>
-                  <mat-radio-group  formControlName="isLocalConveyance">
-                    <mat-label>Is Local Conveyance applicable?</mat-label><br>
-                     <div class="mt-2">
-                      <mat-radio-button value="Yes" >Yes</mat-radio-button>
-                      <mat-radio-button value="No" class="m-1" [checked]="true">No</mat-radio-button>
-                     </div>
-                  </mat-radio-group>
-                </div>
-
-                <mat-form-field  *ngIf="showLocalConveyance" color="accent" appearance="outline">
-                  <mat-label>Local Conveyance Amount</mat-label>
-                  <input matInput placeholder="Enter Local Conveyance Amount" formControlName="localConveyanceAmount">
-                </mat-form-field>
-
-
-              </div>
-
-              <div class="col">
-                <div>
-                  <mat-label>Is honorarium applicable?</mat-label>
-                <mat-radio-group formControlName="isHonararium">
-                    <div class="mt-2">
-                      <mat-radio-button value="Yes" >Yes</mat-radio-button>
-                      <mat-radio-button value="No" class="m-1" >No</mat-radio-button>
+                    <mat-label><b>Upload FCPA</b></mat-label><br>
+                    <div class="m-2">
+                        <input type="file" formControlName="uploadFCPA">
                     </div>
-                   
-                
-                </mat-radio-group>
+                </div>
+
+                <div class="col">
+                  <div class="m-2" >
+                    <mat-form-field color="accent" appearance="outline">
+                   <mat-label>Event Date</mat-label>
+                     <input matInput type="date" formControlName="fcpaDate">
+                   </mat-form-field>
+                 </div>
 
                 </div>
-                <div>
-                  <mat-label>Is accomodation allowance applicable?</mat-label>
+              </div>
+              <div class="row">
+                
+                <div class="col">
+                    <div>
+                        <mat-label>Is honorarium applicable?</mat-label>
+                        <mat-radio-group formControlName="isHonararium">
+                            <div class="mt-2">
+                                <mat-radio-button value="Yes" >Yes</mat-radio-button>
+                                <mat-radio-button value="No" class="m-1" >No</mat-radio-button>
+                            </div>
+                        </mat-radio-group>
+                    </div>
+                </div>
+                <div class="container">
+                    <form [formGroup]="eventInitiatio4Honararium" *ngIf="isHonararium" class="form-border">
+                        <h4 class="d-flex justify-content-center col-12"><b>Honararium Details</b></h4>
+                        <div class="row">
+                          <div class="col">
+                            <mat-form-field color="accent" appearance="outline">
+                              <mat-label>Presentation / Speaking / Workshop duration</mat-label>
+                              <input matInput type="number" placeholder="Enter Duration in minutes"
+                                formControlName="presentationDuration">
+                            </mat-form-field>
+                  
+                            <mat-form-field color="accent" appearance="outline">
+                              <mat-label>Development presentation /Panel session preparation</mat-label>
+                              <input matInput type="number" placeholder="Enter Duration in minutes"
+                                formControlName="panelSessionPreparation">
+                            </mat-form-field>
+                  
+                            <mat-form-field color="accent" appearance="outline">
+                              <mat-label>Q&A Session</mat-label>
+                              <input matInput type="number" [max]="15" placeholder="Enter Duration in minutes"
+                                formControlName="qaSession">
+                              <mat-hint>(Max 15 minutes)</mat-hint>
+                            </mat-form-field>
+                  
+                            <mat-form-field color="accent" appearance="outline">
+                              <mat-label>Enter Honararium Amount</mat-label>
+                              <input matInput type="number" placeholder="Enter Honararium Amount" formControlName="honorariumAmount">
+                            </mat-form-field>
+                  
+                          </div>
+                          <div class="col">
+                            <mat-form-field color="accent" appearance="outline">
+                              <mat-label>Speaker/Trainer Briefing</mat-label>
+                              <input matInput type="number" [max]="120" placeholder="Enter Duration in minutes"
+                                formControlName="briefingDuration">
+                              <mat-hint>(Max 120 minutes)</mat-hint>
+                            </mat-form-field>
+                  
+                            <mat-form-field color="accent" appearance="outline">
+                              <mat-label>Panel Discussion/session duration</mat-label>
+                              <input matInput type="number" placeholder="Panel Discussion/session duration" formControlName="panelDiscussionDuration">
+                            </mat-form-field>
+                  
+                            <mat-form-field color="accent" appearance="outline">
+                              <mat-label>Total number of hours</mat-label>
+                              <input matInput type="number" placeholder="Total number of hours prepopulated" disabled [value]="totalHours">
+                            </mat-form-field>
+                          </div>
+                        </div>
+                        <h4 class="d-flex justify-content-center col-12"><b>Benificiary Details</b></h4>
+                        <div class="row">
+                          <div class="col">
+                      
+                            <div class="m-3" *ngIf="showRationale">
+                              <mat-label>Upload NOC</mat-label><br>
+                              <input type="file" formControlName="uploadNOC">
+                            </div>
+                  
+                            <mat-form-field color="accent" appearance="outline">
+                              <mat-label>Currency</mat-label>
+                              <mat-select formControlName="currency">
+                                <mat-option value="rupees">Rupees</mat-option>
+                                <mat-option value="dollar">Dollar</mat-option>
+                                <mat-option value="other">Other</mat-option>
+                              </mat-select>
+                            </mat-form-field>
+                  
+                            <mat-form-field *ngIf="showOtherCurrencyTextBox" color="accent" appearance="outline">
+                              <mat-label>Other Currency</mat-label>
+                              <input matInput placeholder="Enter Currency" [disabled]="!isHonararium"  [value]="otherCurrency" >
+                            
+                            </mat-form-field>
+                  
+                            <mat-form-field color="accent" appearance="outline">
+                              <mat-label>Selection Of Taxes</mat-label>
+                              <!-- <mat-select [disabled]="!isHonararium" [(ngModel)]="taxSelect" [ngModelOptions]="{standalone: true}">
+                                <mat-option value="Inclusive">Inclusive of Tax</mat-option>
+                                <mat-option value="Exclusive">Exclusive of Tax</mat-option>
+                              </mat-select> -->
+                              <mat-select formControlName="taxSelection">
+                                <mat-option value="Inclusive">Inclusive of Tax</mat-option>
+                                <mat-option value="Exclusive">Exclusive of Tax</mat-option>
+                              </mat-select>
+                            </mat-form-field>
+                  
+                            <mat-form-field *ngIf="!isHonararium" color="accent" appearance="outline">
+                              <mat-label>Benificiary Name</mat-label>
+                              <input matInput placeholder="Enter Bank Account Number" [disabled]="!isHonararium" [value]="bankAccountNumber">
+                            </mat-form-field>
+                  
+                            <mat-form-field *ngIf="isHonararium" color="accent" appearance="outline">
+                              <mat-label>Benificiary Name</mat-label>
+                              <input matInput placeholder="Enter Benificiary Name" formControlName="benificiaryName" [matAutocomplete]="auto">
+                  
+                              <mat-autocomplete #auto="matAutocomplete">
+                                <mat-option *ngFor="let a of filteredAccounts" value={{a.BeneficiaryName}} >{{a.BeneficiaryName}}</mat-option>
+                              </mat-autocomplete>
+                            </mat-form-field>
+                  
+                            <mat-form-field color="accent" appearance="outline">
+                              <mat-label>Bank Account Number</mat-label>
+                              <input matInput placeholder="Enter Bank Account Number" [disabled]="!isHonararium || isVendorPresent" [value]="bankAccountNumber">
+                            </mat-form-field>
+                          
+                          </div>
+                          <div class="col">
+                            <mat-form-field *ngIf="showRationale" color="accent" appearance="outline">
+                              <mat-label>Rationale</mat-label>
+                              <input matInput type="number" placeholder="Enter Currency" formControlName="rationale">
+                            </mat-form-field>
+            
+                            <mat-form-field color="accent" appearance="outline">
+                              <mat-label>Name as per PAN</mat-label>
+                              <input matInput placeholder="Name as per PAN pre populated" [disabled]="!isHonararium || isVendorPresent"  [value]="nameAsPan">
+                            </mat-form-field>
+                  
+                            <mat-form-field color="accent" appearance="outline">
+                              <mat-label>PAN Card Number</mat-label>
+                              <input matInput placeholder="PAN Card Number pre populated" [disabled]="!isHonararium || isVendorPresent" [value]="panCardNumber">
+                            </mat-form-field>
+                  
+                            <mat-form-field color="accent" appearance="outline">
+                              <mat-label>IFSC Code </mat-label>
+                              <input matInput placeholder="IFSC Code pre populated" [disabled]="!isHonararium || isVendorPresent"  [value]="ifscCode">
+                            </mat-form-field>
+                  
+                            <mat-form-field color="accent" appearance="outline">
+                              <mat-label>Email ID (*optional)</mat-label>
+                              <input matInput placeholder="Email ID pre populated" [disabled]="!isHonararium" [(ngModel)]="emailId" [ngModelOptions]="{standalone: true}" [value]="emailId">
+                            </mat-form-field>
+                  
+                            <div class="m-3">
+                              <mat-label>Upload PAN Card</mat-label><br>
+                              <input type="file" [disabled]="!isHonararium" [value]="uploadPAN">
+                            </div>
+                  
+                            <div class="m-3">
+                              <mat-label>Upload Cheque</mat-label><br>
+                              <input type="file" [disabled]="!isHonararium" [value]="uploadCheque">
+                            </div>
+                  
+                          </div>
+                        </div>
+                        
+                        
+                      </form>
+                </div>
+
+                <div class="col">
+                    <mat-radio-group  formControlName="isTravelRequired">
+                        <mat-label>Is Travel allowance applicable?</mat-label><br>
+                         <div class="mt-2">
+                          <mat-radio-button value="Yes" >Yes</mat-radio-button>
+                          <mat-radio-button value="No" class="m-1" [checked]="true">No</mat-radio-button>
+                         </div>
+                      </mat-radio-group>
+                </div>
+
+                <div class="container">
+                    <form [formGroup]="eventInitiation4Travel" *ngIf="showTravelForm" class="form-border">
+                        <h4 class="d-flex justify-content-center col-12"><b>Travel Details</b></h4>
+                        <div class="row">
+                          <div class="col">
+                            <mat-form-field color="accent" appearance="outline">
+                              <mat-label>Travel Selection</mat-label>
+                              <mat-select formControlName="travelType">
+                                <mat-option value="air">Air</mat-option>
+                                <mat-option value="train">Train</mat-option>
+                                <mat-option value="other">Other</mat-option>
+                              </mat-select>
+                            </mat-form-field>
+            
+                            <mat-form-field  color="accent" appearance="outline">
+                              <mat-label>Travel Amount</mat-label>
+                              <input matInput type="number" placeholder="Enter Travel Amount" formControlName="travelAmount">
+                            </mat-form-field>
+            
+                          </div>
+            
+                          <div class="col">
+                            <div>
+                              <mat-radio-group  formControlName="travelBTC">
+                                <mat-label>Is BTC/BTE?</mat-label><br>
+                                 <div class="mt-2">
+                                  <mat-radio-button value="BTC" >BTC</mat-radio-button>
+                                  <mat-radio-button value="BTE" class="m-1" >BTE</mat-radio-button>
+                                 </div>
+                              </mat-radio-group>
+                            </div>
+            
+                          </div>
+                        </div>
+                      </form>
+                   
+
+                </div>
+
+
+
+                <div class="col">
+                    <mat-label>Is accomodation allowance applicable?</mat-label>
                 <mat-radio-group formControlName="isAccomRequired">
                     <div class="mt-2 ">
                     <mat-radio-button value="Yes" >Yes</mat-radio-button>
@@ -468,214 +648,49 @@
                 </div>
                 </mat-radio-group>
                 </div>
-
-              </div>
+                <div class="container">
+                    <form [formGroup]="eventInitiation4Accomodation" *ngIf="showAccomForm" class="form-border">
+                        <h4 class="d-flex justify-content-center col-12"><b>Accomodation Details</b></h4>
+                        <div class="row">
+                          <div class="col">
+                            <div>
+                              <mat-radio-group  formControlName="accomBTC">
+                                <mat-label>Is BTC/BTE?</mat-label><br>
+                                 <div class="mt-2">
+                                  <mat-radio-button value="BTC" >BTC</mat-radio-button>
+                                  <mat-radio-button value="BTE" class="m-1" >BTE</mat-radio-button>
+                                 </div>
+                              </mat-radio-group>
+                            </div>
+                          </div>
+                          <div class="col">
+                            <mat-form-field  color="accent" appearance="outline">
+                              <mat-label>Accomodation Amount</mat-label>
+                              <input matInput type="number" placeholder="Enter Accomodation Amount" formControlName="accomAmount">
+                            </mat-form-field>
+                          </div>
+                        </div>
+                      </form>
+                </div>
             </div>
-          </form>
 
-          <form [formGroup]="eventInitiation4Travel" *ngIf="showTravelForm">
-            <h4 class="d-flex justify-content-center col-12"><b>Travel Details</b></h4>
-            <div class="row">
-              <div class="col">
-                <mat-form-field color="accent" appearance="outline">
-                  <mat-label>Travel Selection</mat-label>
-                  <mat-select formControlName="travelType">
-                    <mat-option value="air">Air</mat-option>
-                    <mat-option value="train">Train</mat-option>
-                    <mat-option value="other">Other</mat-option>
-                  </mat-select>
-                </mat-form-field>
-
-                <mat-form-field  color="accent" appearance="outline">
-                  <mat-label>Travel Amount</mat-label>
-                  <input matInput type="number" placeholder="Enter Travel Amount" formControlName="travelAmount">
-                </mat-form-field>
-
-              </div>
-
-              <div class="col">
-                <div>
-                  <mat-radio-group  formControlName="travelBTC">
-                    <mat-label>Is BTC/BTE?</mat-label><br>
+            <div>
+                <mat-radio-group  formControlName="isLocalConveyance">
+                    <mat-label>Is Local Conveyance applicable?</mat-label><br>
                      <div class="mt-2">
-                      <mat-radio-button value="BTC" >BTC</mat-radio-button>
-                      <mat-radio-button value="BTE" class="m-1" >BTE</mat-radio-button>
+                      <mat-radio-button value="Yes" >Yes</mat-radio-button>
+                      <mat-radio-button value="No" class="m-1" [checked]="true">No</mat-radio-button>
                      </div>
                   </mat-radio-group>
-                </div>
-
-              </div>
             </div>
-          </form>
 
-          <form [formGroup]="eventInitiation4Accomodation" *ngIf="showAccomForm">
-            <h4 class="d-flex justify-content-center col-12"><b>Accomodation Details</b></h4>
-            <div class="row">
-              <div class="col">
-                <div>
-                  <mat-radio-group  formControlName="accomBTC">
-                    <mat-label>Is BTC/BTE?</mat-label><br>
-                     <div class="mt-2">
-                      <mat-radio-button value="BTC" >BTC</mat-radio-button>
-                      <mat-radio-button value="BTE" class="m-1" >BTE</mat-radio-button>
-                     </div>
-                  </mat-radio-group>
-                </div>
-              </div>
-              <div class="col">
-                <mat-form-field  color="accent" appearance="outline">
-                  <mat-label>Accomodation Amount</mat-label>
-                  <input matInput type="number" placeholder="Enter Accomodation Amount" formControlName="accomAmount">
-                </mat-form-field>
-              </div>
+            <div class="col">
+              <mat-form-field  *ngIf="showLocalConveyance" color="accent" appearance="outline">
+                <mat-label>Local Conveyance Amount</mat-label>
+                <input matInput placeholder="Enter Local Conveyance Amount" formControlName="localConveyanceAmount">
+              </mat-form-field>
             </div>
-          </form>
-
-          <form [formGroup]="eventInitiatio4Honararium" *ngIf="isHonararium">
-            <h4 class="d-flex justify-content-center col-12"><b>Honararium Details</b></h4>
-            <div class="row">
-              <div class="col">
-                <mat-form-field color="accent" appearance="outline">
-                  <mat-label>Presentation / Speaking / Workshop duration</mat-label>
-                  <input matInput type="number" placeholder="Enter Duration in minutes"
-                    formControlName="presentationDuration">
-                </mat-form-field>
-      
-                <mat-form-field color="accent" appearance="outline">
-                  <mat-label>Development presentation /Panel session preparation</mat-label>
-                  <input matInput type="number" placeholder="Enter Duration in minutes"
-                    formControlName="panelSessionPreparation">
-                </mat-form-field>
-      
-                <mat-form-field color="accent" appearance="outline">
-                  <mat-label>Q&A Session</mat-label>
-                  <input matInput type="number" [max]="15" placeholder="Enter Duration in minutes"
-                    formControlName="qaSession">
-                  <mat-hint>(Max 15 minutes)</mat-hint>
-                </mat-form-field>
-      
-                <mat-form-field color="accent" appearance="outline">
-                  <mat-label>Enter Honararium Amount</mat-label>
-                  <input matInput type="number" placeholder="Enter Honararium Amount" formControlName="honorariumAmount">
-                </mat-form-field>
-      
-              </div>
-              <div class="col">
-                <mat-form-field color="accent" appearance="outline">
-                  <mat-label>Speaker/Trainer Briefing</mat-label>
-                  <input matInput type="number" [max]="120" placeholder="Enter Duration in minutes"
-                    formControlName="briefingDuration">
-                  <mat-hint>(Max 120 minutes)</mat-hint>
-                </mat-form-field>
-      
-                <mat-form-field color="accent" appearance="outline">
-                  <mat-label>Panel Discussion/session duration</mat-label>
-                  <input matInput type="number" placeholder="Panel Discussion/session duration" formControlName="panelDiscussionDuration">
-                </mat-form-field>
-      
-                <mat-form-field color="accent" appearance="outline">
-                  <mat-label>Total number of hours</mat-label>
-                  <input matInput type="number" placeholder="Total number of hours prepopulated" disabled [value]="totalHours">
-                </mat-form-field>
-              </div>
-            </div>
-            <h4 class="d-flex justify-content-center col-12"><b>Benificiary Details</b></h4>
-            <div class="row">
-              <div class="col">
-          
-                <div class="m-3" *ngIf="showRationale">
-                  <mat-label>Upload NOC</mat-label><br>
-                  <input type="file" formControlName="uploadNOC">
-                </div>
-      
-                <mat-form-field color="accent" appearance="outline">
-                  <mat-label>Currency</mat-label>
-                  <mat-select formControlName="currency">
-                    <mat-option value="rupees">Rupees</mat-option>
-                    <mat-option value="dollar">Dollar</mat-option>
-                    <mat-option value="other">Other</mat-option>
-                  </mat-select>
-                </mat-form-field>
-      
-                <mat-form-field *ngIf="showOtherCurrencyTextBox" color="accent" appearance="outline">
-                  <mat-label>Other Currency</mat-label>
-                  <input matInput placeholder="Enter Currency" [disabled]="!isHonararium"  [value]="otherCurrency" >
-                
-                </mat-form-field>
-      
-                <mat-form-field color="accent" appearance="outline">
-                  <mat-label>Selection Of Taxes</mat-label>
-                  <!-- <mat-select [disabled]="!isHonararium" [(ngModel)]="taxSelect" [ngModelOptions]="{standalone: true}">
-                    <mat-option value="Inclusive">Inclusive of Tax</mat-option>
-                    <mat-option value="Exclusive">Exclusive of Tax</mat-option>
-                  </mat-select> -->
-                  <mat-select formControlName="taxSelection">
-                    <mat-option value="Inclusive">Inclusive of Tax</mat-option>
-                    <mat-option value="Exclusive">Exclusive of Tax</mat-option>
-                  </mat-select>
-                </mat-form-field>
-      
-                <mat-form-field *ngIf="!isHonararium" color="accent" appearance="outline">
-                  <mat-label>Benificiary Name</mat-label>
-                  <input matInput placeholder="Enter Bank Account Number" [disabled]="!isHonararium" [value]="bankAccountNumber">
-                </mat-form-field>
-      
-                <mat-form-field *ngIf="isHonararium" color="accent" appearance="outline">
-                  <mat-label>Benificiary Name</mat-label>
-                  <input matInput placeholder="Enter Benificiary Name" formControlName="benificiaryName" [matAutocomplete]="auto">
-      
-                  <mat-autocomplete #auto="matAutocomplete">
-                    <mat-option *ngFor="let a of filteredAccounts" value={{a.BeneficiaryName}} >{{a.BeneficiaryName}}</mat-option>
-                  </mat-autocomplete>
-                </mat-form-field>
-      
-                <mat-form-field color="accent" appearance="outline">
-                  <mat-label>Bank Account Number</mat-label>
-                  <input matInput placeholder="Enter Bank Account Number" [disabled]="!isHonararium || isVendorPresent" [value]="bankAccountNumber">
-                </mat-form-field>
-              
-              </div>
-              <div class="col">
-                <mat-form-field *ngIf="showRationale" color="accent" appearance="outline">
-                  <mat-label>Rationale</mat-label>
-                  <input matInput type="number" placeholder="Enter Currency" formControlName="rationale">
-                </mat-form-field>
-
-                <mat-form-field color="accent" appearance="outline">
-                  <mat-label>Name as per PAN</mat-label>
-                  <input matInput placeholder="Name as per PAN pre populated" [disabled]="!isHonararium || isVendorPresent"  [value]="nameAsPan">
-                </mat-form-field>
-      
-                <mat-form-field color="accent" appearance="outline">
-                  <mat-label>PAN Card Number</mat-label>
-                  <input matInput placeholder="PAN Card Number pre populated" [disabled]="!isHonararium || isVendorPresent" [value]="panCardNumber">
-                </mat-form-field>
-      
-                <mat-form-field color="accent" appearance="outline">
-                  <mat-label>IFSC Code </mat-label>
-                  <input matInput placeholder="IFSC Code pre populated" [disabled]="!isHonararium || isVendorPresent"  [value]="ifscCode">
-                </mat-form-field>
-      
-                <mat-form-field color="accent" appearance="outline">
-                  <mat-label>Email ID (*optional)</mat-label>
-                  <input matInput placeholder="Email ID pre populated" [disabled]="!isHonararium" [(ngModel)]="emailId" [ngModelOptions]="{standalone: true}" [value]="emailId">
-                </mat-form-field>
-      
-                <div class="m-3">
-                  <mat-label>Upload PAN Card</mat-label><br>
-                  <input type="file" [disabled]="!isHonararium" [value]="uploadPAN">
-                </div>
-      
-                <div class="m-3">
-                  <mat-label>Upload Cheque</mat-label><br>
-                  <input type="file" [disabled]="!isHonararium" [value]="uploadCheque">
-                </div>
-      
-              </div>
-            </div>
-            
-            
-          </form>
+        </form>
 
           <div class="col-12 d-flex justify-content-start">
             <button type="button" class="btn btn-primary btn-sm" (click)="addHCPTable()">AddNew</button>
@@ -765,8 +780,8 @@
               <td>
                 <mat-form-field appearance="outline" color="accent" >
                   <mat-label>Brands</mat-label>
-                  <mat-select >
-                    <mat-option  value="op1">op1</mat-option>
+                  <mat-select (ngModelChange)="slideKitPrePopulate($event,slideKitDropDown)"  [ngModelOptions]="{standalone: true}" [(ngModel)]="slideKitDropDown" >
+                    <mat-option *ngFor="let a of slideKitDropDownOptions" value={{a.SlideKitName}}>{{a.SlideKitName}}</mat-option>
                   </mat-select>
                 </mat-form-field>
 
@@ -791,7 +806,7 @@
 
 <div class="container d-flex justify-content-end">
   <button mat-raised-button color="accent" class="m-1" matStepperPrevious>Previous</button>
-  <button mat-raised-button color="primary" class="m-1" matStepperNext>Next</button>
+  <button  mat-raised-button color="primary" class="m-1" matStepperNext>Next</button>
 </div>
 
   </mat-step>
@@ -1016,10 +1031,10 @@
           <tbody>
             <tr *ngFor="let expense of expenseTableDetails; index as i">
               <td scope="row">{{i+1}}</td>
-              <td>{{expense.expenseType}}</td>
-              <td>{{expense.expenseAmount}}</td>
-              <td>{{expense.isExcludingTax}}</td>
-              <td>{{expense.isExpenseBtc}}</td>
+              <td>{{expense.Expense}}</td>
+              <td>{{expense.Amount}}</td>
+              <td>{{expense.AmountExcludingTax}}</td>
+              <td>{{expense.BtcorBte}}</td>
               <td style="cursor: pointer;">
                 <i (click)="openExpenseUpdateModal(expense)" class="material-icons" style="margin-right: 5px;">edit</i>
                 <i (click)="deleteExpense(i)" class="material-icons">delete</i>

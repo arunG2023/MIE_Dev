@@ -135,6 +135,13 @@ export class Class1EventRequestComponent implements OnInit {
     utilityService.getEmployeesFromHCPMaster().subscribe(
       res => this.inviteesFromHCPMaster = res
     )
+
+    // Get Slidekit Details
+    utilityService.getSlideKitDetails().subscribe(
+      res => {
+        if(Boolean(res)) this.slideKitDetails = res;
+      }
+    )
     
     this.eventInitiation1 = new FormGroup({
       withIn30DaysDeviation : new FormControl(''),
@@ -169,6 +176,7 @@ export class Class1EventRequestComponent implements OnInit {
 
     this.eventInitiation4Sub = new FormGroup({
       uploadFCPA : new FormControl(''),
+      fcpaDate : new FormControl('',Validators.required),
       isTravelRequired : new FormControl('No',Validators.required),
       isLocalConveyance : new FormControl('No',Validators.required),
       isHonararium : new FormControl('No',Validators.required),
@@ -271,49 +279,7 @@ export class Class1EventRequestComponent implements OnInit {
       uploadExpenseDeviation : new FormControl('')
     })
 
-    /*
-    this.eventInitiation5 = new FormGroup({
-      presentationDuration : new FormControl(0,[Validators.required]),
-      panelSessionPreparation : new FormControl(0,[Validators.required]),
-      qaSession : new FormControl(0,[Validators.required]),
-      briefingDuration : new FormControl(0,[Validators.required]),
-      panelDiscussionDuration : new FormControl(0,[Validators.required]),
-      // totalHours : new FormControl('',[Validators.required])
-    })
 
-    this.eventInitiation6 = new FormGroup({
-      isHonararium : new FormControl('No',[Validators.required]),
-      uploadNOC : new FormControl('',),
-      rationale : new FormControl('',),
-      // currency : new FormControl('',[Validators.required]),
-      // otherCurrency : new FormControl('',),
-      // taxSelect : new FormControl({value : '',disabled : !this.isHonararium}),
-      // benficiaryName : new FormControl('',[Validators.required]),
-      bankAccountNumber : new FormControl('',),
-      // nameAsPan : new FormControl('',[Validators.required]),
-      // panCardNumber : new FormControl('',[Validators.required]),
-      // ifscCode : new FormControl('',[Validators.required]),
-      // emailId : new FormControl(''),
-      // uploadPAN : new FormControl('',[Validators.required]),
-      // uploadCheque : new FormControl('',[Validators.required])
-    })
-
-    this.eventInitiation7 = new FormGroup({
-      invitee : new FormControl('',[Validators.required]),
-      expense : new FormControl('',[Validators.required]),
-      expenseAmount : new FormControl(0,),
-      isLocalConveyance : new FormControl('No',),
-      isAdvanceRequired : new FormControl('No',Validators.required),
-      isExcludingTax : new FormControl('',[Validators.required]),
-      uploadExpenseDeviation : new FormControl('',[Validators.required]),
-      isBtc : new FormControl('',[Validators.required]),
-      toCalculateExpense : new FormControl('No',[Validators.required]),
-      finalAmount : new FormControl('',[Validators.required]),
-      btcTotalAmount : new FormControl('',[Validators.required]),
-      bteTotalAmount : new FormControl('',[Validators.required]),
-      uploadAgenda : new FormControl('',[Validators.required]),
-      uploadInvitation : new FormControl('',[Validators.required])
-    }) */
   }
 
   ngOnInit(): void {
@@ -326,7 +292,8 @@ export class Class1EventRequestComponent implements OnInit {
     this.event4FormSpeakerPrepopulate();
     this.event4FormTrainerPrepopulate();
     this.event4FormOtherPrepopulate();
-    this.eventInitiatio4HonarariumPrepopulate()
+    this.eventInitiatio4HonarariumPrepopulate();
+    // this.slideKitPrePopulate();
     this.event4FormSubPrepopulate();
     this.inviteeSelectionFormPrePopulate();
     this.expenseSelectionFormPrePopulate();
@@ -368,28 +335,30 @@ export class Class1EventRequestComponent implements OnInit {
   // Filter Events within 30 days
   eventsWithin30Days: any[] =[] ;
   filterEventsWithIn30Days(eventList:any){
-    eventList.forEach(event => {
-      let today : any = new Date();
-      // console.log(event.EventDate)
-      if(event.EventDate){
-        let eventDate : any = new Date(event.EventDate);
-        if(eventDate > today){
-         
-          let Difference_In_Time = eventDate.getTime() - today.getTime();
- 
-          // To calculate the no. of days between two dates
-          let Difference_In_Days = Math.round(Difference_In_Time / (1000 * 3600 * 24));
-
-          if(Difference_In_Days <= 30){
-            this.eventsWithin30Days.push(event)
-          }
-        }
-        // console.log(new Date(event.EventDate))
-
+    if(Boolean(eventList) && eventList.length > 0){
+      eventList.forEach(event => {
+        let today : any = new Date();
         // console.log(event.EventDate)
-      }
-     
-    })
+        if(event.EventDate){
+          let eventDate : any = new Date(event.EventDate);
+          if(eventDate > today){
+           
+            let Difference_In_Time = eventDate.getTime() - today.getTime();
+   
+            // To calculate the no. of days between two dates
+            let Difference_In_Days = Math.round(Difference_In_Time / (1000 * 3600 * 24));
+  
+            if(Difference_In_Days <= 30){
+              this.eventsWithin30Days.push(event)
+            }
+          }
+          // console.log(new Date(event.EventDate))
+  
+          // console.log(event.EventDate)
+        }
+       
+      })
+    }
 
     // this.pageLoaded = true
     if(this.eventsWithin30Days.length > 0){
@@ -477,6 +446,7 @@ export class Class1EventRequestComponent implements OnInit {
         
         // console.log(this.totalPercent)
         this.brandTableDetails.push(brand);
+       
         this.showBrandTable = true;
         this.eventInitiation3.reset();
         this.percentageAllocation = 0;
@@ -960,6 +930,11 @@ export class Class1EventRequestComponent implements OnInit {
         hcpgoNonGo = this.otherGoNonGo;
       }
 
+      if(this.eventInitiation4Sub.invalid){
+        alert("FCPA Date is missing");
+        hcpValidity++;
+      }
+
       // console.log("HonarVal",this.eventInitiatio4Honararium.valid)
       if(this.isHonararium && !this.eventInitiatio4Honararium.valid){
         alert("Honararium Details are missing")
@@ -1030,7 +1005,7 @@ export class Class1EventRequestComponent implements OnInit {
         TrainerCode : (Boolean(this.trainerCode))? this.trainerCode : " ",
         Speciality : (Boolean(this.speakerSpeciality))? this.speakerSpeciality : this.trainerSpeciality,
         Tier : (Boolean(this.speakerTier))? this.speakerTier : this.trainerTier,
-        Rationale : (this.isHonararium && this.showRationale)? this.eventInitiatio4Honararium.value.rationale : 0+'',
+        Rationale : (this.isHonararium && this.showRationale)? this.eventInitiatio4Honararium.value.rationale+'' : 0+'',
         PresentationDuration : honarariumDuration.presentationDuration+'' ,
         PanelSessionPreperationDuration :  honarariumDuration.panelSessionPreparation+'',
         PanelDisscussionDuration : honarariumDuration.panelDiscussionDuration+'',
@@ -1088,6 +1063,7 @@ export class Class1EventRequestComponent implements OnInit {
       this.eventInitiation4Sub.controls.isHonararium.setValue('No');
       this.eventInitiation4Sub.controls.isLocalConveyance.setValue('No');
       this.eventInitiation4Sub.controls.localConveyanceAmount.setValue(0);
+      this.eventInitiation4Sub.controls.fcpaDate.setValue('');
 
       this.otherGoNonGo = '';
       this.otherSpeciality = '';
@@ -1254,14 +1230,45 @@ export class Class1EventRequestComponent implements OnInit {
 
 
   // SideKit Selection:
-  hideUploadFile : boolean = false;
-  sideKitBrand(id:number){
-    // console.log(id)
-    console.log(document.getElementsByClassName('.brand-dropdown')[id])
-    
-   
-    this.hideUploadFile = true;
+  slideKitDetails : any;
+  slideKitDropDown : any;
+  slideKitDropDownOptions : any[] =[];
+
+  slideKitPrePopulate(a:any){
+   console.log(a)
+    if(Boolean(this.brandTableDetails) && this.brandTableDetails.length > 0){
+      console.log(this.brandTableDetails)
+
+    }
   }
+
+  slideKitBrandMatch(){
+    let activeSlideKits : any[] = [];
+    if(Boolean(this.slideKitDetails) && this.slideKitDetails.length > 0){
+      this.slideKitDetails.forEach(slideKit => {
+        if(slideKit.IsActive == 'Yes'){
+            activeSlideKits.push(slideKit)
+        }
+      })
+    }
+    console.log(activeSlideKits)
+    activeSlideKits.forEach(slideKit =>{
+      this.brandTableDetails.forEach(brand => {
+        if(slideKit.BrandName == brand.BrandName){
+          this.slideKitDropDownOptions.push(slideKit)
+        }
+      })
+    })
+
+    console.log(this.slideKitDropDownOptions)
+  }
+
+
+  hideUploadFile : boolean = false;
+  
+
+
+  // Invitee Control
   showInviteeLocalConveyance : boolean = false;
 
   inviteesFromHCPMaster : any ;
@@ -1373,6 +1380,7 @@ export class Class1EventRequestComponent implements OnInit {
       alert("Select BTC/BTE");
       inviteeValidity++;
     }
+    
     if(inviteeValidity == 0){
       const inviteeData = {
         EventIdOrEventRequestId : ' ',
@@ -1432,10 +1440,17 @@ export class Class1EventRequestComponent implements OnInit {
   addToExpenseTable(){
     if(this.expenseSelectionForm.valid){
       const expense = {
-        expenseType : this.expenseSelectionForm.value.expenseType,
-        expenseAmount : this.expenseSelectionForm.value.expenseAmount,
-        isExcludingTax : this.expenseSelectionForm.value.isExcludingTax,
-        isExpenseBtc : this.expenseSelectionForm.value.isExpenseBtc
+        // For API
+        EventId : " ",
+        BtcAmount : " ",
+        BteAmount : " ",
+        BudgetAmount : " ",
+
+        // For Table
+        Expense : this.expenseSelectionForm.value.expenseType,
+        Amount : this.expenseSelectionForm.value.expenseAmount+'',
+        AmountExcludingTax : this.expenseSelectionForm.value.isExcludingTax,
+        BtcorBte : this.expenseSelectionForm.value.isExpenseBtc
       }
       this.expenseTableDetails.push(expense);
       this.expenseSelectionForm.reset();
@@ -1482,10 +1497,11 @@ export class Class1EventRequestComponent implements OnInit {
       RequestBrandsList : this.brandTableDetails,
       EventRequestHcpRole : this.hcpTableDetails,
       EventRequestInvitees : this.inviteeTableDetails,
+      EventRequestExpenseSheet : this.expenseTableDetails,
       EventRequestHCPSlideKits : [
         {
           EventId : " ",
-          Mis: " ",
+          Mis: "MisCode",
           SlideKitType : " ",
           SlideKitDocument : " "
         }

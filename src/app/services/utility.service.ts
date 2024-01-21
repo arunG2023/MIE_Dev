@@ -122,4 +122,9 @@ export class UtilityService {
   postClass1PreEventRequest(data:any){
     return this.http.post(this.baseAPIUrl+"/Test/AllObjModelsData", data)
   }
+
+  // Get Slide Kit Details from Slide Kit master
+  getSlideKitDetails(){
+    return this.http.get(this.baseAPIUrl+'/MasterSheets/SlideKitMaster')
+  }
 }

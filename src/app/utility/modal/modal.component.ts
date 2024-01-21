@@ -116,13 +116,13 @@ export class ModalComponent implements OnInit {
       this.btc = data.BtcorBte;
       this.lcAmount = data.LcAmount
     }
-    else if(data.expenseType){
+    else if(data.Expense){
       this.showExpenseForm = true;
 
-      this.expenseType = data.expenseType;
-      this.expenseAmount = data.expenseAmount;
-      this.isExpenseBtc = data.isExpenseBtc;
-      this.isExcludingTax = data.isExcludingTax;
+      this.expenseType = data.Expense;
+      this.expenseAmount = data.Amount;
+      this.isExpenseBtc = data.AmountExcludingTax;
+      this.isExcludingTax = data.BtcorBte;
     }
     else{
       this.showBrandForm = false;
