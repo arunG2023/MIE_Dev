@@ -498,8 +498,8 @@
                   <mat-radio-group  formControlName="travelBTC">
                     <mat-label>Is BTC/BTE?</mat-label><br>
                      <div class="mt-2">
-                      <mat-radio-button value="Yes" >Yes</mat-radio-button>
-                      <mat-radio-button value="No" class="m-1" >No</mat-radio-button>
+                      <mat-radio-button value="BTC" >BTC</mat-radio-button>
+                      <mat-radio-button value="BTE" class="m-1" >BTE</mat-radio-button>
                      </div>
                   </mat-radio-group>
                 </div>
@@ -516,8 +516,8 @@
                   <mat-radio-group  formControlName="accomBTC">
                     <mat-label>Is BTC/BTE?</mat-label><br>
                      <div class="mt-2">
-                      <mat-radio-button value="Yes" >Yes</mat-radio-button>
-                      <mat-radio-button value="No" class="m-1" [checked]="true">No</mat-radio-button>
+                      <mat-radio-button value="BTC" >BTC</mat-radio-button>
+                      <mat-radio-button value="BTE" class="m-1" >BTE</mat-radio-button>
                      </div>
                   </mat-radio-group>
                 </div>
@@ -605,7 +605,11 @@
       
                 <mat-form-field color="accent" appearance="outline">
                   <mat-label>Selection Of Taxes</mat-label>
-                  <mat-select [disabled]="!isHonararium" [(ngModel)]="taxSelect" [ngModelOptions]="{standalone: true}">
+                  <!-- <mat-select [disabled]="!isHonararium" [(ngModel)]="taxSelect" [ngModelOptions]="{standalone: true}">
+                    <mat-option value="Inclusive">Inclusive of Tax</mat-option>
+                    <mat-option value="Exclusive">Exclusive of Tax</mat-option>
+                  </mat-select> -->
+                  <mat-select formControlName="taxSelection">
                     <mat-option value="Inclusive">Inclusive of Tax</mat-option>
                     <mat-option value="Exclusive">Exclusive of Tax</mat-option>
                   </mat-select>
@@ -634,7 +638,7 @@
               <div class="col">
                 <mat-form-field *ngIf="showRationale" color="accent" appearance="outline">
                   <mat-label>Rationale</mat-label>
-                  <input matInput placeholder="Enter Currency" formControlName="rationale">
+                  <input matInput type="number" placeholder="Enter Currency" formControlName="rationale">
                 </mat-form-field>
 
                 <mat-form-field color="accent" appearance="outline">
