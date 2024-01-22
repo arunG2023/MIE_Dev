@@ -15,7 +15,7 @@ export class UtilityService {
   previousEvents : any;
 
   getPreviousEventsFast(){
-    this.http.get(this.baseAPIUrl+'/Class1/GetEventData').subscribe(
+    this.http.get(this.baseAPIUrl+'/GetRequestSheets/GetEventRequestWebData').subscribe(
       res => {
         this.previousEvents = res;
       }
@@ -29,12 +29,12 @@ export class UtilityService {
 
   // TO get event types
   getEventTypes(): Observable<any>{
-    return this.http.get(this.baseAPIUrl+"/MasterSheets/GetEventData")
+    return this.http.get(this.baseAPIUrl+"/GetMasterSheets/GetEventData")
   }
 
   // Get Roles
   getRoles(): Observable<any>{
-    return this.http.get(this.baseAPIUrl+'/MasterSheets/GetRoleData')
+    return this.http.get(this.baseAPIUrl+'/GetMasterSheets/GetRoleData')
   }
 
   // Get employee details from Employee Master
@@ -54,7 +54,7 @@ export class UtilityService {
 
   // Get HCP roles from HCP Role Master
   getHcpRoles(): Observable<any>{
-    return this.http.get(this.baseAPIUrl+'/MasterSheets/GetHCPRoleData')
+    return this.http.get(this.baseAPIUrl+'/GetMasterSheets/GetHCPRoleData')
   }
   
   // Update employees in HCP Role Master
@@ -70,61 +70,70 @@ export class UtilityService {
 
   // Get Brand Names
   getBrandNames(){
-    return this.http.get(this.baseAPIUrl+'/MasterSheets/GetBrandNameData')
+    return this.http.get(this.baseAPIUrl+'/GetMasterSheets/GetBrandNameData')
   }
 
   // Get Approved Speakers
   getApprovedSpeakers(){
-    return this.http.get(this.baseAPIUrl+'/Test/GetApprovedSpeakersData');
+    return this.http.get(this.baseAPIUrl+'/GetMasterSheets/GetApprovedSpeakersData');
   }
 
   // Get Approved Trainer
   getApprovedTrainers(){
-    return this.http.get(this.baseAPIUrl+"/MasterSheets/GetApprovedTrainersData");
+    return this.http.get(this.baseAPIUrl+"/GetMasterSheets/GetApprovedTrainersData");
   }
 
   // Get All States
   getAllStates(){
-    return this.http.get(this.baseAPIUrl+'/MasterSheets/GetStateNameData')
+    return this.http.get(this.baseAPIUrl+'/GetMasterSheets/GetStateNameData')
   }
 
   // Get All City
   getAllCities(){
-    return this.http.get(this.baseAPIUrl+'/MasterSheets/GetCityNameData')
+    return this.http.get(this.baseAPIUrl+'/GetMasterSheets/GetCityNameData')
   }
 
   // Get Vendor Details
   getVendorDetails(){
-    return this.http.get(this.baseAPIUrl+'/MasterSheets/VendorMasterSheetData')
+    return this.http.get(this.baseAPIUrl+'/GetMasterSheets/VendorMasterSheetData')
   }
 
-  // POST event 1 reques form First set of data
-  postEvent1Data1(data:any){
-    return this.http.post(this.baseAPIUrl+'/Class1/AddData',data)
-  }
+  
 
   // Get Remuneration Value
   getFmv(speaciality,tier){
-    return this.http.get(`http://localhost:5098/api/Test/GetfmvColumnValue?specialty=${speaciality}&columnTitle=${tier}`)
+    return this.http.get(this.baseAPIUrl+`/FMV/GetfmvColumnValue?specialty=${speaciality}&columnTitle=${tier}`)
   }
 
   // POST brandNames
-  postBrandNames(brands){
-    return this.http.post(this.baseAPIUrl+"/EventRequestBrandsList/AddDataList",brands)
-  }
+
 
   // Getting Employees From HCP Master
   getEmployeesFromHCPMaster(){
-    return this.http.get(this.baseAPIUrl+"/MasterSheets/HcpMaster");
+    return this.http.get(this.baseAPIUrl+"/GetMasterSheets/HcpMaster");
   }
 
   // Post class1 consolidated data
   postClass1PreEventRequest(data:any){
-    return this.http.post(this.baseAPIUrl+"/Test/AllObjModelsData", data)
+    return this.http.post(this.baseAPIUrl+"/PostRequestSheets/AllObjModelsData", data)
   }
 
   // Get Slide Kit Details from Slide Kit master
   getSlideKitDetails(){
     return this.http.get(this.baseAPIUrl+'/MasterSheets/SlideKitMaster')
   }
+
+
+  // Methods for Honararium Payment Request:
+   // adding honorarium data
+   addHonorariumPayment(data:any)
+   {
+       return this.http.post(this.baseAPIUrl+"/PostReqestSheets/AddHonorariumData",data);
+   }
+
+   // honorarium details full list
+   honorariumDetails()
+   {
+       return this.http.get(this.baseAPIUrl+"/GetRequestSheets/GetHCPRoleDetailsData");
+   }
 }

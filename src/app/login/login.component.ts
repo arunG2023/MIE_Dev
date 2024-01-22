@@ -45,6 +45,7 @@ export class LoginComponent implements OnInit {
    
       this.userService.loginUser(loginRequestBody).subscribe(
         res => {
+          console.log(res)
           if(res.token){
             this.isInvalidCredentials = false
             this.authService.storeToken(res.token);

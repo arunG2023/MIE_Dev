@@ -1,4 +1,4 @@
-<form [formGroup]="updateForm" *ngIf="!showBrandForm && !showHCPForm && !showInviteeForm && !showExpenseForm" >
+<form [formGroup]="updateForm" *ngIf="!showBrandForm && !showHCPForm && !showInviteeForm && !showExpenseForm && !showhonorariumForm" >
     <mat-form-field appearance="outline">
         <mat-label>First Name</mat-label>
         <input  matInput placeholder="Prepopulate from Sheet" formControlName="firstName" >
@@ -155,4 +155,36 @@
         <button mat-raised-button color="warn"  (click)="close()">Cancel</button>
     </div>
 
+</form>
+
+<form [formGroup]="honorariumUpdateForm" *ngIf="showhonorariumForm">
+    <mat-form-field appearance="outline">
+        <mat-label>HCP Role</mat-label>
+        <input  matInput placeholder="Prepopulate from Sheet" formControlName="hcprole" >
+    </mat-form-field>
+ 
+    <mat-form-field appearance="outline">
+        <mat-label>HCP Name</mat-label>
+        <input  matInput placeholder="Prepopulate from Sheet" formControlName="hcpname" >
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+    <mat-label>MIS Code</mat-label>
+    <input  matInput placeholder="Prepopulate from Sheet" formControlName="miscode" >
+</mat-form-field>
+<mat-form-field appearance="outline">
+    <mat-label>GONGO</mat-label>
+    <input  matInput placeholder="Prepopulate from Sheet" formControlName="GONGO" >
+</mat-form-field>
+    <mat-form-field appearance="outline">
+        <mat-label>Is Excluding Tax</mat-label>
+        <input  matInput placeholder="Prepopulate from Sheet" formControlName="isExclucingTax" >
+    </mat-form-field>
+ 
+ 
+ 
+    <div class="d-flex justify-content-center align-items-center">
+        <button mat-raised-button color="primary" (click)="updateExpense()" type="submit" class="mr-2" >Update</button>
+        <button mat-raised-button color="warn"  (click)="close()">Cancel</button>
+    </div>
+ 
 </form>

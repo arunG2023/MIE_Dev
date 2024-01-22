@@ -46,7 +46,7 @@ export class Class1EventRequestComponent implements OnInit {
 
 
   // For Stepper Validation
-  isLinear: boolean = true;
+  isLinear: boolean = false;
   orientation : string ;
   pageLoaded : boolean = false
 
@@ -106,6 +106,7 @@ export class Class1EventRequestComponent implements OnInit {
       res => {
         // console.log(res)
         this.approvedSpeakers = res;
+        // console.log('ApprSe',this.approvedSpeakers)
       }
     )
 
@@ -177,6 +178,7 @@ export class Class1EventRequestComponent implements OnInit {
     this.eventInitiation4Sub = new FormGroup({
       uploadFCPA : new FormControl(''),
       fcpaDate : new FormControl('',Validators.required),
+      isAdvanceRequired : new FormControl('',Validators.required),
       isTravelRequired : new FormControl('No',Validators.required),
       isLocalConveyance : new FormControl('No',Validators.required),
       isHonararium : new FormControl('No',Validators.required),
@@ -515,6 +517,9 @@ export class Class1EventRequestComponent implements OnInit {
     this.totalPercent -= +brand.PercentAllocation; 
     
     this.isStep3Valid = (this.brandTableDetails.length > 0)? true : false;
+
+    this.slideKitDropDownOptions = [];
+    this.slideKitBrandMatch();
   }
 
   sendBrandDetails(){
@@ -616,6 +621,7 @@ export class Class1EventRequestComponent implements OnInit {
   showRationale :boolean = true;
 
   event4FormSpeakerPrepopulate(){
+    console.log(this.approvedSpeakers)
     this.eventInitiation4Speaker.valueChanges.subscribe(
       changes => {
         if(changes.speakerName !== ''){
@@ -681,13 +687,26 @@ export class Class1EventRequestComponent implements OnInit {
   private _filter(value: string): string[] {
     // console.log(this.employeeDetails)
     if(Boolean(value)){
-      return this.approvedSpeakers.filter(emp => emp.SpeakerName.toLowerCase().includes(value.toLowerCase()));
+      return this.approvedSpeakers.filter(emp => {
+        if(Boolean(emp.SpeakerName)){
+          if(emp.SpeakerName.toLowerCase().includes(value.toLowerCase())){
+            return emp;
+          }
+        }
+        
+      });
     }
   }
 
   private _getFilteredSpeaker(misCode : string){
     if(Boolean(misCode)){
-      return this.approvedSpeakers.find(speaker => speaker.MISCode.toLowerCase() == misCode.toLowerCase())
+      return this.approvedSpeakers.find(speaker => {
+        if(Boolean(speaker.MISCode)){
+          if(speaker.MISCode == misCode){
+            return speaker;
+          }
+        }
+      })
     }
   }
 
@@ -696,8 +715,10 @@ export class Class1EventRequestComponent implements OnInit {
       let speakers : any[] = [];
 
       this.approvedSpeakers.forEach(speaker => {
-        if(speaker.SpeakerName.toLowerCase() == name.toLowerCase()){
-          speakers.push(speaker);
+        if(Boolean(speaker.SpeakerName)){
+          if(speaker.SpeakerName.toLowerCase() == name.toLowerCase()){
+            speakers.push(speaker);
+          }
         }
       })
 
@@ -992,6 +1013,10 @@ export class Class1EventRequestComponent implements OnInit {
       alert("Travel Deatails are missing")
       hcpValidity++;
     }
+    if(this.eventInitiation4Sub.value.isAdvanceRequired.invalid){
+      alert("Is advance required is missing");
+      hcpValidity++;
+    }
     if(this.eventInitiation4Sub.value.isLocalConveyance == "Yes" && this.eventInitiation4Sub.value.localConveyanceAmount == 0){
       alert("Local Conveyance Amount is missing");
       hcpValidity++;
@@ -1048,6 +1073,14 @@ export class Class1EventRequestComponent implements OnInit {
 
       console.log(HcpData)
       this.hcpTableDetails.push(HcpData);
+
+      for(let i=0;i< this.hcpTableDetails.length;i++){
+        this.slideKitTableInput.push('slideBrand'+i);
+        this.slideKitTableRadio.push('radio'+i)
+      }
+
+      
+
       this.isStep4Valid = (this.hcpTableDetails.length > 0)? true : false;
 
       hcpname = '';
@@ -1117,6 +1150,11 @@ export class Class1EventRequestComponent implements OnInit {
   deletHcp(id){
     this.hcpTableDetails.splice(id,1); 
     this.isStep4Valid = (this.hcpTableDetails.length > 0)? true : false;
+
+    for(let i=0;i< this.hcpTableDetails.length;i++){
+      this.slideKitTableInput.push('slideBrand'+i);
+      this.slideKitTableRadio.push('radio'+i)
+    }
 
   }
 
@@ -1248,14 +1286,110 @@ export class Class1EventRequestComponent implements OnInit {
   slideKitDropDown : any;
   slideKitDropDownOptions : any[] =[];
 
-  slideKitPrePopulate(a:any){
-   this.slideKitDropDown = a;
-   this.isStep5Valid = (Boolean(this.slideKitDropDown))? true : false;
-    if(Boolean(this.brandTableDetails) && this.brandTableDetails.length > 0){
-      console.log(this.brandTableDetails)
+  slideKitTableInput : any[] = [];
+  slideKitTableRadio : any[] = [];
 
+  slideKitTableDetails : any[] = [];
 
+  slideKitType : any ;
+  idShown : any[] = [];
+  misCode : any;
+  // showSlideKitUploadFile : boolean = false
+
+  slideKitRadioOption(option : any, name : string, id : string,misCode:string){
+    // console.log(misCode);
+    this.misCode = misCode;
+    // console.log(name)
+    // console.log(document.getElementById(id[id.length-1]))
+    // if(name)
+    
+      if(this.idShown.indexOf(id) == -1){
+        this.idShown.push(id);
+      }
+      // else{
+      //   this.idShown.push(id)
+      // }
+
+      if(this.idShown.length == this.hcpTableDetails.length){
+        this.isStep5Valid = true;
+      }else this.isStep5Valid = false;
+    
+    
+    console.log(this.idShown)
+    if(option == 'SlideKit From Company'){
+      
+    
+      this.slideKitType = option;
+      // document.getElementById(id).style.visibility = "visible";
+      document.getElementById(id).style.display = 'block';
+      document.getElementById(misCode+id).style.display = 'none'
+      // console.log(document.getElementById(misCode+id))
+      // this.showSlideKitUploadFile = false;  
     }
+    else{
+      const slideKitDetail = {
+        EventId: " ",
+        Mis: this.misCode,
+        SlideKitType: option,
+        SlideKitDocument: " "
+    }
+
+      if(this.slideKitTableDetails.length > 0){
+        if(!this.slideKitTableDetails.find(ele => ele.Mis == this.misCode)){
+          this.slideKitTableDetails.push(slideKitDetail)
+        }
+      }
+      else{
+        this.slideKitTableDetails.push(slideKitDetail);
+      }
+      
+    
+      
+      // document.getElementById(id).style.visibility = "hidden";
+      document.getElementById(id).style.display = 'none';
+      document.getElementById(misCode+id).style.display = 'block'
+      // this.showSlideKitUploadFile = true;
+    }
+    
+  }
+
+  slideKitPrePopulate(a:any){
+    
+
+      // console.log(id)
+      // console.log('Mis',data)
+      const slideKitDetail = {
+        EventId: " ",
+        Mis: this.misCode,
+        SlideKitType: this.slideKitType,
+        SlideKitDocument: a
+    }
+      // this.slideKitDropDown = a;
+      
+
+      if(this.slideKitTableDetails.length > 0){
+        if(!this.slideKitTableDetails.find(ele => ele.Mis == this.misCode)){
+          this.slideKitTableDetails.push(slideKitDetail);
+          // console.log('aa')
+        }
+      }
+      else{
+        this.slideKitTableDetails.push(slideKitDetail);
+      }
+      // console.log(this.slideKitTableDetails);
+
+    
+   
+  //  this.isStep5Valid = (Boolean(this.slideKitDropDown))? true : false;
+    // if(Boolean(this.brandTableDetails) && this.brandTableDetails.length > 0){
+    //   console.log(this.brandTableDetails)
+
+
+    // }
+  }
+
+  printSlideKitDetails(){
+    console.log(this.slideKitTableDetails)
   }
 
   slideKitBrandMatch(){
@@ -1544,7 +1678,7 @@ export class Class1EventRequestComponent implements OnInit {
         PercentAllocation : " ",
         ProjectId: " ",
         HcpRole : " ",
-        IsAdvanceRequired: " "
+        IsAdvanceRequired: this.eventInitiation4Sub.value.isAdvanceRequired.value
       }
       const class1 = {
         Class1 : class1EventData,
@@ -1553,21 +1687,14 @@ export class Class1EventRequestComponent implements OnInit {
         EventRequestHcpRole : this.hcpTableDetails,
         EventRequestInvitees : this.inviteeTableDetails,
         EventRequestExpenseSheet : this.expenseTableDetails,
-        EventRequestHCPSlideKits : [
-          {
-            EventId : " ",
-            Mis: "MisCode",
-            SlideKitType : " ",
-            SlideKitDocument : " "
-          }
-        ]
+        EventRequestHCPSlideKits : this.slideKitTableDetails
       }
   
       console.log(class1)
-      // this.utilityService.postClass1PreEventRequest(class1).subscribe(res => {
-      //   console.log(res)
-      // },
-      // err => console.log(err))
+      this.utilityService.postClass1PreEventRequest(class1).subscribe(res => {
+        console.log(res)
+      },
+      err => console.log(err))
     }
     // console.log(this.brandTableDetails)
   }

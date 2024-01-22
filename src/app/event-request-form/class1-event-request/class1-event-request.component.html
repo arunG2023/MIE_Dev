@@ -2,14 +2,14 @@
   <mat-step  [stepControl]="eventInitiation1" label="Pre Event Check">
     <p class="text-danger h5">Previous Events that are within 30 days from today</p>
     <div class="container table-responsive">
-      <table class="table text-center table-striped" >
+      <table class="table text-center table-bordered table-striped" >
         <thead>
           <tr>
-            <th>S.no</th>
-            <th>Event ID</th>
-            <th>Event Type</th>
-            <th>Venue</th>
-            <th>Event Date</th>
+            <th><b>S.no</b></th>
+            <th><b>Event ID</b></th>
+            <th><b>Event Typ</b>e</th>
+            <th><b>Venue</b></th>
+            <th><b>Event Date</b></th>
           </tr>
         </thead>
         <tbody >
@@ -398,6 +398,20 @@
                 </div>
               </div>
               <div class="row">
+                <div class="col">
+                  <div>
+                    <mat-label>Is Advance Required?</mat-label>
+                    <mat-radio-group formControlName="isAdvanceRequired">
+                        <div class="mt-2">
+                            <mat-radio-button value="Yes" >Yes</mat-radio-button>
+                            <mat-radio-button value="No" class="m-1" >No</mat-radio-button>
+                        </div>
+                    </mat-radio-group>
+                  </div>
+                </div>
+  
+              </div>
+              <div class="row">
                 
                 <div class="col">
                     <div>
@@ -644,6 +658,8 @@
                 </div>
             </div>
 
+           
+
             <div>
                 <mat-radio-group  formControlName="isLocalConveyance">
                     <mat-label>Is Local Conveyance applicable?</mat-label><br>
@@ -729,7 +745,7 @@
             <th>GO/N-GO</th>
             <th>Slide Kit selection</th>
             <th>Upload Document</th>
-            <th>Actions</th>
+            <!-- <th>Actions</th> -->
           </tr>
         </thead>
         <tbody >
@@ -741,28 +757,37 @@
               <td>{{s.GOorNGO}}</td>
               <td>
                 
-                <mat-radio-group>
-                  <mat-radio-button id={{i+1}} value="Select slide kit from Company">Select slide kit from Company</mat-radio-button>
-                  <mat-radio-button value="HCP slidekit approved by company">HCP slidekit approved by company</mat-radio-button>
-                  <mat-radio-button value="others">others</mat-radio-button>
+                <mat-radio-group (ngModelChange)="slideKitRadioOption($event,slideKitTableRadio[i],i,s.MisCode)" [ngModelOptions]="{standalone: true}" [(ngModel)]="slideKitTableRadio[i]" >
+                  <mat-radio-button value="SlideKit From Company">Select slide kit from Company</mat-radio-button>
+                  <mat-radio-button value="HCP SlideKit Approved by Company">HCP slidekit approved by company</mat-radio-button>
+                  <mat-radio-button value="Others">Others</mat-radio-button>
                 </mat-radio-group>
               </td>
               <td>
-                <mat-form-field appearance="outline" color="accent" >
-                  <mat-label>Brands</mat-label>
-                  <mat-select (ngModelChange)="slideKitPrePopulate($event,slideKitDropDown)"  [ngModelOptions]="{standalone: true}" [(ngModel)]="slideKitDropDown" >
-                    <mat-option *ngFor="let a of slideKitDropDownOptions" value={{a.SlideKitName}}>{{a.SlideKitName}}</mat-option>
-                  </mat-select>
-                </mat-form-field>
-
-                <!-- <input type="file" *ngIf="!hideUploadFile"> -->
+                <div class="container">
+                  <div class="row">
+                    <div class="col" id={{i}} style="display: none;">
+                      <mat-form-field   appearance="outline" color="accent" >
+                        <mat-label>Brands</mat-label>
+                        <mat-select (ngModelChange)="slideKitPrePopulate($event,slideKitTableInput[i])"  [ngModelOptions]="{standalone: true}" [(ngModel)]="slideKitTableInput[i]" >
+                          <mat-option *ngFor="let a of slideKitDropDownOptions" value={{a.SlideKitName}}>{{a.SlideKitName}}</mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                    </div>
+                    <div class="col" id={{s.MisCode+i}} style="display: none;">
+                      <mat-label>Upload Deviation</mat-label><br>
+                      <input type="file" >
+                    </div>
+                   
+                  </div>
+                </div>
                 
                 
               </td>
-            <td style="cursor: pointer;">
+            <!-- <td style="cursor: pointer;">
               <i class="material-icons" style="margin-right: 5px;">edit</i>
               <i class="material-icons">delete</i>
-            </td>
+            </td> -->
            
 
            
@@ -776,7 +801,7 @@
 
 <div class="container d-flex justify-content-end">
   <button mat-raised-button color="accent" class="m-1" matStepperPrevious>Previous</button>
-  <button  mat-raised-button color="primary" class="m-1" [disabled]="!isStep5Valid" matStepperNext>Next</button>
+  <button  mat-raised-button color="primary" class="m-1" (click)="printSlideKitDetails()" [disabled]="!isStep5Valid" matStepperNext>Next</button>
 </div>
 
   </mat-step>

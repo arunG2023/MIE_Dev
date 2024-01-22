@@ -71,6 +71,16 @@ export class ModalComponent implements OnInit {
   private isExcludingTax : string;
   private isExpenseBtc : string;
 
+  //honorarium update form
+  showhonorariumForm : boolean = false;
+ 
+  honorariumUpdateForm :FormGroup;
+ 
+  hcprole : any;
+  hcpname : string;
+  miscode : number;
+  GONGO : string;
+  isExclucingTax:string;
 
   constructor(public dialogRef : MatDialogRef<AddEmployeesComponent>,
     @Inject(MAT_DIALOG_DATA) public data,
@@ -124,6 +134,9 @@ export class ModalComponent implements OnInit {
       this.isExpenseBtc = data.AmountExcludingTax;
       this.isExcludingTax = data.BtcorBte;
     }
+    else if(data.forHonararium){
+      this.showhonorariumForm = true;
+    }
     else{
       this.showBrandForm = false;
       this.showHCPForm = false;
@@ -172,6 +185,14 @@ export class ModalComponent implements OnInit {
       lastName : new FormControl(this.lastName,[Validators.required]),
       userName : new FormControl(this.userName, [Validators.required]),
       roleName : new FormControl(this.roleId, [Validators.required])
+    })
+
+    this.honorariumUpdateForm = new FormGroup ({
+      hcprole : new FormControl(this.hcpName,[Validators.required]),
+      hcpname : new FormControl(this.hcpName,[Validators.required]),
+      miscode : new FormControl(this.misCode,[Validators.required]),
+      GONGO : new FormControl(this.GONGO,[Validators.required]),
+      isExclucingTax : new FormControl(this.isExclucingTax,[Validators.required])
     })
   }
 
