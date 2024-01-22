@@ -4,6 +4,7 @@ import { Router, NavigationEnd, NavigationStart } from '@angular/router';
 import PerfectScrollbar from 'perfect-scrollbar';
 import * as $ from "jquery";
 import { filter, Subscription } from 'rxjs';
+import { UtilityService } from '../services/utility.service';
 
 @Component({
   selector: 'app-public-layout',
@@ -15,7 +16,10 @@ export class PublicLayoutComponent implements OnInit {
     private lastPoppedUrl: string;
     private yScrollStack: number[] = [];
   
-    constructor( public location: Location, private router: Router) {}
+    constructor( public location: Location, private router: Router, private utilityService : UtilityService) {
+        utilityService.getPreviousEventsFast()
+        
+    }
   
     ngOnInit() {
         const isWindows = navigator.platform.indexOf('Win') > -1 ? true : false;

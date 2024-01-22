@@ -136,4 +136,10 @@ export class UtilityService {
    {
        return this.http.get(this.baseAPIUrl+"/GetRequestSheets/GetHCPRoleDetailsData");
    }
+
+  //  Post Event Settlement
+  getInviteesData()
+  {
+    return this.http.get(this.baseAPIUrl+"/GetRequestSheets/GetInviteesData");
+  }
 }
