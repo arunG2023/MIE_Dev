@@ -17,7 +17,9 @@ export class PublicLayoutComponent implements OnInit {
     private yScrollStack: number[] = [];
   
     constructor( public location: Location, private router: Router, private utilityService : UtilityService) {
-        utilityService.getPreviousEventsFast()
+        utilityService.getPreviousEventsFast();
+        utilityService.getInviteesFast();
+      
         
     }
   

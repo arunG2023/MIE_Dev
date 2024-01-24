@@ -37,6 +37,7 @@ export class Class1EventRequestComponent implements OnInit {
   eventDetails : any;
   hcpRoles : any
   vendorDetails : any;
+  expenseType : any
   
  
 
@@ -106,6 +107,7 @@ export class Class1EventRequestComponent implements OnInit {
       res => {
         // console.log(res)
         this.approvedSpeakers = res;
+        // console.log(this.approvedSpeakers.length);
         // console.log('ApprSe',this.approvedSpeakers)
       }
     )
@@ -132,9 +134,22 @@ export class Class1EventRequestComponent implements OnInit {
       res => this.vendorDetails = res
     )
 
+    // Get Expense Types
+    utilityService.getExpenseType().subscribe(
+      res => this.expenseType = res
+    )
+
     // Get Invitees From HCP Master 
     utilityService.getEmployeesFromHCPMaster().subscribe(
-      res => this.inviteesFromHCPMaster = res
+      res => {
+        this.inviteesFromHCPMaster = res;
+        console.log('Before SPlice',this.inviteesFromHCPMaster.length);
+        this.inviteesFromHCPMaster.splice(1000,);
+        console.log('After SPlice',this.inviteesFromHCPMaster.length);
+        console.log(this.inviteesFromHCPMaster)
+        
+      }
+      
     )
 
     // Get Slidekit Details
@@ -295,10 +310,12 @@ export class Class1EventRequestComponent implements OnInit {
     this.event4FormTrainerPrepopulate();
     this.event4FormOtherPrepopulate();
     this.eventInitiatio4HonarariumPrepopulate();
+    
     // this.slideKitPrePopulate();
     this.event4FormSubPrepopulate();
     this.inviteeSelectionFormPrePopulate();
     this.expenseSelectionFormPrePopulate();
+    // this.amountPrePopulate();
     // this.event5FormPrepopulate();
     // this.event6FormPrepopulate();
     // this.event7FormPrepopulate();
@@ -766,9 +783,11 @@ export class Class1EventRequestComponent implements OnInit {
             if(!this.hideOtherMisCode){
               console.log(this._getFilteredOther(changes.otherMisCode))
               const filteredOther = this._getFilteredOther(changes.otherMisCode);
-              this.otherSpeciality = filteredOther.Speciality
-              this.otherGoNonGo = filteredOther['GO/Non-GO'];
-              this.otherMisCode = changes.otherMisCode
+              if(Boolean(filteredOther)){
+                this.otherSpeciality = filteredOther['Speciality']
+                this.otherGoNonGo = filteredOther['GO/Non-GO'];
+                this.otherMisCode = changes.otherMisCode
+              }
 
             }
           }
@@ -787,7 +806,12 @@ export class Class1EventRequestComponent implements OnInit {
 
   private _getFilteredOther(misCode : string){
     if(Boolean(misCode)){
-      return this.inviteesFromHCPMaster.find(invitee => invitee.MISCode.toLowerCase() == misCode.toLowerCase())
+      return this.inviteesFromHCPMaster.find(invitee => 
+        {
+          if(invitee['MISCode']){
+            if(invitee.MISCode == misCode) return invitee
+          }
+        })
     }
   }
 
@@ -870,7 +894,7 @@ export class Class1EventRequestComponent implements OnInit {
 
   private _filterTrainerByMisCode(misCode : string){
     if(Boolean(misCode)){
-      return this.approvedTrainers.find(trainer => trainer.MISCode.toLowerCase() == misCode.toLowerCase())
+      return this.approvedTrainers.find(trainer => trainer.MISCode == misCode)
     }
   }
 
@@ -963,8 +987,14 @@ export class Class1EventRequestComponent implements OnInit {
       }
 
       if(this.eventInitiation4Sub.invalid){
-        alert("FCPA Date is missing");
-        hcpValidity++;
+        if(this.eventInitiation4Sub.controls.fcpaDate.invalid){
+          alert("FCPA Date is missing");
+          hcpValidity++;
+        }
+        if(this.eventInitiation4Sub.controls.isAdvanceRequired.invalid){
+          alert("Is advance required is missing");
+          hcpValidity++;
+        }
       }
 
       // console.log("HonarVal",this.eventInitiatio4Honararium.valid)
@@ -1013,10 +1043,7 @@ export class Class1EventRequestComponent implements OnInit {
       alert("Travel Deatails are missing")
       hcpValidity++;
     }
-    if(this.eventInitiation4Sub.value.isAdvanceRequired.invalid){
-      alert("Is advance required is missing");
-      hcpValidity++;
-    }
+    
     if(this.eventInitiation4Sub.value.isLocalConveyance == "Yes" && this.eventInitiation4Sub.value.localConveyanceAmount == 0){
       alert("Local Conveyance Amount is missing");
       hcpValidity++;
@@ -1049,11 +1076,15 @@ export class Class1EventRequestComponent implements OnInit {
         BriefingSession : honarariumDuration.briefingDuration+'',
         TotalSessionHours : (Boolean(this.totalHours))? this.totalHours+'' : 0+'',
 
+        // For Amount
+        isTravelBTC : this.eventInitiation4Travel.value.travelBTC,
+        isAccomBTC : this.eventInitiation4Accomodation.value.accomBTC,
+
 
         // For Table
         HcpRole : (!this.showOtherHCPRoleTextBox)? this.hcpRoles.find(role => { if(this.eventInitiation4.value.hcpRole == role.HCPRoleID) return role }).HCPRole : this.hcpRoleWritten,
         HcpName : hcpname,
-        MisCode : hcpMisCode,
+        MisCode : hcpMisCode+'',
         GOorNGO : hcpgoNonGo,
         HonorariumRequired : this.eventInitiation4Sub.value.isHonararium,
         HonarariumAmount : this.eventInitiatio4Honararium.value.honorariumAmount+'',
@@ -1070,8 +1101,23 @@ export class Class1EventRequestComponent implements OnInit {
 
       }
 
+      this.BTCTotalAmount += parseInt(HcpData.HonarariumAmount)
 
-      console.log(HcpData)
+      // console.log(HcpData)
+      if(HcpData.isTravelBTC == 'BTC'){
+        this.BTCTotalAmount += parseInt(HcpData.Travel);
+      }
+      else{
+        this.BTETotalAmount += parseInt(HcpData.Travel)
+      }
+
+      if(HcpData.isAccomBTC == 'BTC'){
+        this.BTCTotalAmount += parseInt(HcpData.Accomdation);
+      }
+      else{
+        this.BTETotalAmount += parseInt(HcpData.Accomdation)
+      }
+
       this.hcpTableDetails.push(HcpData);
 
       for(let i=0;i< this.hcpTableDetails.length;i++){
@@ -1487,7 +1533,11 @@ export class Class1EventRequestComponent implements OnInit {
   filterHCPMasterInvitees(name : string){
     console.log("nam",Boolean(name))
     if(Boolean(name)){
-      return this.inviteesFromHCPMaster.filter(invitee => invitee['HCPName'].toLowerCase().includes(name.toLowerCase()));
+      return this.inviteesFromHCPMaster.filter(invitee =>{
+        if(invitee['HCPName']){
+          return invitee['HCPName'].toLowerCase().includes(name.toLowerCase())
+        }
+      });
     }
     // return this.inviteesFromHCPMaster.find(invitee => invitee['HCP Name'].includes(name))
   }
@@ -1495,7 +1545,7 @@ export class Class1EventRequestComponent implements OnInit {
   getFilteredInvitee(misCode:string){
     console.log('mis',Boolean(misCode))
     if(Boolean(misCode)){
-      return this.inviteesFromHCPMaster.find(invitee => invitee['MISCode'].toLowerCase() == misCode.toLowerCase());
+      return this.inviteesFromHCPMaster.find(invitee => invitee['MISCode'] == misCode);
     }
    
   }
@@ -1505,7 +1555,9 @@ export class Class1EventRequestComponent implements OnInit {
       const invitees : any[] = [];
     
       this.inviteesFromHCPMaster.forEach(invitee => {
-        if(invitee['HCPName'].toLowerCase() === name.toLowerCase()) invitees.push(invitee)
+        if(invitee['HCPName']){
+          if(invitee['HCPName'].toLowerCase() === name.toLowerCase()) invitees.push(invitee)
+        }
       }
     )
     return invitees;
@@ -1540,10 +1592,10 @@ export class Class1EventRequestComponent implements OnInit {
       
       const inviteeData = {
         EventIdOrEventRequestId : ' ',
-        MisCode : this.filteredInviteeMisCode,
+        MisCode : this.filteredInviteeMisCode+'',
         InviteeName : this.inviteeSelectionForm.value.inviteeName,
         LocalConveyance :  this.inviteeSelectionForm.value.isInviteeLocalConveyance,
-        BtcorBte : (this.inviteeSelectionForm.value.inviteeBTC)? this.inviteeSelectionForm.value.inviteeBTC : 'NIL',
+        BtcorBte : (Boolean(this.inviteeSelectionForm.value.inviteeBTC))? this.inviteeSelectionForm.value.inviteeBTC : 'NIL',
         LcAmount : (this.showInviteeLocalConveyance)?this.inviteeSelectionForm.value.inviteeLocalConveyanceAmount+'':0+'',
       }
       this.inviteeTableDetails.push(inviteeData);
@@ -1580,9 +1632,10 @@ export class Class1EventRequestComponent implements OnInit {
   expenseTableDetails : any = [];
 
   expenseSelectionFormPrePopulate(){
+    
     this.expenseSelectionForm.valueChanges.subscribe(
       changes => {
-        if(changes.expenseType == 'foodAndBeverages'){
+        if(changes.expenseType == 'Food & Beverages tax amoun'){
           if(changes.expenseAmount/this.inviteeTableDetails.length > 1500){
             this.showExpenseDeviation = true;
           }
@@ -1597,12 +1650,21 @@ export class Class1EventRequestComponent implements OnInit {
 
   addToExpenseTable(){
     if(this.expenseSelectionForm.valid){
+      if(this.expenseSelectionForm.value.isExpenseBtc == 'BTC'){
+        this.BTCTotalAmount += this.expenseSelectionForm.value.expenseAmount;
+      }
+      else{
+        this.BTETotalAmount += this.expenseSelectionForm.value.expenseAmount;
+      }
+
+      this.BudgetAmount = this.BTCTotalAmount + this.BTETotalAmount;
+
       const expense = {
         // For API
         EventId : " ",
-        BtcAmount : " ",
-        BteAmount : " ",
-        BudgetAmount : " ",
+        BtcAmount : this.BTCTotalAmount+'',
+        BteAmount : this.BTETotalAmount+'',
+        BudgetAmount : this.BudgetAmount+'',
 
         // For Table
         Expense : this.expenseSelectionForm.value.expenseType,
@@ -1631,6 +1693,34 @@ export class Class1EventRequestComponent implements OnInit {
   deleteExpense(id:any){
     this.expenseTableDetails.splice(id,1); 
     this.isStep7Valid = (this.expenseTableDetails.length > 0)? true : false;
+  }
+
+  BTCTotalAmount : number = 0;
+  BTETotalAmount : number = 0;
+  BudgetAmount : number = 0; 
+
+  private amountPrePopulate(){
+   
+    
+    // this.eventInitiation4Travel.valueChanges.subscribe(changes =>{
+    //   console.log(changes)
+    //   if(changes.travelType == 'BTC'){
+    //     // if(changes.travelAmount > 0 ){
+    //     //   this.BTETotalAmount -= changes.travelAmount
+    //     // }
+       
+    //     this.BTCTotalAmount = this.BTCTotalAmount + changes.travelAmount;
+    //     console.log(this.BTCTotalAmount)
+    //   }
+    //   else{
+    //     // if(changes.travelAmount > 0){
+    //     //   this.BTCTotalAmount -= changes.travelAmount
+    //     // }
+    //     this.BTETotalAmount += parseInt(changes.travelAmount);
+    //     console.log(this.BTETotalAmount);
+    //   }
+    // })
+
   }
 
   // Submitting Form
@@ -1678,7 +1768,9 @@ export class Class1EventRequestComponent implements OnInit {
         PercentAllocation : " ",
         ProjectId: " ",
         HcpRole : " ",
-        IsAdvanceRequired: this.eventInitiation4Sub.value.isAdvanceRequired.value
+        IsAdvanceRequired: this.eventInitiation4Sub.value.isAdvanceRequired,
+        EventOpen30days: (this.show30DaysUploaDeviation)? 'Yes' : 'No',
+        EventWithin7days : (this.show7DaysUploadDeviation)? 'Yes' : 'No'
       }
       const class1 = {
         Class1 : class1EventData,
@@ -1693,6 +1785,10 @@ export class Class1EventRequestComponent implements OnInit {
       console.log(class1)
       this.utilityService.postClass1PreEventRequest(class1).subscribe(res => {
         console.log(res)
+        if(res.Status == 200){
+          alert("Event is submitted Succesfully");
+          this.router.navigate(['dashboard'])
+        }
       },
       err => console.log(err))
     }
@@ -1709,128 +1805,6 @@ export class Class1EventRequestComponent implements OnInit {
   isStep6Valid : boolean = false;
   isStep7Valid : boolean = false;
   isFormValid : boolean = true;
-/*
-  // Event Inititaion Form7 COntrol
-  showExpenseTextBox : boolean = false;
-  showTotalExpense : boolean = false;
-
-  expenseTableDetails : any;
-  localConveyanceNeeded : boolean = false;
-
-  event7FormPrepopulate(){
-    this.eventInitiation7.valueChanges.subscribe(
-      changes => {
-      
-        if(changes.expense == 'e2'){
-          this.showExpenseTextBox = true;
-        }
-        else{
-          this.showExpenseTextBox = false;
-        }
-        if(changes.toCalculateExpense == 'Yes'){
-          this.showTotalExpense = true;
-        }
-        else{
-          this.showTotalExpense = false;
-        }
-        if(changes.isLocalConveyance == 'Yes'){
-          this.localConveyanceNeeded = true;
-        }
-        else this.localConveyanceNeeded = false;
-
-        if(changes.invitee && changes.expense && changes.isAdvanceRequired && changes.isExcludingTax && changes.isBtc){
-          console.log(changes)
-        }
-      }
-    )
-  }
-
-  addInviteesToTable(){
-    const invitee = {
-      invitee : 'aa'
-    };
-
-  }  
-  
-  
-
-
-  submitForm(){
-    // console.log(this.eventInitiation1.value);
-    // console.log(this.eventInitiation2.value);
-    // console.log(this.eventInitiation3.value);
-    // console.log(this.eventInitiation4.value);
-    // console.log(this.eventInitiation5.value);
-    // console.log(this.eventInitiation6.value);
-    // console.log(this.eventInitiation7.value);
-
-    if(this.eventInitiation2.value.eventTopic &&  this.eventCode && this.eventInitiation2.value.eventDate &&
-      this.eventInitiation2.value.startTime && this.eventInitiation2.value.endTime  && this.eventInitiation2.value.venueName &&
-      this.eventInitiation2.value.state && this.eventInitiation2.value.city && this.eventInitiation7.value.isAdvanceRequired &&
-      this.eventInitiation3.value.brandName && this.eventInitiation4.value.hcpRole && this.percentageAllocation &&  this.projectId){
-        const class1FinalData1 = {
-          EventTopic : this.eventInitiation2.value.eventTopic,
-          EventType : this.eventDetails.find(event => event.EventTypeId == this.eventCode ).EventType,
-          EventDate : new Date(this.eventInitiation2.value.eventDate),
-          StartTime : this.eventInitiation2.value.startTime,
-          EndTime : this.eventInitiation2.value.endTime,
-          VenueName : this.eventInitiation2.value.venueName,
-          State : this.allStates.find(state => state.StateId == this.eventInitiation2.value.state).StateName,
-          City : this.allCity.find(city => city.CityId == this.eventInitiation2.value.city).CityName,
-          // BeneficiaryName : this.benificiaryName,
-          // BankAccountNumber : this.eventInitiation6.value.bankAccountNumber,
-          // PanName : this.nameAsPan,
-          // PanCardNumber : this.panCardNumber,
-          // IfscCode : this.ifscCode,
-          // EmailId : this.emailId,
-          // Invitees : this.eventInitiation7.value.invitee,
-          IsAdvanceRequired : this.eventInitiation7.value.isAdvanceRequired || 'No',
-          // SelectionOfTaxes : this.taxSelect,
-          BrandName : this._getBrandWithId(this.eventInitiation3.value.brandName).BrandName,
-          HCPRole :   (this.eventInitiation4.value.hcpRole !== 'H6')? this.hcpRoles.find(role =>  role.HCPRoleID === this.eventInitiation4.value.hcpRole).HCPRole : this.hcpRoleWritten, 
-          // InitiatorName : this.auth.decodeToken()['unique_name'],
-          PercentAllocation : this.percentageAllocation.toString(),
-          ProjectId : this.projectId,
-        }
-        console.log(class1FinalData1)
-        this.utilityService.postEvent1Data1(class1FinalData1).subscribe(
-          res => {
-            console.log("Data added successfully");
-            alert('Event Submitted Successfully');
-            this.router.navigate(['dashboard']);
-            
-          },
-          err => alert("Not Added")
-        )
-
-      }
-      else{
-        alert("Some Fields are missing")
-      }
-    
-
-    const class1FinalData2 = {
-      HcpRoleId : this.eventInitiation4.value.hcpRole,
-      MISCode : this.eventInitiation4.value.misCode,
-      SpeakerCode : this.speakerCode,
-      TrainerCode : "null",
-      HonarariumRequired : this.eventInitiation6.value.isHonararium,
-      Speciality : this.speciality,
-      Tier : this.tier,
-      'Go/NGo' : this.goNonGo,
-      PresentationDuration : this.eventInitiation5.value.presentationDuration+"",
-      PanelSessionPresentationDuration : this.eventInitiation5.value.panelSessionPreparation+"",
-      PanelDiscussionDuration : this.eventInitiation5.value.panelDiscussionDuration+"",
-      QASessionDuration : this.eventInitiation5.value.qaSession+"",
-      BriefingSession : this.eventInitiation5.value.briefingDuration+"",
-      TotalSessiionHours : this.totalHours+"",
-      Rationale :this.eventInitiation6.value.rationale
-
-    }
-    // console.log(class1FinalData2)
-  }
-
-  */
 
   @HostListener('window:resize',['$event'])
     onResize(event:Event){
@@ -1854,11 +1828,19 @@ export class Class1EventRequestComponent implements OnInit {
   // File Upload Check
   selectedFile : File | null;
   onFileSelected(event:any){
-    this.selectedFile = event.target.files[0];
-    const formData = new FormData();
-    formData.append('File 1', this.selectedFile);
-    console.log(formData.get('File 1'))
-   
+    //debugger
+     if(event.target.files.length>0)
+     {
+      const fileUploadModel = event.target.files[0];
+      const formData = new FormData();
+      formData.append('fileUploadModel',fileUploadModel);
+      this.utilityService.fileUpload(formData).subscribe((res=>
+        {
+         // debugger
+        }))
+     
+     
+     }
   }
 
 

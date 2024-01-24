@@ -1,0 +1,1086 @@
+<mat-stepper  [linear]="isLinear" #stepper orientation={{orientation}} labelPosition="bottom" >
+    <mat-step  [stepControl]="eventInitiation1" label="Pre Event Check">
+      <p class="text-danger h5">Previous Events that are within 30 days from today</p>
+      <div class="container table-responsive">
+        <table class="table text-center table-bordered table-striped" >
+          <thead>
+            <tr>
+              <th><b><small>S.no</small></b></th>
+              <th><b><small>Event ID</small></b></th>
+              <th><b><small>Event Type</small></b>e</th>
+              <th><b><small>Venue</small></b></th>
+              <th><b><small>Event Date</small></b></th>
+            </tr>
+          </thead>
+          <tbody >
+            <tr *ngFor="let event of eventsWithin30Days ; index as i" >
+              <th scope="row">{{i+1}}</th>
+              <td>{{event['EventId/EventRequestId']}}</td>
+              <td>{{event.EventType}}</td>
+              <td>{{event.VenueName}}</td>
+              <td>{{event.EventDate}}</td>
+            </tr>
+            
+          </tbody>
+  
+        </table>
+      </div>
+  
+      <form  [formGroup]="eventInitiation1">
+      
+          <div class="row">
+            <div class="col" *ngIf="show30DaysUploaDeviation" >
+              <div class="p-2 m-1" >
+                <mat-label>Upload Deviation</mat-label><br>
+                <input type="file" (change)="onFileSelected($event)" formControlName="withIn30DaysDeviation">
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col"  >
+              <div class="p-2 m-1" >
+                 <mat-form-field color="accent" appearance="outline">
+                <mat-label>Event Date</mat-label>
+                  <input matInput type="date" min="{{ today | date: 'yyyy-MM-dd'}}" formControlName="eventDate">
+                </mat-form-field>
+              </div>
+              
+            </div>
+            <div class="col">
+              <div class="p-2 m-1" *ngIf="show7DaysUploadDeviation" >
+                <mat-label>Upload Deviation</mat-label><br>
+                <input type="file" (change)="onFileSelected($event)" formControlName="next7DaysDeviation">
+              </div>
+            </div>
+          </div>
+  
+        <div class="d-flex justify-content-end align-items-center">
+          <!-- <button mat-raised-button color="warn" matStepperNext  (click)="stepper.reset()" class="m-1">Reset</button> -->
+          <button mat-raised-button color="primary" [disabled]="!isStep1Valid" matStepperNext class="m-1">Next</button>
+        </div>
+      </form>
+    </mat-step>
+  
+    <mat-step [stepControl]="eventInitiation2" label="Event-Details">
+      <form [formGroup]="eventInitiation2">
+        <div class="row">
+          <div class="col">
+            <mat-form-field color="accent" appearance="outline">
+              <mat-label>Event Type</mat-label>
+              <mat-select disabled [value]="eventType" >
+                <mat-option *ngFor="let event of eventDetails"
+                  value={{event.EventTypeId}}>{{event.EventType}}</mat-option>
+              </mat-select>
+            </mat-form-field>
+  
+            <mat-form-field color="accent" appearance="outline">
+              <mat-label>Event Topic</mat-label>
+              <input matInput placeholder="Placeholder" formControlName="eventTopic">
+            </mat-form-field>
+  
+            <mat-form-field color="accent" appearance="outline">
+              <mat-label>Event Date</mat-label>
+              <input matInput  disabled [value]="eventDate">
+            </mat-form-field>
+  
+            <div class="row">
+              <mat-form-field class="col-lg-6 col-md-6 col-sm-6" color="accent" appearance="outline">
+                <mat-label>Start Time</mat-label>
+                <input matInput type="time" formControlName="startTime">
+              </mat-form-field>
+  
+              <mat-form-field class="col-lg-6 col-md-6 col-sm-6" color="accent" appearance="outline">
+                <mat-label>End Time</mat-label>
+                <input matInput type="time" formControlName="endTime">
+                <mat-error>End Time Should be greater than start time</mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+  
+          <div class="col">
+            <!-- <mat-form-field color="accent" appearance="outline">
+              <mat-label>Venue Name </mat-label>
+              <input matInput placeholder="Venue Name" formControlName="venueName">
+            </mat-form-field> -->
+            <mat-form-field color="accent" appearance="outline">
+              <mat-label>Meeting Type</mat-label>
+              <mat-select formControlName="meetingType">
+                <mat-option value='Physical'>Physical</mat-option>
+                <mat-option value='Vendor'>Vendor</mat-option>
+                <mat-option value='Other'>Other</mat-option>
+              </mat-select>
+            </mat-form-field>
+
+            <mat-form-field color="accent" appearance="outline" *ngIf="showVendorFields">
+              <mat-label>Vendor Name</mat-label>
+              <input matInput placeholder="Placeholder" formControlName="vendorName">
+            </mat-form-field>
+
+            <div class="p-2 m-1" *ngIf="showVendorFields">
+              <mat-label>Vendor File Upload</mat-label><br>
+              <input type="file" (change)="onFileSelected($event)" formControlName="vendorFileUpload">
+            </div>
+
+
+  
+            <!-- <mat-form-field color="accent" appearance="outline">
+              <mat-label>State</mat-label>
+              <mat-select formControlName="state">
+                <mat-option *ngFor="let state of allStates" value={{state.StateId}}>{{state.StateName}}</mat-option>
+              </mat-select>
+            </mat-form-field>
+  
+            <mat-form-field color="accent" appearance="outline">
+              <mat-label>City</mat-label>
+              <mat-select formControlName="city">
+                <mat-option *ngFor="let city of filteredCity" value={{city.CityId}}>{{city.CityName}}</mat-option>
+              </mat-select>
+            </mat-form-field> -->
+  
+            <div class="d-flex justify-content-end">
+              <button mat-raised-button color="accent" class="m-1" matStepperPrevious>Previous</button>
+              <button mat-raised-button color="primary" class="m-1" [disabled]="!isStep2Valid" matStepperNext>Next</button>
+            </div>
+  
+          </div>
+        </div>
+      </form>
+    </mat-step>
+    <!--  [stepControl]="eventInitiation3" -->
+    <mat-step label="Brand Allocation">
+      <form [formGroup]="eventInitiation3">
+        <div class="row">
+  
+          <div class="col">
+            <mat-form-field color="accent" appearance="outline">
+              <mat-label>Brand Name</mat-label>
+              <mat-select formControlName="brandName">
+                <mat-option *ngFor="let brand of brandNames" value={{brand.BrandId}}>{{brand.BrandName}}</mat-option>
+              </mat-select>
+            </mat-form-field>
+  
+            <mat-form-field color="accent" appearance="outline">
+              <mat-label>% Allocation</mat-label>
+              <input matInput placeholder="% of Allocation auto populated" disabled [value]="percentageAllocation">
+            </mat-form-field>
+          </div>
+  
+          <div class="col">
+            <mat-form-field color="accent" appearance="outline">
+              <mat-label>Project-ID</mat-label>
+              <input matInput placeholder="Project Id auto populated" disabled [value]="projectId">
+            </mat-form-field>
+  
+            <mat-form-field color="accent" appearance="outline">
+              <mat-label>EventCode</mat-label>
+              <input matInput placeholder="EventCode auto populated" disabled [value]="eventCode">
+            </mat-form-field>
+  
+          </div>
+  
+          <div class="col-12 d-flex justify-content-center">
+            <button type="button" class="btn btn-primary btn-sm" (click)="addToBrandTable()">AddNew</button>
+          </div>
+  
+          <div class="container table-responsive">
+            <table class="table text-center table-bordered">
+              <thead>
+                <tr>
+                  <th><b><small>S.no</small></b></th>
+                  <th><b><small>Brand Name</small></b></th>
+                  <th><b><small>Allocation</small></b></th>
+                  <th><b><small>Project ID</small></b></th>
+                  <th><b><small>Actions</small></b></th>
+                </tr>
+              </thead>
+              <tbody *ngIf="showBrandTable">
+                <tr *ngFor="let brand of brandTableDetails; index as i">
+                  <th scope="row">{{i+1}}</th>
+                  <td>{{brand.BrandName}}</td>
+                  <td>{{brand.PercentAllocation}}%</td>
+                  <td>{{brand.ProjectId}}</td>
+                  <td style="cursor: pointer;">
+                    <i (click)="openBrandUpdateModal(brand)" class="material-icons" style="margin-right: 5px;">edit</i>
+                    <i (click)="deleteBrand(brand,i)" class="material-icons">delete</i>
+                  </td>
+  
+                </tr>
+              </tbody>
+  
+            </table>
+          </div>
+  
+            
+          <!-- <div class="col-12 d-flex justify-content-center m-2">
+            <button type="button" class="btn btn-success btn-sm" (click)="sendBrandDetails()">Save</button>
+            <button type="button" class="btn btn-warning btn-sm">Reset</button>
+          </div> -->
+  
+          <div class="container d-flex justify-content-end">
+            <button mat-raised-button color="accent" class="m-1" matStepperPrevious>Previous</button>
+            <button (click)="slideKitBrandMatch()" mat-raised-button color="primary" class="m-1" [disabled]="!isStep3Valid" matStepperNext>Next</button>
+          </div>
+  
+        </div>
+      </form>
+    </mat-step>
+    <mat-step  label="Panel Selection">
+      
+        
+            <form [formGroup]="eventInitiation4">
+              <div class="row">
+                <div class="col">
+                  <mat-form-field color="accent" appearance="outline">
+                    <mat-label>HCP Role</mat-label>
+                    <mat-select formControlName="hcpRole">
+                      <mat-option *ngFor="let hcp of hcpRoles" value={{hcp.HCPRoleID}}>{{hcp.HCPRole}}</mat-option>
+                    </mat-select>
+                  </mat-form-field>
+  
+                  
+                </div>
+                <div class="col">
+                  <mat-form-field *ngIf="showOtherHCPRoleTextBox" color="accent" appearance="outline">
+                    <mat-label>HCP Role Name</mat-label>
+                    <input matInput type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="hcpRoleWritten"> 
+                  </mat-form-field>
+                </div>
+              </div>           
+            </form>
+  
+            <form *ngIf="showOthersForm" [formGroup]="eventInitiation4Other" >
+              <div class="row">
+                <div class="col">
+                  <mat-form-field color="accent" appearance="outline">
+                    <mat-label>HCP Name</mat-label>
+                    <input matInput  type="text" placeholder="Speaker/Trainer Name prepopulated" formControlName="otherName" [matAutocomplete]="auto">
+        
+                    <mat-autocomplete #auto="matAutocomplete">
+                      <mat-option *ngFor="let a of filteredOthers" value={{a.HCPName}} >{{a.HCPName}}</mat-option>
+                    </mat-autocomplete>
+                  </mat-form-field>
+  
+                  <mat-form-field *ngIf="hideOtherMisCode" color="accent" appearance="outline">
+                    <mat-label>MIS Code</mat-label>
+                    <input matInput type="text" disabled [value]="otherMisCode" >
+                  </mat-form-field>
+  
+                  <mat-form-field *ngIf="!hideOtherMisCode" color="accent" appearance="outline">
+                    <mat-label>MIS Code</mat-label>
+                    <mat-select formControlName="otherMisCode">
+                      <mat-option *ngFor="let a of filteredOthersByName" value={{a.MISCode}}>{{a.MISCode}}</mat-option>
+                    </mat-select>
+                  </mat-form-field>
+  
+                  
+                </div>
+  
+                <div class="col">
+                  <!-- <mat-form-field color="accent" appearance="outline">
+                    <mat-label>Tier</mat-label>
+                    <input matInput type="text" placeholder="Tier prepopulated" disabled [value]="otherTier">
+                  </mat-form-field> -->
+        
+                  <mat-form-field color="accent" appearance="outline">
+                    <mat-label>Go/N-Go</mat-label>
+                    <input matInput type="text" placeholder="Go/N-Go prepopulated" disabled [value]="otherGoNonGo">
+                  </mat-form-field>
+  
+                  <mat-form-field color="accent" appearance="outline">
+                    <mat-label>Speciality</mat-label>
+                    <input matInput type="text" placeholder="Speciality prepopulated" disabled [value]="otherSpeciality">
+                  </mat-form-field>
+                </div>
+              </div>
+  
+            </form>
+  
+            <form *ngIf="showSpeakerForm" [formGroup]="eventInitiation4Speaker">
+              <div class="row">
+                <div class="col">
+                  <mat-form-field color="accent" appearance="outline">
+                    <mat-label>Speaker Name</mat-label>
+                    <input matInput  type="text" placeholder="Speaker/Trainer Name prepopulated" formControlName="speakerName" [matAutocomplete]="auto">
+        
+                    <mat-autocomplete #auto="matAutocomplete">
+                      <mat-option *ngFor="let a of filteredspeakers" value={{a.SpeakerName}} >{{a.SpeakerName}}</mat-option>
+                    </mat-autocomplete>
+                  </mat-form-field>
+  
+                  <mat-form-field *ngIf="hideSpeakerMisCode" color="accent" appearance="outline">
+                    <mat-label>MIS Code</mat-label>
+                    <input matInput type="text" [value]="speakerMisCode || ''" disabled >
+                    <mat-error>MIS Code is invalid</mat-error>
+                  </mat-form-field>
+  
+                  <mat-form-field *ngIf="!hideSpeakerMisCode"  color="accent" appearance="outline">
+                    <mat-label>MIS Code</mat-label>
+                    <mat-select formControlName="speakerMisCode">
+                      <mat-option *ngFor="let speaker of filteredSpeakerByName" value={{speaker.MISCode}}>{{speaker.MISCode}}</mat-option>
+                    </mat-select>
+                  </mat-form-field>
+  
+                  <mat-form-field color="accent" appearance="outline">
+                    <mat-label>Speaker Code</mat-label>
+                    <input matInput type="text" placeholder="Speaker/Trainer Code prepopulated" disabled [value]="speakerCode">
+                  </mat-form-field>
+                </div>
+                <div class="col">
+                  <mat-form-field color="accent" appearance="outline">
+                    <mat-label>Speciality</mat-label>
+                    <input matInput type="text" placeholder="Speciality prepopulated" disabled [value]="speakerSpeciality">
+                  </mat-form-field>
+  
+                  <mat-form-field color="accent" appearance="outline">
+                    <mat-label>Tier</mat-label>
+                    <input matInput type="text" placeholder="Tier prepopulated" disabled [value]="speakerTier">
+                  </mat-form-field>
+        
+                  <mat-form-field color="accent" appearance="outline">
+                    <mat-label>Go/N-Go</mat-label>
+                    <input matInput type="text" placeholder="Go/N-Go prepopulated" disabled [value]="speakerGoNonGo">
+                  </mat-form-field>
+  
+                </div>
+              </div>
+            </form>
+  
+  
+            <form *ngIf="showTrainerForm" [formGroup]="eventInitiation4Trainer">
+              <div class="row">
+                <div class="col">
+                  <mat-form-field color="accent" appearance="outline">
+                    <mat-label>Trainer Name</mat-label>
+                    <input matInput  type="text" placeholder="Speaker/Trainer Name prepopulated" formControlName="trainerName" [matAutocomplete]="auto">
+        
+                    <mat-autocomplete #auto="matAutocomplete">
+                      <mat-option *ngFor="let a of filteredTrainerOption" value={{a.TrainerName}} >{{a.TrainerName}}</mat-option>
+                    </mat-autocomplete>
+                  </mat-form-field>
+  
+                  <mat-form-field *ngIf="hideTrainerMisCode" color="accent" appearance="outline">
+                    <mat-label>MIS Code</mat-label>
+                    <input matInput type="text" disabled [value]="trainerMisCode || ''">
+                    
+                  </mat-form-field>
+  
+                  <mat-form-field *ngIf="!hideTrainerMisCode" color="accent" appearance="outline">
+                    <mat-label>MIS Code</mat-label>
+                    <mat-select formControlName="trainerMisCode">
+                      <mat-option *ngFor="let trainer of filteredTrainerOptionByName" value={{trainer.MISCode}}>{{trainer.MISCode}}</mat-option>
+                    </mat-select>
+                    
+                  </mat-form-field>
+  
+                  <mat-form-field color="accent" appearance="outline">
+                    <mat-label>Trainer Code</mat-label>
+                    <input matInput type="text" placeholder="Speaker/Trainer Code prepopulated" disabled [value]="trainerCode">
+                  </mat-form-field>
+                </div>
+                <div class="col">
+                  <mat-form-field color="accent" appearance="outline">
+                    <mat-label>Speciality</mat-label>
+                    <input matInput type="text" placeholder="Speciality prepopulated" disabled [value]="trainerSpeciality">
+                  </mat-form-field>
+  
+                  <mat-form-field color="accent" appearance="outline">
+                    <mat-label>Tier</mat-label>
+                    <input matInput type="text" placeholder="Tier prepopulated" disabled [value]="trainerTier">
+                  </mat-form-field>
+        
+                  <mat-form-field color="accent" appearance="outline">
+                    <mat-label>Go/N-Go</mat-label>
+                    <input matInput type="text" placeholder="Go/N-Go prepopulated" disabled [value]="trainerGoNonGo">
+                  </mat-form-field>
+  
+                </div>
+              </div>
+            </form>
+  
+            <form [formGroup]="eventInitiation4Sub">
+              <div class="row">
+                  <div class="col">
+  
+                      <mat-label><b>Upload FCPA</b></mat-label><br>
+                      <div class="m-2">
+                          <input type="file" formControlName="uploadFCPA">
+                      </div>
+                  </div>
+  
+                  <div class="col">
+                    <div class="m-2" >
+                      <mat-form-field color="accent" appearance="outline">
+                     <mat-label>FCPA Date</mat-label>
+                       <input matInput type="date" formControlName="fcpaDate">
+                     </mat-form-field>
+                   </div>
+  
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col">
+                    <div>
+                      <mat-label>Is Advance Required?</mat-label>
+                      <mat-radio-group formControlName="isAdvanceRequired">
+                          <div class="mt-2">
+                              <mat-radio-button value="Yes" >Yes</mat-radio-button>
+                              <mat-radio-button value="No" class="m-1" >No</mat-radio-button>
+                          </div>
+                      </mat-radio-group>
+                    </div>
+                  </div>
+    
+                </div>
+                <div class="row">
+                  
+                  <div class="col">
+                      <div>
+                          <mat-label>Is honorarium applicable?</mat-label>
+                          <mat-radio-group formControlName="isHonararium">
+                              <div class="mt-2">
+                                  <mat-radio-button value="Yes" >Yes</mat-radio-button>
+                                  <mat-radio-button value="No" class="m-1" >No</mat-radio-button>
+                              </div>
+                          </mat-radio-group>
+                      </div>
+                  </div>
+                  <div class="container">
+                      <form [formGroup]="eventInitiatio4Honararium" *ngIf="isHonararium" class="form-border">
+                          <h4 class="d-flex justify-content-center col-12"><b>Honararium Details</b></h4>
+                          <div class="row">
+                            <div class="col">
+                              <mat-form-field color="accent" appearance="outline">
+                                <mat-label>Presentation / Speaking / Workshop duration</mat-label>
+                                <input matInput type="number" placeholder="Enter Duration in minutes"
+                                  formControlName="presentationDuration">
+                              </mat-form-field>
+                    
+                              <mat-form-field color="accent" appearance="outline">
+                                <mat-label>Development presentation /Panel session preparation</mat-label>
+                                <input matInput type="number" placeholder="Enter Duration in minutes"
+                                  formControlName="panelSessionPreparation">
+                              </mat-form-field>
+                    
+                              <mat-form-field color="accent" appearance="outline">
+                                <mat-label>Q&A Session</mat-label>
+                                <input matInput type="number" [max]="15" placeholder="Enter Duration in minutes"
+                                  formControlName="qaSession">
+                                <mat-hint>(Max 15 minutes)</mat-hint>
+                              </mat-form-field>
+                    
+                              <mat-form-field color="accent" appearance="outline">
+                                <mat-label>Enter Honararium Amount</mat-label>
+                                <input matInput type="number" placeholder="Enter Honararium Amount" formControlName="honorariumAmount">
+                              </mat-form-field>
+                    
+                            </div>
+                            <div class="col">
+                              <mat-form-field color="accent" appearance="outline">
+                                <mat-label>Speaker/Trainer Briefing</mat-label>
+                                <input matInput type="number" [max]="120" placeholder="Enter Duration in minutes"
+                                  formControlName="briefingDuration">
+                                <mat-hint>(Max 120 minutes)</mat-hint>
+                              </mat-form-field>
+                    
+                              <mat-form-field color="accent" appearance="outline">
+                                <mat-label>Panel Discussion/session duration</mat-label>
+                                <input matInput type="number" placeholder="Panel Discussion/session duration" formControlName="panelDiscussionDuration">
+                              </mat-form-field>
+                    
+                              <mat-form-field color="accent" appearance="outline">
+                                <mat-label>Total number of hours</mat-label>
+                                <input matInput type="number" placeholder="Total number of hours prepopulated" disabled [value]="totalHours">
+                              </mat-form-field>
+                            </div>
+                          </div>
+                          <h4 class="d-flex justify-content-center col-12"><b>Benificiary Details</b></h4>
+                          <div class="row">
+                            <div class="col">
+                        
+                              <div class="m-3" *ngIf="showRationale">
+                                <mat-label>Upload NOC</mat-label><br>
+                                <input type="file" formControlName="uploadNOC">
+                              </div>
+                    
+                              <mat-form-field color="accent" appearance="outline">
+                                <mat-label>Currency</mat-label>
+                                <mat-select formControlName="currency">
+                                  <mat-option value="INR">INR</mat-option>
+                                  <mat-option value="EURO">Euro</mat-option>
+                                  <mat-option value="Others">Other</mat-option>
+                                </mat-select>
+                              </mat-form-field>
+                    
+                              <mat-form-field *ngIf="showOtherCurrencyTextBox" color="accent" appearance="outline">
+                                <mat-label>Other Currency</mat-label>
+                                <input matInput placeholder="Enter Currency" [disabled]="!isHonararium"  [value]="otherCurrency" >
+                              
+                              </mat-form-field>
+                    
+                              <mat-form-field color="accent" appearance="outline">
+                                <mat-label>Selection Of Taxes</mat-label>
+                                <!-- <mat-select [disabled]="!isHonararium" [(ngModel)]="taxSelect" [ngModelOptions]="{standalone: true}">
+                                  <mat-option value="Inclusive">Inclusive of Tax</mat-option>
+                                  <mat-option value="Exclusive">Exclusive of Tax</mat-option>
+                                </mat-select> -->
+                                <mat-select formControlName="taxSelection">
+                                  <mat-option value="Inclusive">Inclusive of Tax</mat-option>
+                                  <mat-option value="Exclusive">Exclusive of Tax</mat-option>
+                                  <mat-option value="NA">N/A</mat-option>
+                                </mat-select>
+                              </mat-form-field>
+                    
+                              <mat-form-field *ngIf="!isHonararium" color="accent" appearance="outline">
+                                <mat-label>Benificiary Name</mat-label>
+                                <input matInput placeholder="Enter Bank Account Number" [disabled]="!isHonararium" [value]="bankAccountNumber">
+                              </mat-form-field>
+                    
+                              <mat-form-field *ngIf="isHonararium" color="accent" appearance="outline">
+                                <mat-label>Benificiary Name</mat-label>
+                                <input matInput placeholder="Enter Benificiary Name" formControlName="benificiaryName" [matAutocomplete]="auto">
+                    
+                                <mat-autocomplete #auto="matAutocomplete">
+                                  <mat-option *ngFor="let a of filteredAccounts" value={{a.BeneficiaryName}} >{{a.BeneficiaryName}}</mat-option>
+                                </mat-autocomplete>
+                              </mat-form-field>
+                    
+                              <mat-form-field color="accent" appearance="outline">
+                                <mat-label>Bank Account Number</mat-label>
+                                <input matInput placeholder="Enter Bank Account Number" [disabled]="!isHonararium || isVendorPresent" [value]="bankAccountNumber">
+                              </mat-form-field>
+                            
+                            </div>
+                            <div class="col">
+                              <mat-form-field *ngIf="showRationale" color="accent" appearance="outline">
+                                <mat-label>Rationale</mat-label>
+                                <input matInput type="number" placeholder="Enter Currency" formControlName="rationale">
+                              </mat-form-field>
+              
+                              <mat-form-field color="accent" appearance="outline">
+                                <mat-label>Name as per PAN</mat-label>
+                                <input matInput placeholder="Name as per PAN pre populated" [disabled]="!isHonararium || isVendorPresent"  [value]="nameAsPan">
+                              </mat-form-field>
+                    
+                              <mat-form-field color="accent" appearance="outline">
+                                <mat-label>PAN Card Number</mat-label>
+                                <input matInput placeholder="PAN Card Number pre populated" [disabled]="!isHonararium || isVendorPresent" [value]="panCardNumber">
+                              </mat-form-field>
+                    
+                              <mat-form-field color="accent" appearance="outline">
+                                <mat-label>IFSC Code </mat-label>
+                                <input matInput placeholder="IFSC Code pre populated" [disabled]="!isHonararium || isVendorPresent"  [value]="ifscCode">
+                              </mat-form-field>
+                    
+                              <mat-form-field color="accent" appearance="outline">
+                                <mat-label>Email ID (*optional)</mat-label>
+                                <input matInput placeholder="Email ID pre populated" [disabled]="!isHonararium" [(ngModel)]="emailId" [ngModelOptions]="{standalone: true}" [value]="emailId">
+                              </mat-form-field>
+                    
+                              <div class="m-3">
+                                <mat-label>Upload PAN Card</mat-label><br>
+                                <input type="file" [disabled]="!isHonararium" [value]="uploadPAN">
+                              </div>
+                    
+                              <div class="m-3">
+                                <mat-label>Upload Cheque</mat-label><br>
+                                <input type="file" [disabled]="!isHonararium" [value]="uploadCheque">
+                              </div>
+                    
+                            </div>
+                          </div>
+                          
+                          
+                        </form>
+                  </div>
+  
+                  <div class="col">
+                      <mat-radio-group  formControlName="isTravelRequired">
+                          <mat-label>Is Travel allowance applicable?</mat-label><br>
+                           <div class="mt-2">
+                            <mat-radio-button value="Yes" >Yes</mat-radio-button>
+                            <mat-radio-button value="No" class="m-1" [checked]="true">No</mat-radio-button>
+                           </div>
+                        </mat-radio-group>
+                  </div>
+  
+                  <div class="container">
+                      <form [formGroup]="eventInitiation4Travel" *ngIf="showTravelForm" class="form-border">
+                          <h4 class="d-flex justify-content-center col-12"><b>Travel Details</b></h4>
+                          <div class="row">
+                            <div class="col">
+                              <mat-form-field color="accent" appearance="outline">
+                                <mat-label>Travel Selection</mat-label>
+                                <mat-select formControlName="travelType">
+                                  <mat-option value="air">Air</mat-option>
+                                  <mat-option value="train">Train</mat-option>
+                                  <mat-option value="other">Other</mat-option>
+                                </mat-select>
+                              </mat-form-field>
+              
+                              <mat-form-field  color="accent" appearance="outline">
+                                <mat-label>Travel Amount</mat-label>
+                                <input matInput type="number" placeholder="Enter Travel Amount" formControlName="travelAmount">
+                              </mat-form-field>
+              
+                            </div>
+              
+                            <div class="col">
+                              <div>
+                                <mat-radio-group  formControlName="travelBTC">
+                                  <mat-label>Is BTC/BTE?</mat-label><br>
+                                   <div class="mt-2">
+                                    <mat-radio-button value="BTC" >BTC</mat-radio-button>
+                                    <mat-radio-button value="BTE" class="m-1" >BTE</mat-radio-button>
+                                   </div>
+                                </mat-radio-group>
+                              </div>
+              
+                            </div>
+                          </div>
+                        </form>
+                     
+  
+                  </div>
+  
+  
+  
+                  <div class="col">
+                      <mat-label>Is accomodation allowance applicable?</mat-label>
+                  <mat-radio-group formControlName="isAccomRequired">
+                      <div class="mt-2 ">
+                      <mat-radio-button value="Yes" >Yes</mat-radio-button>
+                      <mat-radio-button value="No" class="m-1" >No</mat-radio-button>
+                  </div>
+                  </mat-radio-group>
+                  </div>
+                  <div class="container">
+                      <form [formGroup]="eventInitiation4Accomodation" *ngIf="showAccomForm" class="form-border">
+                          <h4 class="d-flex justify-content-center col-12"><b>Accomodation Details</b></h4>
+                          <div class="row">
+                            <div class="col">
+                              <div>
+                                <mat-radio-group  formControlName="accomBTC">
+                                  <mat-label>Is BTC/BTE?</mat-label><br>
+                                   <div class="mt-2">
+                                    <mat-radio-button value="BTC" >BTC</mat-radio-button>
+                                    <mat-radio-button value="BTE" class="m-1" >BTE</mat-radio-button>
+                                   </div>
+                                </mat-radio-group>
+                              </div>
+                            </div>
+                            <div class="col">
+                              <mat-form-field  color="accent" appearance="outline">
+                                <mat-label>Accomodation Amount</mat-label>
+                                <input matInput type="number" placeholder="Enter Accomodation Amount" formControlName="accomAmount">
+                              </mat-form-field>
+                            </div>
+                          </div>
+                        </form>
+                  </div>
+              </div>
+  
+             
+  
+              <div>
+                  <mat-radio-group  formControlName="isLocalConveyance">
+                      <mat-label>Is Local Conveyance applicable?</mat-label><br>
+                       <div class="mt-2">
+                        <mat-radio-button value="Yes" >Yes</mat-radio-button>
+                        <mat-radio-button value="No" class="m-1" [checked]="true">No</mat-radio-button>
+                       </div>
+                    </mat-radio-group>
+              </div>
+  
+              <div class="col">
+                <mat-form-field  *ngIf="showLocalConveyance" color="accent" appearance="outline">
+                  <mat-label>Local Conveyance Amount</mat-label>
+                  <input matInput placeholder="Enter Local Conveyance Amount" formControlName="localConveyanceAmount">
+                </mat-form-field>
+              </div>
+          </form>
+  
+            <div class="col-12 d-flex justify-content-start">
+              <button type="button" class="btn btn-primary btn-sm" (click)="addHCPTable()">AddNew</button>
+            </div>
+  
+            <div class="container table-responsive">
+              <table class="table text-center table-bordered">
+                <thead>
+                  <tr>
+                    <th><b><small>S.no</small></b></th>
+                    <th><b><small>HCP Role</small></b></th>
+                    <th><b><small>HCP Name</small></b></th>
+                    <th><b><small>MIS Code</small></b></th>
+                    <th><b><small>Go/NGo</small></b></th>
+                    <th><b><small>Honorarium</small></b></th>
+                    <th><b><small>Honorarium amount</small></b></th>
+                    <th><b><small>Travel Amount</small></b></th>
+                    <th><b><small>ACC Amount</small></b></th>
+                    <th><b><small>LC Amount</small></b></th>
+                    <th><b><small>Final Amount</small></b></th>
+                    <th><b><small>Actions</small></b></th>
+                  </tr>
+                </thead>
+                <tbody >
+                  <tr *ngFor="let Hcp of hcpTableDetails; index as i">
+                    <th scope="row">{{i+1}}</th>
+                    <td>{{Hcp.HcpRole}}</td>
+                    <td>{{Hcp.HcpName}}</td>
+                    <td>{{Hcp.MisCode}}</td>
+                    <td>{{Hcp.GOorNGO}}</td>
+                    <td>{{Hcp.HonorariumRequired}}</td>
+                    <td>{{Hcp.HonarariumAmount}}</td>
+                    <td>{{Hcp.Travel}}</td>
+                    <td>{{Hcp.Accomdation}}</td>
+                    <td>{{Hcp.LocalConveyance}}</td>
+                    <td>{{Hcp.FinalAmount}}</td>
+                    <td style="cursor: pointer;">
+                      <i (click)="openHCPTableUpdateModal(Hcp)" class="material-icons" style="margin-right: 5px;">edit</i>
+                      <i (click)="deletHcp(i)" class="material-icons">delete</i>
+                    </td>
+    
+                  </tr>
+                </tbody>
+    
+              </table>
+            </div>
+    
+  
+          <div class="container d-flex justify-content-end">
+            <button mat-raised-button color="accent" class="m-1" matStepperPrevious>Previous</button>
+            <button mat-raised-button color="primary" class="m-1" [disabled]="!isStep4Valid" matStepperNext>Next</button>
+          </div>
+        
+    
+    </mat-step>
+    <mat-step label="Slide-Kit Selection">
+  
+      <div class="container table-responsive">
+        <table class="table text-center table-bordered">
+          <thead>
+            <tr>
+              <th><b><small>S.no</small></b></th>
+              <th><b><small>HCP Role</small></b></th>
+              <th><b><small>HCP Name</small></b></th>
+              <th><b><small>MIS-Code</small></b></th>
+              <th><b><small>GO/N-GO</small></b></th>
+              <th><b><small>Slide Kit selection</small></b></th>
+              <th><b><small>Upload Document</small></b></th>
+              <!-- <th>Actions</th> -->
+            </tr>
+          </thead>
+          <tbody >
+            <tr *ngFor="let s of hcpTableDetails; index as i">
+                <th scope="row">{{i+1}}</th>
+                <td>{{s.HcpRole}}</td>
+                <td>{{s.HcpName}}</td>
+                <td>{{s.MisCode}}</td>
+                <td>{{s.GOorNGO}}</td>
+                <td>
+                  <div class="d-flex justify-content-center">
+                    <mat-radio-group (ngModelChange)="slideKitRadioOption($event,slideKitTableRadio[i],i,s.MisCode)" [ngModelOptions]="{standalone: true}" [(ngModel)]="slideKitTableRadio[i]" >
+                      
+                      <mat-radio-button value="SlideKit From Company">Select slide kit from Company</mat-radio-button>
+                      <br>
+                      <mat-radio-button value="HCP SlideKit Approved by Company">HCP slidekit approved by company</mat-radio-button>
+                      <br>
+                      <mat-radio-button value="Others">Others</mat-radio-button>
+                    </mat-radio-group>
+                  </div>
+                  
+                </td>
+                <td>
+                  <div class="container">
+                    <div class="row">
+                      <div class="col" id={{i}} style="display: none;">
+                        <mat-form-field   appearance="outline" color="accent" >
+                          <mat-label>Brands</mat-label>
+                          <mat-select (ngModelChange)="slideKitPrePopulate($event,slideKitTableInput[i])"  [ngModelOptions]="{standalone: true}" [(ngModel)]="slideKitTableInput[i]" >
+                            <mat-option *ngFor="let a of slideKitDropDownOptions" value={{a.SlideKitName}}>{{a.SlideKitName}}</mat-option>
+                          </mat-select>
+                        </mat-form-field>
+                      </div>
+                      <div class="col" id={{s.MisCode+i}} style="display: none;">
+                        <mat-label>Upload Deviation</mat-label><br>
+                        <input type="file" >
+                      </div>
+                     
+                    </div>
+                  </div>
+                  
+                  
+                </td>
+              <!-- <td style="cursor: pointer;">
+                <i class="material-icons" style="margin-right: 5px;">edit</i>
+                <i class="material-icons">delete</i>
+              </td> -->
+             
+  
+             
+            </tr>
+          </tbody>
+  
+        </table>
+      </div>
+  
+   
+  
+  <div class="container d-flex justify-content-end">
+    <button mat-raised-button color="accent" class="m-1" matStepperPrevious>Previous</button>
+    <button  mat-raised-button color="primary" class="m-1" (click)="printSlideKitDetails()" [disabled]="!isStep5Valid" matStepperNext>Next</button>
+  </div>
+  
+    </mat-step>
+    <mat-step label="Invitees-Selection">
+      <form [formGroup]="inviteeSelectionForm">
+        <div class="row">
+          <div class="col">
+            <mat-form-field color="accent" appearance="outline">
+              <mat-label>Invitees From</mat-label>
+              <mat-select formControlName="inviteesFrom">
+                <mat-option value="hcpMaster">from HCP master</mat-option>
+                <mat-option value="menarini">from Menarini</mat-option>
+                <mat-option value="other">Other</mat-option>
+              </mat-select>
+            </mat-form-field>
+  
+            <mat-form-field color="accent" appearance="outline">
+              <mat-label>Enter Invitee Name</mat-label>
+              <input matInput type="text" formControlName="inviteeName" [matAutocomplete]="autoInvitee">
+  
+              <mat-autocomplete #autoInvitee="matAutocomplete">
+                      <mat-option *ngFor="let a of filteredHCPMasterInvitees" value={{a.HCPName}} >{{a.HCPName}}</mat-option>
+                    </mat-autocomplete>
+            </mat-form-field>
+            
+  
+  
+  
+            <div *ngIf="showInviteeLocalConveyance">
+              <mat-label><b>Is BTC / BTE?</b></mat-label>
+              <mat-radio-group formControlName="inviteeBTC">
+                    <div class="mt-2 ">
+                    <mat-radio-button value="BTC" >BTC</mat-radio-button>
+                    <mat-radio-button value="BTE" class="m-1">BTE</mat-radio-button>
+                </div>
+              </mat-radio-group>
+            </div>
+  
+          </div>
+          <div class="col">
+            <mat-form-field *ngIf="hideInviteeMisCode" color="accent" appearance="outline">
+              <mat-label>Enter Invitee MIS Code</mat-label>
+              <input matInput type="text" disabled [value]="filteredInviteeMisCode || ''"  >
+            </mat-form-field>
+  
+            <mat-form-field *ngIf="!hideInviteeMisCode" color="accent" appearance="outline">
+              <mat-label>Enter Invitee MIS Code</mat-label>
+              <mat-select formControlName="inviteeMisCode">
+                <mat-option *ngFor="let invitee of filteredInviteeMisCodeSelect" value={{invitee.MISCode}}>{{invitee.MISCode}}</mat-option>
+                
+              </mat-select>
+              <!-- <input matInput type="text" [value]="filteredInviteeMisCode"  > -->
+            </mat-form-field>
+            
+           
+            <mat-label><b>Is Local Conveyance applicable?</b></mat-label>
+            <mat-radio-group value="No"  formControlName="isInviteeLocalConveyance">
+                <div class="mt-2 ">
+                <mat-radio-button value="Yes" >Yes</mat-radio-button>
+                <mat-radio-button value="No" class="m-1">No</mat-radio-button>
+                </div>
+            </mat-radio-group>
+  
+            <mat-form-field *ngIf="showInviteeLocalConveyance" color="accent" appearance="outline">
+              <mat-label>Enter Local Conveyance Amount</mat-label>
+              <input matInput type="number" formControlName="inviteeLocalConveyanceAmount" >
+            </mat-form-field>
+  
+            
+  
+          </div>
+        </div>
+      </form>
+  
+         <div class="col-12 d-flex justify-content-center">
+           <button type="button" class="btn btn-primary btn-sm" (click)="addToInviteeTable()">AddNew</button>
+          
+         </div>
+   
+   
+       <div class="container table-responsive">
+         <table class="table text-center table-bordered">
+           <thead>
+             <tr>
+               <th><b><small>S.no</small></b></th>
+               <th><b><small>Invitees</small></b></th>
+               <th><b><small>localConveyance</small></b></th>
+               <th><b><small>BTC/BTE</small></b></th>
+               <th><b><small>LC Amount</small></b></th>
+               <th><b><small>Actions</small></b></th>
+             </tr>
+           </thead>
+           <tbody >
+             <tr *ngFor="let invitee of inviteeTableDetails; index as i" >
+                <td>{{i+1}}</td>
+                <td>{{invitee.InviteeName}}</td>
+                <td>{{invitee.LocalConveyance}}</td>
+                <td>{{invitee.BtcorBte}}</td>
+                <td>{{invitee.LcAmount}}</td>
+                <td style="cursor: pointer;">
+                  <i (click)="openInviteeUpdateModal(invitee)" class="material-icons" style="margin-right: 5px;">edit</i>
+                  <i (click)="deleteInvitee(i)" class="material-icons">delete</i>
+                </td>
+   
+              
+             </tr>
+           </tbody>
+   
+         </table>
+       </div>
+       <!-- <div class="col-12 d-flex justify-content-center m-2">
+        <button type="button" class="btn btn-success btn-sm" >Save</button>
+        <button type="button" class="btn btn-warning btn-sm">Reset</button>
+       </div> -->
+   
+       <div class="col-6">
+       
+         <mat-label><b>Upload Agenda</b></mat-label>
+         <div>
+         <input type="file"> 
+           </div>
+   </div>
+           <div class="col-6">
+       
+             <mat-label><b>Upload Invitation</b></mat-label>
+             <div>
+             <input type="file">
+           </div>
+                
+                 
+               </div>
+    
+      
+       <div class="container d-flex justify-content-end">
+         <button mat-raised-button color="accent" class="m-1" matStepperPrevious>Previous</button>
+         <button mat-raised-button color="primary" class="m-1" [disabled]="!isStep6Valid" matStepperNext>Next</button>
+       </div>
+   
+     </mat-step>
+  
+     <mat-step label="Expense-Selection">
+        <form [formGroup]="expenseSelectionForm">
+          <div class="row">
+            <div class="col">
+              <mat-form-field color="accent" appearance="outline">
+                <mat-label>Expense</mat-label>
+                <mat-select formControlName="expenseType">
+                  <mat-option value="HCP">Expense 1</mat-option>
+                  <mat-option value="foodAndBeverages">Food And Beverages</mat-option>
+                  <mat-option value="other">Other</mat-option>
+                </mat-select>
+              </mat-form-field>
+  
+              <mat-form-field color="accent" appearance="outline">
+                <mat-label>Enter Expense amount</mat-label>
+                <input type="number" matInput placeholder="Enter Expense amount" formControlName="expenseAmount">
+                <!-- <mat-hint>(If expense selected as Food and Beverages)</mat-hint> -->
+              </mat-form-field>
+  
+              <div class="m-2" *ngIf="showExpenseDeviation">
+                <mat-label>Upload Deviation</mat-label><br>
+                <input type="file" formControlName="uploadExpenseDeviation">
+              </div>
+            </div>
+            <div class="col">
+              <mat-label>Amount is excluding Tax</mat-label>
+              <mat-radio-group formControlName="isExcludingTax">
+                <div style="display: flex; justify-content: start;">
+                  <mat-radio-button value="Yes" class="m-2">Yes</mat-radio-button>
+                  <mat-radio-button value="No" class="m-2">No</mat-radio-button>
+                </div>
+              </mat-radio-group>
+  
+              <mat-label>Is BTC/BTE?</mat-label>
+              <mat-radio-group formControlName="isExpenseBtc">
+                <div style="display: flex; justify-content:start;">
+                  <mat-radio-button value="BTC" class="m-2">BTC</mat-radio-button>
+                  <mat-radio-button value="BTE" class="m-2">BTE</mat-radio-button>
+                </div>
+              </mat-radio-group>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col">
+              <mat-form-field color="accent" appearance="outline">
+                <mat-label>BTC Total Amount</mat-label>
+                <input matInput placeholder="BTC Amount" disabled [ngModelOptions]="{standalone: true}" [(ngModel)]="BTCTotalAmount">
+              </mat-form-field>
+            </div>
+            <div class="col">
+              <mat-form-field color="accent" appearance="outline">
+                <mat-label>BTE Total Amount</mat-label>
+                <input matInput placeholder="BTE Total Amount" disabled [ngModelOptions]="{standalone: true}" [(ngModel)]="BTETotalAmount">
+              </mat-form-field>
+            </div>
+            <div class="col">
+              <mat-form-field color="accent" appearance="outline">
+                <mat-label>Budget Amount</mat-label>
+                <input matInput placeholder="BTE Total Amount" disabled [ngModelOptions]="{standalone: true}" [(ngModel)]="BudgetAmount"> 
+              </mat-form-field>
+            </div>
+        
+          </div>
+  
+        </form>
+        <div class="col-12 d-flex justify-content-center">
+          <button (click)="addToExpenseTable()" class="btn btn-primary btn-sm">AddNew</button>
+        </div>
+  
+        <div class="container table-responsive">
+          <table class="table text-center table-bordered">
+            <thead>
+              <tr>
+                <th><b><small>S.no</small></b></th>
+                <th><b><small>Expense</small></b></th>
+                <th><b><small>Expense Amount</small></b></th>
+                <th><b><small>Excluding Tax</small></b></th>
+                <th><b><small>BTC / BTE</small></b></th>
+                <th><b><small>Actions</small></b></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let expense of expenseTableDetails; index as i">
+                <td scope="row">{{i+1}}</td>
+                <td>{{expense.Expense}}</td>
+                <td>{{expense.Amount}}</td>
+                <td>{{expense.AmountExcludingTax}}</td>
+                <td>{{expense.BtcorBte}}</td>
+                <td style="cursor: pointer;">
+                  <i (click)="openExpenseUpdateModal(expense)" class="material-icons" style="margin-right: 5px;">edit</i>
+                  <i (click)="deleteExpense(i)" class="material-icons">delete</i>
+                </td>
+      
+              </tr>
+            </tbody>
+      
+          </table>
+        </div> 
+  
+        <!-- <div class="col-12 d-flex justify-content-center">
+          <button class="btn btn-success btn-sm">Save</button>
+          <button class="btn btn-warning btn-sm">Reset</button>
+        </div> -->
+  
+        <div class="col-12 d-flex justify-content-end">
+          <button class="btn btn-primary btn-sm">Previous</button>
+          <button (click)="submitForm()" class="btn btn-success btn-sm" [disabled]="!isFormValid" >Submit</button>
+        </div>
+          
+      
+        </mat-step>
+  </mat-stepper>
+  
+  
+  
+  

@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { data } from 'jquery';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 
@@ -83,6 +84,11 @@ export class UtilityService {
     return this.http.get(this.baseAPIUrl+"/GetMasterSheets/GetApprovedTrainersData");
   }
 
+  // Get All Expense Type
+  getExpenseType(){
+    return this.http.get(this.baseAPIUrl+'/GetMasterSheets/GetExpenseTypeMasterData');
+  }
+
   // Get All States
   getAllStates(){
     return this.http.get(this.baseAPIUrl+'/GetMasterSheets/GetStateNameData')
@@ -114,13 +120,14 @@ export class UtilityService {
   }
 
   // Post class1 consolidated data
-  postClass1PreEventRequest(data:any){
-    return this.http.post(this.baseAPIUrl+"/PostRequestSheets/AllObjModelsData", data)
-  }
+  postClass1PreEventRequest(data:any) : Observable<any>{
+    return this.http.post(this.baseAPIUrl+"/PostReqestSheets/AllObjModelsData", data)
+  }//PostReqestSheets/AllObjModelsData
 
+  // /PostRequestSheets/AllObjModelsData
   // Get Slide Kit Details from Slide Kit master
   getSlideKitDetails(){
-    return this.http.get(this.baseAPIUrl+'/MasterSheets/SlideKitMaster')
+    return this.http.get(this.baseAPIUrl+'/GetMasterSheets/SlideKitMaster')
   }
 
 
@@ -138,8 +145,49 @@ export class UtilityService {
    }
 
   //  Post Event Settlement
+  postEventInviteess : any ;
+  getInviteesFast(){
+    this.http.get(this.baseAPIUrl+"/GetRequestSheets/GetInviteesData").subscribe(
+      res => {
+        this.postEventInviteess = res;
+      }
+    )
+  }
   getInviteesData()
   {
-    return this.http.get(this.baseAPIUrl+"/GetRequestSheets/GetInviteesData");
+    return this.postEventInviteess;
+  }
+
+   //get expense data for post event settlement
+   getPostEventExpense(){
+    return  this.http.get(this.baseAPIUrl+"/GetRequestSheets/GetExpenseData")
+   }
+
+  //  Panel Selection Final Amount
+  getPanelSelectionFinalAmount(eventId: any){
+    return this.http.get(this.baseAPIUrl + `/GetRequestSheets/GetEventRequestsHcpDetailsTotalSpendValue?EventID=${eventId}`);
+  }
+
+  // Invitee Selection Final Amount
+  getTotalInviteesFinalAmount(eventId : any){
+    return this.http.get(this.baseAPIUrl + `/GetRequestSheets/GetEventRequestsInviteesLcAmountValue?EventID=${eventId}`)
+  }
+
+  // Expense Final
+  getTotalExpenseFinalAmount(eventId){
+    return this.http.get(this.baseAPIUrl+`/GetRequestSheets/GetEventRequestExpenseSheetAmountValue?EventID=${eventId}`)
+  }
+
+
+
+
+  //  Testing APIS
+  // File Upload Test:
+  fileUpload(fileData){
+    return this.http.post(this.baseAPIUrl+'/Temp/AddFormData',fileData, {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    })
   }
 }

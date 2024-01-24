@@ -5,11 +5,11 @@
       <table class="table text-center table-bordered table-striped" >
         <thead>
           <tr>
-            <th><b>S.no</b></th>
-            <th><b>Event ID</b></th>
-            <th><b>Event Typ</b>e</th>
-            <th><b>Venue</b></th>
-            <th><b>Event Date</b></th>
+            <th><b><small>S.no</small></b></th>
+            <th><b><small>Event ID</small></b></th>
+            <th><b><small>Event Type</small></b>e</th>
+            <th><b><small>Venue</small></b></th>
+            <th><b><small>Event Date</small></b></th>
           </tr>
         </thead>
         <tbody >
@@ -163,14 +163,14 @@
         </div>
 
         <div class="container table-responsive">
-          <table class="table text-center">
+          <table class="table text-center table-bordered">
             <thead>
               <tr>
-                <th>S.no</th>
-                <th>Brand Name</th>
-                <th>Allocation</th>
-                <th>Project ID</th>
-                <th>Actions</th>
+                <th><b><small>S.no</small></b></th>
+                <th><b><small>Brand Name</small></b></th>
+                <th><b><small>Allocation</small></b></th>
+                <th><b><small>Project ID</small></b></th>
+                <th><b><small>Actions</small></b></th>
               </tr>
             </thead>
             <tbody *ngIf="showBrandTable">
@@ -390,7 +390,7 @@
                 <div class="col">
                   <div class="m-2" >
                     <mat-form-field color="accent" appearance="outline">
-                   <mat-label>Event Date</mat-label>
+                   <mat-label>FCPA Date</mat-label>
                      <input matInput type="date" formControlName="fcpaDate">
                    </mat-form-field>
                  </div>
@@ -485,9 +485,9 @@
                             <mat-form-field color="accent" appearance="outline">
                               <mat-label>Currency</mat-label>
                               <mat-select formControlName="currency">
-                                <mat-option value="rupees">Rupees</mat-option>
-                                <mat-option value="dollar">Dollar</mat-option>
-                                <mat-option value="other">Other</mat-option>
+                                <mat-option value="INR">INR</mat-option>
+                                <mat-option value="EURO">Euro</mat-option>
+                                <mat-option value="Others">Other</mat-option>
                               </mat-select>
                             </mat-form-field>
                   
@@ -506,6 +506,7 @@
                               <mat-select formControlName="taxSelection">
                                 <mat-option value="Inclusive">Inclusive of Tax</mat-option>
                                 <mat-option value="Exclusive">Exclusive of Tax</mat-option>
+                                <mat-option value="NA">N/A</mat-option>
                               </mat-select>
                             </mat-form-field>
                   
@@ -683,21 +684,21 @@
           </div>
 
           <div class="container table-responsive">
-            <table class="table text-center">
+            <table class="table text-center table-bordered">
               <thead>
                 <tr>
-                  <th>S.no</th>
-                  <th>HCP Role</th>
-                  <th>HCP Name</th>
-                  <th>MIS Code</th>
-                  <th>Go/NGo</th>
-                  <th>Honorarium</th>
-                  <th>Honorarium amount</th>
-                  <th>Travel Amount</th>
-                  <th>ACC Amount</th>
-                  <th>LC Amount</th>
-                  <th>Final Amount</th>
-                  <th>Actions</th>
+                  <th><b><small>S.no</small></b></th>
+                  <th><b><small>HCP Role</small></b></th>
+                  <th><b><small>HCP Name</small></b></th>
+                  <th><b><small>MIS Code</small></b></th>
+                  <th><b><small>Go/NGo</small></b></th>
+                  <th><b><small>Honorarium</small></b></th>
+                  <th><b><small>Honorarium amount</small></b></th>
+                  <th><b><small>Travel Amount</small></b></th>
+                  <th><b><small>ACC Amount</small></b></th>
+                  <th><b><small>LC Amount</small></b></th>
+                  <th><b><small>Final Amount</small></b></th>
+                  <th><b><small>Actions</small></b></th>
                 </tr>
               </thead>
               <tbody >
@@ -735,16 +736,16 @@
   <mat-step label="Slide-Kit Selection">
 
     <div class="container table-responsive">
-      <table class="table text-center">
+      <table class="table text-center table-bordered">
         <thead>
           <tr>
-            <th>S.no</th>
-            <th>HCP Role</th>
-            <th>HCP Name</th>
-            <th>MIS-Code</th>
-            <th>GO/N-GO</th>
-            <th>Slide Kit selection</th>
-            <th>Upload Document</th>
+            <th><b><small>S.no</small></b></th>
+            <th><b><small>HCP Role</small></b></th>
+            <th><b><small>HCP Name</small></b></th>
+            <th><b><small>MIS-Code</small></b></th>
+            <th><b><small>GO/N-GO</small></b></th>
+            <th><b><small>Slide Kit selection</small></b></th>
+            <th><b><small>Upload Document</small></b></th>
             <!-- <th>Actions</th> -->
           </tr>
         </thead>
@@ -756,12 +757,17 @@
               <td>{{s.MisCode}}</td>
               <td>{{s.GOorNGO}}</td>
               <td>
+                <div class="d-flex justify-content-center">
+                  <mat-radio-group (ngModelChange)="slideKitRadioOption($event,slideKitTableRadio[i],i,s.MisCode)" [ngModelOptions]="{standalone: true}" [(ngModel)]="slideKitTableRadio[i]" >
+                    
+                    <mat-radio-button value="SlideKit From Company">Select slide kit from Company</mat-radio-button>
+                    <br>
+                    <mat-radio-button value="HCP SlideKit Approved by Company">HCP slidekit approved by company</mat-radio-button>
+                    <br>
+                    <mat-radio-button value="Others">Others</mat-radio-button>
+                  </mat-radio-group>
+                </div>
                 
-                <mat-radio-group (ngModelChange)="slideKitRadioOption($event,slideKitTableRadio[i],i,s.MisCode)" [ngModelOptions]="{standalone: true}" [(ngModel)]="slideKitTableRadio[i]" >
-                  <mat-radio-button value="SlideKit From Company">Select slide kit from Company</mat-radio-button>
-                  <mat-radio-button value="HCP SlideKit Approved by Company">HCP slidekit approved by company</mat-radio-button>
-                  <mat-radio-button value="Others">Others</mat-radio-button>
-                </mat-radio-group>
               </td>
               <td>
                 <div class="container">
@@ -883,15 +889,15 @@
  
  
      <div class="container table-responsive">
-       <table class="table text-center">
+       <table class="table text-center table-bordered">
          <thead>
            <tr>
-             <th>S.no</th>
-             <th>Invitees</th>
-             <th>localConveyance</th>
-             <th>BTC/BTE</th>
-             <th>LC Amount</th>
-             <th>Actions</th>
+             <th><b><small>S.no</small></b></th>
+             <th><b><small>Invitees</small></b></th>
+             <th><b><small>localConveyance</small></b></th>
+             <th><b><small>BTC/BTE</small></b></th>
+             <th><b><small>LC Amount</small></b></th>
+             <th><b><small>Actions</small></b></th>
            </tr>
          </thead>
          <tbody >
@@ -949,9 +955,7 @@
             <mat-form-field color="accent" appearance="outline">
               <mat-label>Expense</mat-label>
               <mat-select formControlName="expenseType">
-                <mat-option value="HCP">Expense 1</mat-option>
-                <mat-option value="foodAndBeverages">Food And Beverages</mat-option>
-                <mat-option value="other">Other</mat-option>
+                <mat-option *ngFor="let exp of expenseType" value={{exp.ExpenseType}}>{{exp.ExpenseType}}</mat-option>
               </mat-select>
             </mat-form-field>
 
@@ -988,19 +992,19 @@
           <div class="col">
             <mat-form-field color="accent" appearance="outline">
               <mat-label>BTC Total Amount</mat-label>
-              <input matInput placeholder="Auto Calculate" disabled>
+              <input matInput placeholder="BTC Amount" disabled [ngModelOptions]="{standalone: true}" [(ngModel)]="BTCTotalAmount">
             </mat-form-field>
           </div>
           <div class="col">
             <mat-form-field color="accent" appearance="outline">
               <mat-label>BTE Total Amount</mat-label>
-              <input matInput placeholder="Auto Calculate" disabled>
+              <input matInput placeholder="BTE Total Amount" disabled [ngModelOptions]="{standalone: true}" [(ngModel)]="BTETotalAmount">
             </mat-form-field>
           </div>
           <div class="col">
             <mat-form-field color="accent" appearance="outline">
               <mat-label>Budget Amount</mat-label>
-              <input matInput placeholder="Auto Calculate" disabled> 
+              <input matInput placeholder="BTE Total Amount" disabled [ngModelOptions]="{standalone: true}" [(ngModel)]="BudgetAmount"> 
             </mat-form-field>
           </div>
       
@@ -1012,15 +1016,15 @@
       </div>
 
       <div class="container table-responsive">
-        <table class="table text-center">
+        <table class="table text-center table-bordered">
           <thead>
             <tr>
-              <th>S.no</th>
-              <th>Expense</th>
-              <th>Expense Amount</th>
-              <th>Excluding Tax</th>
-              <th>BTC / BTE</th>
-              <th>Actions</th>
+              <th><b><small>S.no</small></b></th>
+              <th><b><small>Expense</small></b></th>
+              <th><b><small>Expense Amount</small></b></th>
+              <th><b><small>Excluding Tax</small></b></th>
+              <th><b><small>BTC / BTE</small></b></th>
+              <th><b><small>Actions</small></b></th>
             </tr>
           </thead>
           <tbody>

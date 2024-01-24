@@ -36,7 +36,7 @@ import { AddEmployeesComponent } from '../add-employees/add-employees.component'
 import { UtilityModule } from '../utility/utility.module';
 
 import { Class1EventRequestComponent } from '../event-request-form/class1-event-request/class1-event-request.component';
-
+import { WebinarEventRequestComponent } from '../event-request-form/webinar-event-request/webinar-event-request.component';
 
 @NgModule({
   imports: [
@@ -65,7 +65,8 @@ import { Class1EventRequestComponent } from '../event-request-form/class1-event-
     HonarariumListComponent,
     PostEventListComponent,
     AddEmployeesComponent,
-    Class1EventRequestComponent
+    Class1EventRequestComponent,
+    WebinarEventRequestComponent
     
   ]
 })
