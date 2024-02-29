@@ -32,7 +32,11 @@
 
                               <app-webinar-event-request *ngIf="selectedEvent == 'EVTWEB'"></app-webinar-event-request>
 
-                              <div *ngIf="selectedEvent !== 'select' && selectedEvent !=='EVTC1' && selectedEvent !== 'EVTWEB'">
+                              
+                              <!-- Phase 2 -->
+                              <app-class2-event-request *ngIf="selectedEvent == class2EventCode"></app-class2-event-request>
+
+                              <div *ngIf="selectedEvent !== 'select' && selectedEvent !=='EVTC1' && selectedEvent !== 'EVTWEB' && selectedEvent !== class2EventCode">
                                 OOPS!!!! No other Event Forms yet developed
                               </div>
                       </div>

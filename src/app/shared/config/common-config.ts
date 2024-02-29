@@ -91,5 +91,12 @@ export const Config = {
     },
     PAGINATION: {
         ROW_LIMIT: 10
+    },
+
+    // Phase 2
+    EVENT_CODE: {
+        CLASS_II: 'EVTC2'
     }
+
+
 }

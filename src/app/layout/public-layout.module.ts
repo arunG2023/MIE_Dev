@@ -111,7 +111,9 @@ import { ErrorDialogComponent } from '../main/general-modules/error-dialog/error
 
 import { PreEventBteBtcSummaryComponent } from '../shared/component/pre-event-bte-btc-summary/pre-event-bte-btc-summary.component';
 import { PostEventSettlementOtherDeviationComponent } from '../shared/component/post-event-settlement-other-deviation/post-event-settlement-other-deviation.component';
+import { PreEventCheckComponent } from '../shared/component/phase2/pre-event-check/pre-event-check.component';
 
+// For Phase 2
 
 @NgModule({
   imports: [
@@ -217,8 +219,11 @@ import { PostEventSettlementOtherDeviationComponent } from '../shared/component/
     ErrorDialogComponent,
 
     PreEventBteBtcSummaryComponent,
-    PostEventSettlementOtherDeviationComponent
+    PostEventSettlementOtherDeviationComponent,
     
+    // Phase 2
+    PreEventCheckComponent
+
 
     
   ]
