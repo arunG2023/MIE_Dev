@@ -34,6 +34,8 @@
                               <app-hcp-consultants-event-request *ngIf="selectedEvent == 'EVTHC'"></app-hcp-consultants-event-request>
                               <app-webinar-event-request *ngIf="selectedEvent == 'EVTWEB'"></app-webinar-event-request>
                               <app-medical-utility-request *ngIf="selectedEvent == 'EVTMU'"></app-medical-utility-request>
+                              
+                              
                               <!-- <app-class2-event-request *ngIf="selectedEvent == 'EVTC2'"></app-class2-event-request> -->
                               <div *ngIf="selectedEvent !== 'select' && selectedEvent !=='EVTC1' && selectedEvent !== 'EVTSF' && selectedEvent !== 'EVTWEB' && selectedEvent !== 'EVTHC' && selectedEvent !== 'EVTMU'">
                                 OOPS!!!! No other Event Forms yet developed
