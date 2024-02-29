@@ -1,0 +1,250 @@
+<div class="main-content withscrollbar">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="card">
+            <div class="card-header card-header-danger">
+                <h4 class="card-title">Speaker Code Update</h4> 
+            </div>
+
+            
+            
+            <div class="card-body">
+              <div class="row">
+                <div class="col-md-12">
+                    <div class="card ">
+                        <div class="card-body">
+                            <form [formGroup]="editSpeakerCodeCreationForm" (ngSubmit)="submit()">
+
+	                            <div class="row" >
+	                                <div class="col">
+	                                    <mat-form-field appearance="outline">
+	                                        <mat-label>MIS Code</mat-label>
+	                                        <input matInput placeholder="Enter MIS Code" formControlName="misCode"
+									        [matAutocomplete]="auto" 
+									        (optionSelected)="onMISCodeSelected($event)"
+									        (blur)="validateMisCode()" pattern="[a-zA-Z0-9/]*" maxlength="10"
+									      />
+									      <mat-autocomplete #auto="matAutocomplete" (optionSelected)="onMISCodeSelected($event)">
+									        <mat-option *ngFor="let code of _filteredMISCodes | async" [value]="code">
+									          {{ code }}
+									        </mat-option>
+									      </mat-autocomplete>                                       
+	                                        <!-- <mat-hint>Hint</mat-hint> -->
+	                                      </mat-form-field>
+
+										  <!-- <mat-error *ngIf="editSpeakerCodeCreationForm.get('misCode').hasError('pattern')">
+											Only letters and numbers are allowed.
+										  </mat-error> -->
+	                                </div>
+	                            </div>
+	                            <div class="row" >
+	                                <div class="col">
+	                                    <mat-form-field appearance="outline">
+	                                        <mat-label>Speaker Name</mat-label>
+	                                        <input matInput  formControlName="speakerName" 
+									      />
+									     <!--  <mat-autocomplete #speakerAuto="matAutocomplete" (optionSelected)="onSpeakerNameSelected($event)">
+									        <mat-option *ngFor="let name of _filteredSpeakerNames | async" [value]="name">
+									          {{ name }}
+									        </mat-option>
+									      </mat-autocomplete> -->                                       
+	                                        <!-- <mat-hint>Hint</mat-hint> -->
+	                                      </mat-form-field>
+	                                </div>  
+                            	</div>   
+
+	                            <div class="row" >
+	                                <div class="col">
+	                                    <mat-form-field appearance="outline">
+	                                        <mat-label>Speciality</mat-label>
+								            <mat-select formControlName="speciality" >
+								              <mat-option *ngFor="let spe of specialities"
+								                value={{spe.Speciality}}>{{spe.Speciality}}</mat-option>
+								            </mat-select> 	                                       
+	                                        <!-- <mat-hint>Hint</mat-hint> -->
+	                                      </mat-form-field>
+	                                </div>
+	                            </div>
+	                            <div class="row" >
+	                                <div class="col">
+	                                    <mat-form-field appearance="outline">
+	                                        <mat-label>Qualification</mat-label>
+	                                        <input  matInput  formControlName="qualification">	                                       
+	                                        <!-- <mat-hint>Hint</mat-hint> -->
+	                                      </mat-form-field>
+	                                </div>
+	                            </div>
+	                            <div class="row" >
+	                                <div class="col">
+	                                    <mat-form-field appearance="outline">
+	                                        <mat-label>HCP Type</mat-label>
+								            <mat-select formControlName="goNgoAgo" >
+								              <mat-option *ngFor="let speakerType of speakerTypes"
+								                value={{speakerType}}>{{speakerType}}</mat-option>
+								            </mat-select>                                      
+	                                        <!-- <mat-hint>Hint</mat-hint> -->
+	                                      </mat-form-field>
+	                                </div>
+	                            </div>
+	                            <div class="row" >
+	                                <div class="col">
+	                                    <mat-form-field appearance="outline">
+	                                        <mat-label>Country</mat-label>
+								            <mat-select formControlName="country" >
+								              <mat-option *ngFor="let ctr of countries"
+								                value={{ctr}}>{{ctr}}</mat-option>
+								            </mat-select>                                    
+	                                        <!-- <mat-hint>Hint</mat-hint> -->
+	                                      </mat-form-field>
+	                                </div>
+	                            </div>
+	                            <div class="row" >
+	                                <div class="col">
+	                                    <mat-form-field appearance="outline">
+	                                        <mat-label>Address</mat-label>
+	                                        <input  matInput  formControlName="address">	                                       
+	                                        <!-- <mat-hint>Hint</mat-hint> -->
+	                                      </mat-form-field>
+	                                </div>
+	                            </div> 
+	                            <div class="row" >
+	                                <div class="col">
+	                                    <mat-form-field appearance="outline">
+	                                        <mat-label>City</mat-label>
+								            <mat-select [disabled]="!isSpeakerMISCodeNA()" formControlName="city" >
+								              <mat-option *ngFor="let ci of cities"
+								                value={{ci.CityName}}>{{ci.CityName}}</mat-option>
+								            </mat-select>	                                   
+	                                        <!-- <mat-hint>Hint</mat-hint> -->
+	                                      </mat-form-field>
+	                                </div>
+	                            </div>
+	                            <div class="row" >
+	                                <div class="col">
+	                                    <mat-form-field appearance="outline">
+	                                        <mat-label>State</mat-label>
+															            <mat-select [disabled]="!isSpeakerMISCodeNA()" formControlName="state" >
+															              <mat-option *ngFor="let st of states"
+															                value={{st.StateName}}>{{st.StateName}}</mat-option>
+															            </mat-select>	                                       
+	                                        <!-- <mat-hint>Hint</mat-hint> -->
+	                                      </mat-form-field>
+	                                </div>
+	                            </div>
+	                            <div class="row" >
+	                                <div class="col">
+	                                    <mat-form-field appearance="outline">
+	                                        <mat-label>Contact Number</mat-label>
+	                                        <input matInput  formControlName="contactNumber">	                                       
+	                                        <!-- <mat-hint>Hint</mat-hint> -->
+	                                      </mat-form-field>
+	                                </div>
+	                            </div>
+ 
+	                            <div class="row"  *ngIf="false">
+	                                <div class="col">
+	                                    <mat-form-field appearance="outline">
+	                                        <mat-label>Speaker Code</mat-label>
+	                                        <input matInput  formControlName="speakerCode">	                                       
+	                                        <!-- <mat-hint>Hint</mat-hint> -->
+	                                      </mat-form-field>
+	                                </div>
+	                            </div>
+							    <div class="row">
+							        <div class="col">
+							          <mat-form-field color="accent" appearance="outline">
+							            <mat-label>Select Division</mat-label>
+							            <mat-select formControlName="divisionId" >
+							              <mat-option *ngFor="let division of divisions"
+							                value={{division.Name}}>{{division.Name}}</mat-option>
+							            </mat-select>
+							          </mat-form-field>
+                                	</div>
+                            	 </div> 
+							      <div class="row">
+							        <div class="col">
+							          <!-- <mat-form-field color="accent" appearance="outline">
+							            <mat-label>Speaker criteria selection</mat-label>
+							            <mat-select formControlName="speakerCriteriaSelectionId" >
+							              <mat-option *ngFor="let speakerCriteria of speakerCriterias"
+							                value={{speakerCriteria}}>{{speakerCriteria}}</mat-option>
+							            </mat-select>
+
+							          </mat-form-field> -->
+
+									    <div>
+									     <mat-radio-group class="speakerCriterias-radio-group" formControlName="speakerCriteriaSelectionId" [ngClass]="{'invalid-field': editSpeakerCodeCreationForm.get('speakerCriteriaSelectionId').invalid}">	
+							            	<mat-label>Speaker criteria selection <span class="color_red">*</span></mat-label>
+										      <mat-radio-button  class="speakerCriterias-radio-button"  *ngFor="let criteriaOption of speakerCriterias"  [value]="criteriaOption" (change)="onSpeakerCriteriaSelectionIdChange($event)">
+										        <strong>{{ criteriaOption }}</strong>
+
+
+									      <div *ngIf="criteriaOption == 'Tier I Criteria'">
+									      	<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(Any two criteria to be met)</b>
+									      	<ol>
+									      		<li>
+      													<mat-checkbox [disabled]="!isCriteriaOptionMatch('Tier I Criteria')" formControlName="speakerCriteriasTireIOptions1" value="Speaks/chairs sessions at international conferences"> Speaks/chairs sessions at international conferences</mat-checkbox></li>
+														<li>
+                                <mat-checkbox [disabled]="!isCriteriaOptionMatch('Tier I Criteria')"  formControlName="speakerCriteriasTireIOptions2" value="Duly qualified and practices as a specialist in their respective area of specialization with > 12 years of experience"> Duly qualified and practices as a specialist in their respective area of specialization with > 12 years of experience</mat-checkbox></li>
+									      		<li>
+      													<mat-checkbox [disabled]="!isCriteriaOptionMatch('Tier I Criteria')"  formControlName="speakerCriteriasTireIOptions3" value="Author/editor of leading textbooks or publishes in leading clinical peer-reviewed journals"> Author/editor of leading textbooks or publishes in leading clinical peer-reviewed journals</mat-checkbox></li>
+									      	</ol>	
+    <!-- Error messages for "Tier I Criteria" validation -->
+    <mat-error *ngIf="editSpeakerCodeCreationForm.hasError('tierICriteriaInvalid')">
+      Please select at least 2 options for Tier I Criteria
+    </mat-error>
+									      </div>
+									      <div *ngIf="criteriaOption == 'Tier II Criteria'">
+									      	<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(Any two criteria to be met)</b>
+									      	<ol>
+									      		<li><mat-checkbox [disabled]="!isCriteriaOptionMatch('Tier II Criteria')"  formControlName="speakerCriteriasTireIIOptions1" value="Speaks/chairs sessions at national conferences"> Speaks/chairs sessions at national conferences</mat-checkbox></li>
+									      		<li><mat-checkbox [disabled]="!isCriteriaOptionMatch('Tier II Criteria')"  formControlName="speakerCriteriasTireIIOptions2" value="Publishes regularly in leading clinical or scientific journals"> Publishes regularly in leading clinical or scientific journals</mat-checkbox></li>
+									      		<li><mat-checkbox [disabled]="!isCriteriaOptionMatch('Tier II Criteria')"  formControlName="speakerCriteriasTireIIOptions3" value="Duly qualified and practices as a specialist in their respective area of specialization"> Duly qualified and practices as a specialist in their respective area of specialization</mat-checkbox></li>
+									      	</ol>	
+   <!-- Error messages for "Tier II Criteria" validation -->
+    <mat-error *ngIf="editSpeakerCodeCreationForm.hasError('tierIICriteriaInvalid')">
+      Please select at least 2 options for Tier II Criteria
+    </mat-error>
+									      </div>
+									      <div *ngIf="criteriaOption == 'Tier III Criteria'">
+									      	<ol>
+									      		<li><mat-checkbox [disabled]="!isCriteriaOptionMatch('Tier III Criteria')"  formControlName="speakerCriteriasTireIIIOptions1" value="Recognized by peers/ other specialists as an expert within his/her field"> Recognized by peers/ other specialists as an expert within his/her field</mat-checkbox></li>
+									      	</ol>	
+   <!-- Error messages for "Tier III Criteria" validation -->
+    <mat-error *ngIf="editSpeakerCodeCreationForm.hasError('tierIIICriteriaInvalid')">
+      Please select options for Tier III Criteria
+    </mat-error>
+									      </div>
+										      </mat-radio-button>
+									  	 </mat-radio-group>
+									    </div>
+                                	</div>
+                            	</div>
+	                            <div class="row" >
+	                                <div class="col">
+	                                    <mat-form-field appearance="outline">
+	                                        <mat-label>Speaker Category</mat-label>
+	                                        <input matInput  formControlName="speakerCategory" readonly>	                                       
+	                                        <!-- <mat-hint>Hint</mat-hint> -->
+	                                      </mat-form-field>
+	                                </div>
+	                            </div>
+
+			                    <div class="row">
+			                        <div class="col">
+			                            <div class="col-12 d-flex justify-content-end">
+			                                <button class="btn btn-success btn-sm" >Submit</button>
+			                            </div>
+			                        </div>
+			                    </div>
+                        	</form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<app-spinner-loader [isLoading]="loadingIndicator"></app-spinner-loader>

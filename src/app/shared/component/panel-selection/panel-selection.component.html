@@ -1,0 +1,838 @@
+<form [formGroup]="hcpRoleSelectionForm">
+    <div class="row">
+        <div class="col">
+            <mat-form-field color="accent" appearance="outline">
+                <mat-label>HCP Role</mat-label>
+                <mat-select (valueChange)="onHcpTypeSelect($event)" formControlName="hcpRole">
+                    <mat-option *ngFor="let hcp of hcpRoleTypes" value={{hcp.HCPRole}}>{{hcp.HCPRole}}</mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+        <div class="col" *ngIf="showOtherForm">
+            <mat-form-field color="accent" appearance="outline">
+                <mat-label>Role</mat-label>
+                <input matInput type="text" placeholder="Enter Other Role" [ngModelOptions]="{standalone: true}"
+                    [(ngModel)]="otherRole">
+            </mat-form-field>
+        </div>
+    </div>
+</form>
+
+<form [formGroup]="speakerForm" *ngIf="showSpeakerForm">
+    <div class="row">
+        <div class="col">
+            <mat-form-field color="accent" appearance="outline" *ngIf="showMisCode">
+                <mat-label>Speaker MIS Code</mat-label>
+                <input (ngModelChange)="onSpeakerMisCodeChange($event)" matInput type="text"
+                    placeholder="Enter MIS Code" [ngModelOptions]="{standalone: true}" [(ngModel)]="speakerMisCode"
+                    [matAutocomplete]="auto">
+
+                <mat-autocomplete #auto="matAutocomplete">
+                    <mat-option *ngFor="let speaker of filteredSpeakersForMatAutoComplete"
+                        value={{speaker.MisCode}}>{{speaker.MisCode}}</mat-option>
+                    <mat-option value="NA">NA</mat-option>
+                </mat-autocomplete>
+            </mat-form-field>
+            <div class="col d-flex align-items-center">
+                <button *ngIf="showAddSpeakerButton" type="button" class="btn btn-primary btn-sm"
+                    (click)="openMasters('speaker')">Add Speaker</button>
+            </div>
+            <mat-form-field color="accent" appearance="outline">
+                <mat-label>Speaker Name</mat-label>
+                <input matInput type="text" placeholder="Enter Speaker Name" formControlName="speakerName"
+                    [matAutocomplete]="speakerNameAutoComplete" (ngModelChange)="onSpeakerNameChanges($event)"
+                    [ngModelOptions]="{standalone: true}" [(ngModel)]="speakerName">
+
+                <mat-autocomplete #speakerNameAutoComplete="matAutocomplete">
+                    <mat-option *ngFor="let speaker of filteredSpeakerNameForMatOption"
+                        value={{speaker.SpeakerName}}>{{speaker.SpeakerName}}</mat-option>
+                </mat-autocomplete>
+            </mat-form-field>
+
+            <mat-form-field color="accent" appearance="outline">
+                <mat-label>Speaker Code</mat-label>
+                <input matInput type="text" placeholder="Enter Speaker Name" formControlName="speakerCode">
+            </mat-form-field>
+
+            <mat-form-field color="accent" appearance="outline">
+                <mat-label>Speaker Country</mat-label>
+                <input matInput type="text" placeholder="Speaker Country" formControlName="speakerCountry">
+            </mat-form-field>
+
+
+        </div>
+        <div class="col">
+            <mat-form-field color="accent" appearance="outline">
+                <mat-label>Speaker Qualification</mat-label>
+                <input matInput type="text" placeholder="Speaker Qualification" formControlName="speakerQualification">
+            </mat-form-field>
+
+            <mat-form-field color="accent" appearance="outline">
+                <mat-label>Speaker Speciality</mat-label>
+                <input matInput type="text" placeholder="Enter Speaker Name" formControlName="speakerSpeciality">
+            </mat-form-field>
+            <mat-form-field color="accent" appearance="outline">
+                <mat-label>Speaker Type</mat-label>
+                <input matInput type="text" placeholder="Enter Speaker Name" formControlName="speakerType">
+            </mat-form-field>
+
+            <mat-form-field color="accent" appearance="outline">
+                <mat-label>Speaker Category</mat-label>
+                <input matInput type="text" placeholder="Enter Speaker Name" formControlName="speakerTier">
+            </mat-form-field>
+        </div>
+    </div>
+</form>
+
+<form [formGroup]="trainerForm" *ngIf="showTrainerForm">
+    <div class="row">
+        <div class="col">
+            <mat-form-field color="accent" appearance="outline">
+                <mat-label>Trainer MIS Code</mat-label>
+                <input (ngModelChange)="onTrainerMisCodeChanges($event)" matInput type="text"
+                    placeholder="Enter MIS Code" [ngModelOptions]="{standalone: true}" [(ngModel)]="trainerMisCode"
+                    [matAutocomplete]="auto">
+
+                <mat-autocomplete #auto="matAutocomplete">
+                    <mat-option *ngFor="let trainer of filteredTrainersForMatAutoComplete"
+                        value={{trainer.MisCode}}>{{trainer.MisCode}}</mat-option>
+                    <mat-option value="NA">NA</mat-option>
+                </mat-autocomplete>
+            </mat-form-field>
+            <div class="col d-flex align-items-center">
+                <button *ngIf="showTrainerAddButton" type="button" class="btn btn-primary btn-sm"
+                    (click)="openMasters('trainer')">Add Trainer</button>
+            </div>
+            <mat-form-field color="accent" appearance="outline">
+                <mat-label>Trainer Name</mat-label>
+                <input matInput type="text" placeholder="Enter Speaker Name" formControlName="trainerName"
+                    (ngModelChange)="onTrainerNameChanges($event)" [ngModelOptions]="{standalone: true}"
+                    [(ngModel)]="trainerName" [matAutocomplete]="speakerNameAutoComplete">
+
+                <mat-autocomplete #speakerNameAutoComplete="matAutocomplete">
+                    <mat-option *ngFor="let trainer of filteredTrainerNameForMatOption"
+                        value={{trainer.TrainerName}}>{{trainer.TrainerName}}</mat-option>
+                </mat-autocomplete>
+            </mat-form-field>
+
+            <mat-form-field color="accent" appearance="outline">
+                <mat-label>Trainer Code</mat-label>
+                <input matInput type="text" placeholder="Enter Speaker Name" formControlName="trainerCode">
+            </mat-form-field>
+
+            <mat-form-field color="accent" appearance="outline">
+                <mat-label>Trainer Country</mat-label>
+                <input matInput type="text" placeholder="Speaker Country" formControlName="trainerCountry">
+            </mat-form-field>
+
+
+        </div>
+        <div class="col">
+            <mat-form-field color="accent" appearance="outline">
+                <mat-label>Trainer Qualification</mat-label>
+                <input matInput type="text" placeholder="Speaker Qualification" formControlName="trainerQualification">
+            </mat-form-field>
+
+            <mat-form-field color="accent" appearance="outline">
+                <mat-label>Trainer Speciality</mat-label>
+                <input matInput type="text" placeholder="Enter Speaker Name" formControlName="trainerSpeciality">
+            </mat-form-field>
+            <mat-form-field color="accent" appearance="outline">
+                <mat-label>Trainer Type</mat-label>
+                <input matInput type="text" placeholder="Enter Speaker Name" formControlName="trainerType">
+            </mat-form-field>
+
+            <mat-form-field color="accent" appearance="outline">
+                <mat-label>Trainer Category</mat-label>
+                <input matInput type="text" placeholder="Enter Speaker Name" formControlName="trainerTier">
+            </mat-form-field>
+        </div>
+    </div>
+</form>
+<form [formGroup]="otherForm" *ngIf="showOtherForm">
+    <div class="row">
+        <div class="col">
+            <mat-form-field color="accent" appearance="outline">
+                <mat-label>HCP MIS Code</mat-label>
+                <input (ngModelChange)="onOtherCodeChanges($event)" matInput type="text" placeholder="Enter MIS Code"
+                    [ngModelOptions]="{standalone: true}" [(ngModel)]="OtherMisCode" [matAutocomplete]="auto">
+
+                <mat-autocomplete #auto="matAutocomplete">
+                    <mat-option *ngFor="let other of filteredOthersForMatAutoComplete"
+                        value={{other.MisCode}}>{{other.MisCode}}</mat-option>
+                    <!-- <mat-option value="NA">NA</mat-option> -->
+                </mat-autocomplete>
+            </mat-form-field>
+            <div class="col d-flex align-items-center">
+                <button *ngIf="showOtherAddButton" type="button" class="btn btn-primary btn-sm"
+                    (click)="openMasters('hcp-master')">Add HCP </button>
+            </div>
+            <mat-form-field color="accent" appearance="outline">
+                <mat-label>HCP Name</mat-label>
+                <input matInput type="text" placeholder="Enter HCP Name" formControlName="otherName"
+                 matInput type="text"
+                [ngModelOptions]="{standalone: true}" [(ngModel)]="otherName" [matAutocomplete]="speakerNameAutoComplete">
+
+                <mat-autocomplete #speakerNameAutoComplete="matAutocomplete">
+                    <mat-option *ngFor="let hcp of filteredOtherNameForMatOption"
+                        value={{hcp.HCPName}}>{{hcp.HCPName}}</mat-option>
+                </mat-autocomplete>
+            </mat-form-field>
+
+
+
+        </div>
+        <div class="col">
+
+
+            <mat-form-field color="accent" appearance="outline">
+                <mat-label>HCP Speciality</mat-label>
+                <input matInput type="text" placeholder="Enter Speaker Name" formControlName="otherSpeciality">
+            </mat-form-field>
+            <mat-form-field color="accent" appearance="outline">
+                <mat-label>HCP Type</mat-label>
+                <input matInput type="text" placeholder="Enter Speaker Name" formControlName="otherType">
+            </mat-form-field>
+
+            <!-- <mat-form-field color="accent" appearance="outline">
+                <mat-label>Trainer Category</mat-label>
+                <input matInput type="text" placeholder="Enter Speaker Name" formControlName="trainerTier">
+            </mat-form-field> -->
+        </div>
+    </div>
+</form>
+<form [formGroup]="rationaleForm" *ngIf="showRationaleForm">
+    <div class="row">
+        <div class="col">
+            <mat-form-field color="accent" appearance="outline">
+                <mat-label>Rationale</mat-label>
+                <input matInput type="text" placeholder="Enter Rationale" formControlName="rationaleText">
+            </mat-form-field>
+        </div>
+        <div class="col">
+            <div class="p-2 m-1">
+                <mat-label><b>Upload NOC</b> <span style="color: red;">*</span></mat-label><br>
+                <input type="file" (change)="onFileSelected($event,'other','nocUpload')" [accept]="allowedTypesForHTML"
+                    formControlName="nocUpload"><br>
+                <span class="text-danger"><small>Allowed File Types (.png, .jpg, .txt , .doc)</small></span><br>
+                <span class="text-danger"><small>Size Should be greater than 0 KB and less than 30MB</small></span>
+            </div>
+        </div>
+    </div>
+</form>
+<form [formGroup]="fcpaForm" *ngIf="showFcpaForm">
+    <span class="text-secondary"><small>Your FCPA is Invalid, Please update it</small></span>
+    <div class="row">
+        <div class="col">
+            <mat-form-field color="accent" appearance="outline">
+                <mat-label>FCPA Date</mat-label>
+                <input matInput type="date" placeholder="Enter FCPA Date" [min]="minDate" [max]="maxDate" formControlName="fcpaDate">
+            </mat-form-field>
+        </div>
+        <div class="col">
+            <div class="p-2 m-1">
+                <mat-label><b>Upload FCPA</b> <span style="color: red;">*</span></mat-label><br>
+                <input type="file" (change)="onFileSelected($event,'other','fcpaUpload')" [accept]="allowedTypesForHTML"
+                    formControlName="fcpaUpload"><br>
+                <span class="text-danger"><small>Allowed File Types (.png, .jpg, .txt , .doc)</small></span><br>
+                <span class="text-danger"><small>Size Should be greater than 0 KB and less than 30MB</small></span>
+            </div>
+        </div>
+    </div>
+</form>
+<a href={{fcpaDownloadLink}} *ngIf="showFcpaDownloadLink"><span>Click Here Download Your FCPA</span></a>
+<div class="row" *ngIf="showSpeakerForm || showTrainerForm || showOtherForm">
+    <div class="col">
+        <div>
+            <mat-label>Is honorarium applicable?</mat-label>
+            <mat-radio-group (ngModelChange)="onHonorariumRadioChange($event)" [ngModelOptions]="{standalone: true}"
+                [(ngModel)]="isHonorarium">
+                <div class="mt-2">
+                    <mat-radio-button value="Yes">Yes</mat-radio-button>
+                    <mat-radio-button value="No" class="m-1">No</mat-radio-button>
+                </div>
+            </mat-radio-group>
+
+        </div>
+    </div>
+</div>
+<form [formGroup]="honorariumForm" *ngIf="showHonorariumForm">
+    <h4 class="d-flex justify-content-center col-12"><b>Honararium Details</b></h4>
+    <div class="row">
+        <div class="col">
+            <mat-form-field color="accent" appearance="outline">
+                <mat-label>Presentation / Speaking / Workshop duration(minutes)</mat-label>
+                <input matInput type="number" (input)="onSessionMinutesChanges($event,'presentationDuration')"
+                    placeholder="Enter Duration in minutes" formControlName="presentationDuration">
+            </mat-form-field>
+
+            <mat-form-field color="accent" appearance="outline">
+                <mat-label>Development presentation /Panel session preparation(minutes)</mat-label>
+                <input matInput type="number" (input)="onSessionMinutesChanges($event,'panelSessionPreparation')"
+                    placeholder="Enter Duration in minutes" formControlName="panelSessionPreparation">
+            </mat-form-field>
+
+            <mat-form-field color="accent" appearance="outline">
+                <mat-label>Q&A Session<mat-hint>(Min 15 minutes)</mat-hint></mat-label>
+                <input matInput type="number" [min]="15" placeholder="Enter Duration in minutes"
+                    (input)="onSessionMinutesChanges($event,'qaSession')" formControlName="qaSession">
+            </mat-form-field>
+
+            <!-- *ngIf="showHonorariumAmountField" -->
+            <mat-form-field color="accent" appearance="outline" >
+                <mat-label>Enter Honararium Amount Excluding Tax</mat-label>
+                <input matInput type="number" placeholder="Enter Honararium Amount"
+                    formControlName="honorariumAmountExcludingTax">
+            </mat-form-field>
+
+            <div class="p-2 m-1" *ngIf="showHonorariumDeviation  && !isInternationalSpeaker">
+                <mat-label><b>Honorarium Amount Deviation</b> <span style="color: red;">*</span></mat-label><br>
+                <input type="file" (change)="onFileSelected($event,'deviation','honorariumDeviationUpload')"
+                    [accept]="allowedTypesForHTML" formControlName="honorariumDeviationUpload"><br>
+                <span class="text-danger"><small>Allowed File Types (.png, .jpg, .txt , .doc)</small></span><br>
+                <span class="text-danger"><small>Size Should be greater than 0 KB and less than 30MB</small></span>
+            </div>
+
+        </div>
+        <div class="col">
+            <mat-form-field color="accent" appearance="outline">
+                <mat-label>Speaker/Trainer Briefing(minutes)</mat-label>
+                <input matInput type="number" [max]="120" placeholder="Enter Duration in minutes"
+                    (input)="onSessionMinutesChanges($event,'briefingDuration')" formControlName="briefingDuration">
+            </mat-form-field>
+
+            <mat-form-field color="accent" appearance="outline">
+                <mat-label>Panel Discussion/session duration <mat-hint>(Max 120 minutes)</mat-hint></mat-label>
+                <input matInput type="number" placeholder="Panel Discussion/session duration"
+                    (input)="onSessionMinutesChanges($event,'panelDiscussionDuration')"
+                    formControlName="panelDiscussionDuration">
+            </mat-form-field>
+
+            <mat-form-field color="accent" appearance="outline">
+                <mat-label>Total number of minutes <mat-hint>(Max 480 minutes)</mat-hint></mat-label>
+                <input matInput type="number" placeholder="Total number of minutes " disabled [value]="totalHours">
+            </mat-form-field>
+
+            <mat-form-field color="accent" appearance="outline">
+                <mat-label>Enter Honorarium Amount Including Tax</mat-label>
+                <input matInput type="number" placeholder="Enter Honararium Amount"                 
+                    formControlName="honorariumAmountIncludingTax">
+            </mat-form-field>
+            <span class="text-danger" *ngIf="showHonorariumAmountError">Amount Including Tax Should be greater than Amount Excluding Tax </span>
+
+        </div>
+    </div>
+    <div class="row" *ngIf="isInternationalSpeaker">
+        <div class="col">
+            <mat-checkbox formControlName="globalFmvCheck">Global FMV followed as per the country
+                requirements</mat-checkbox>
+
+            <div *ngIf="showInternationalFileUpload">
+                <mat-label><b>Upload Document</b> <span style="color: red;">*</span></mat-label><br>
+                <input type="file" (change)="onFileSelected($event,'other','internationalSpeakerDocument')"
+                    [accept]="allowedTypesForHTML" formControlName="internationalSpeakerDocument"><br>
+                <span class="text-danger"><small>Allowed File Types (.png, .jpg, .txt , .doc)</small></span><br>
+                <span class="text-danger"><small>Size Should be greater than 0 KB and less than 30MB</small></span>
+            </div>
+        </div>
+    </div>
+</form>
+
+<div class="row" *ngIf="showSpeakerForm || showTrainerForm || showOtherForm">
+    <div class="col">
+        <mat-form-field color="accent" appearance="outline">
+            <mat-label>Expense Type<span style="color: red;">*</span></mat-label>
+            <mat-select (valueChange)="onExpenseSelect($event)" [(ngModel)]="expenseType" multiple>
+                <mat-option value="Local Conveyance">Local Conveyance</mat-option>
+                <mat-option value="Accomdation">Accomdation</mat-option>
+                <mat-option value="Travel">Travel</mat-option>
+            </mat-select>
+        </mat-form-field>
+    </div>
+</div>
+<form [formGroup]="travelForm" *ngIf="showTravelForm">
+    <h4 class="d-flex justify-content-center col-12"><b>Travel Details</b></h4>
+    <div class="row">
+        <div class="col">
+            <mat-form-field color="accent" appearance="outline">
+                <mat-label>Travel Selection</mat-label>
+                <mat-select formControlName="travelType">
+                    <mat-option value="air">Air</mat-option>
+                    <mat-option value="train">Train</mat-option>
+                    <mat-option value="road">Road</mat-option>
+                </mat-select>
+            </mat-form-field>
+
+            <mat-form-field color="accent" appearance="outline">
+                <mat-label>Travel Amount Excluding Tax</mat-label>
+                <input matInput type="number" placeholder="Enter Travel Amount"
+                    formControlName="travelAmountwithoutTax">
+            </mat-form-field>
+
+
+        </div>
+
+        <div class="col">
+            <div>
+                <mat-radio-group formControlName="travelBTC">
+                    <mat-label>Is BTC/BTE?</mat-label><br>
+                    <div class="mt-2">
+                        <mat-radio-button value="BTC">BTC</mat-radio-button>
+                        <mat-radio-button value="BTE" class="m-1">BTE</mat-radio-button>
+                    </div>
+                </mat-radio-group>
+            </div>
+
+            <mat-form-field color="accent" appearance="outline">
+                <mat-label>Travel Amount Including Tax</mat-label>
+                <input  matInput type="number"
+                    placeholder="Enter Travel Amount" formControlName="travelAmountwithTax">
+            </mat-form-field>
+            <span class="text-danger" *ngIf="showTravelAmountError">Amount Including Tax Should be greater than Amount Excluding Tax </span>
+
+
+        </div>
+    </div>
+</form>
+<form [formGroup]="accomodationForm" *ngIf="showAccomodationForm" class="form-border">
+    <h4 class="d-flex justify-content-center col-12"><b>Accomodation Details</b></h4>
+    <div class="row">
+        <div class="col">
+            <div>
+                <mat-radio-group formControlName="accomBTC">
+                    <mat-label>Is BTC/BTE?</mat-label><br>
+                    <div class="mt-2">
+                        <mat-radio-button value="BTC">BTC</mat-radio-button>
+                        <mat-radio-button value="BTE" class="m-1">BTE</mat-radio-button>
+                    </div>
+                </mat-radio-group>
+            </div>
+
+            <mat-form-field color="accent" appearance="outline">
+                <mat-label>Accomodation Amount Including Tax</mat-label>
+                <input  matInput type="number"
+                    placeholder="Enter Travel Amount" formControlName="accomAmountWithTax">
+            </mat-form-field>
+            <span class="text-danger" *ngIf="showAccomAmountError">Amount Including Tax Should be greater than Amount Excluding Tax </span>
+
+        </div>
+        <div class="col">
+            <mat-form-field color="accent" appearance="outline">
+                <mat-label>Accomodation Amount Excluding Tax</mat-label>
+                <input matInput type="number" placeholder="Enter Accomodation Amount"
+                    formControlName="accomAmountWithoutTax">
+            </mat-form-field>
+
+
+        </div>
+    </div>
+</form>
+<form [formGroup]="localConveyanceForm" *ngIf="showLocalConveyanceForm">
+    <h4 class="d-flex justify-content-center col-12"><b>Local Conveyance Details</b></h4>
+    <div class="row">
+        <div class="col">
+            <div>
+                <mat-radio-group formControlName="localBTC">
+                    <mat-label>Is BTC/BTE?</mat-label><br>
+                    <div class="mt-2">
+                        <mat-radio-button value="BTC">BTC</mat-radio-button>
+                        <mat-radio-button value="BTE" class="m-1">BTE</mat-radio-button>
+                    </div>
+                </mat-radio-group>
+            </div>
+
+            <mat-form-field color="accent" appearance="outline">
+                <mat-label>Local Conveyance Amount Including Tax</mat-label>
+                <input matInput type="number"
+                    placeholder="Enter Travel Amount" formControlName="localAmountWithTax">
+            </mat-form-field>
+
+            <span class="text-danger" *ngIf="showLCAmountError">Amount Including Tax Should be greater than Amount Excluding Tax </span>
+
+        </div>
+        <div class="col">
+            <mat-form-field color="accent" appearance="outline">
+                <mat-label>Local Conveyance Amount Excluding Tax</mat-label>
+                <input matInput type="number" placeholder="Enter Accomodation Amount"
+                    formControlName="localAmountWithoutTax">
+            </mat-form-field>
+
+
+        </div>
+    </div>
+</form>
+<form [formGroup]="benificiaryForm" *ngIf="showBenificiaryForm">
+    <h4 class="d-flex justify-content-center col-12"><b>Benificiary Details</b></h4>
+
+    <div class="row">
+        <div class="col">
+            <mat-form-field color="accent" appearance="outline">
+                <mat-label>Currency</mat-label>
+                <mat-select (valueChange)="onCurrencyTypeDropDownChanges($event,'normal')"
+                    formControlName="currencyType">
+                    <mat-option value="INR">INR</mat-option>
+                    <mat-option value="EURO">Euro</mat-option>
+                    <mat-option value="Others">Other</mat-option>
+                </mat-select>
+            </mat-form-field>
+
+            <!-- <mat-form-field color="accent" appearance="outline">
+                <mat-label>Selection Of Taxes</mat-label>
+                <mat-select formControlName="taxSelection">
+                    <mat-option value="Inclusive">Inclusive of Tax</mat-option>
+                    <mat-option value="Exclusive">Exclusive of Tax</mat-option>
+                    <mat-option value="NA">N/A</mat-option>
+                </mat-select>
+            </mat-form-field> -->
+
+            <mat-form-field color="accent" appearance="outline">
+                <mat-label>Benificiary Name</mat-label>
+                <input matInput placeholder="Enter Benificiary Name"
+                    (ngModelChange)="onBenificiaryNameChange($event, 'normal')" [ngModelOptions]="{standalone: true}"
+                    [(ngModel)]="benificiaryName" [matAutocomplete]="vendorAutoComplete">
+
+                <mat-autocomplete #vendorAutoComplete="matAutocomplete">
+                    <mat-option *ngFor="let vendor of filteredVendorsForMatAutoComplete"
+                        (click)="onVendorOptionSelect('normal', vendor.VendorId)"
+                        value={{vendor.BeneficiaryName}}>{{vendor.BeneficiaryName}}</mat-option>
+                </mat-autocomplete>
+            </mat-form-field>
+            <!-- <div *ngIf="showVendorAddButton">
+                <button (click)="openMasters('vendor')" class="btn btn-sm btn-primary" routerLink="">Add Vendor</button>
+            </div> -->
+
+
+            <mat-form-field color="accent" appearance="outline">
+                <mat-label>Name as per PAN</mat-label>
+                <input matInput placeholder="Name as per PAN" formControlName="nameAsPerPAN">
+            </mat-form-field>
+
+
+
+
+            <mat-form-field color="accent" appearance="outline">
+                <mat-label>IFSC Code </mat-label>
+                <input matInput placeholder="IFSC Code" formControlName="ifscCode">
+            </mat-form-field>
+
+            <mat-form-field color="accent" appearance="outline">
+                <mat-label>Bank Name</mat-label>
+                <input matInput placeholder="Enter Bank Name" formControlName="bankName">
+            </mat-form-field>
+
+
+
+            <div class="m-3" *ngIf="showVendorPanUpoad">
+                <mat-label>Upload PAN Card</mat-label><br>
+                <input type="file" (change)="onFileSelected($event,'other','uploadPAN')"
+                    accept=".png, .jpg, .jpeg, .txt , .doc, .pdf" formControlName="uploadPAN"><br>
+                <span class="text-danger"><small>Allowed File Types (.png, .jpg, .txt , .doc)</small></span><br>
+                <span class="text-danger"><small>Size Should be greater than 0 KB and less than 30MB</small></span>
+            </div>
+
+            <div *ngIf="showVendorPanPreview">
+                <mat-label>Pan Card File</mat-label>
+                <iframe style="border: 1px solid red;" width="100%" height="200" frameBorder="0"
+                    [src]="vendorPanIframeUrl"></iframe>
+                <!-- <embed  width="100%" height="200" [src]="vendorChequeIframeUrl" type="file"> -->
+            </div>
+
+
+
+
+
+        </div>
+
+
+        <div class="col">
+            <mat-form-field *ngIf="showCurrencyTextBox" color="accent" appearance="outline">
+                <mat-label>Other Currency</mat-label>
+                <input matInput placeholder="Enter Currency" formControlName="otherCurrencyType">
+
+            </mat-form-field>
+
+            <mat-form-field color="accent" appearance="outline">
+                <mat-label>Bank Account Number</mat-label>
+                <input matInput placeholder="Enter Bank Account Number" formControlName="bankAccountNumber">
+            </mat-form-field>
+
+            <mat-form-field color="accent" appearance="outline">
+                <mat-label>PAN Card Number</mat-label>
+                <input matInput placeholder="PAN Card Number" formControlName="panCardNumber">
+            </mat-form-field>
+
+            <mat-form-field color="accent" appearance="outline">
+                <mat-label>Email ID (optional)</mat-label>
+                <input matInput placeholder="Mention Your Email ID " formControlName="emailId">
+            </mat-form-field>
+
+            <div class="m-3" *ngIf="showVendorChequeUpload">
+                <mat-label>Upload Cheque</mat-label><br>
+                <input type="file" (change)="onFileSelected($event,'other','uploadCheque')"
+                    accept=".png, .jpg, .jpeg, .txt , .doc, .pdf" formControlName="uploadCheque"><br>
+                <span class="text-danger"><small>Allowed File Types (.png, .jpg, .txt , .doc)</small></span><br>
+                <span class="text-danger"><small>Size Should be greater than 0 KB and less than 30MB</small></span>
+            </div>
+
+            <div *ngIf="showVendorChequePreview">
+                <mat-label>Cheque File</mat-label>
+                <iframe style="border: 1px solid red;" width="100%" height="200" frameBorder="0"
+                    [src]="vendorChequeIframeUrl"></iframe>
+                <!-- <embed  width="100%" height="200" [src]="vendorChequeIframeUrl" type="file"> -->
+            </div>
+
+
+
+        </div>
+    </div>
+    <div class="row">
+        <div class="col d-flex justify-content-center">
+            <button type="button" class="btn btn-danger btn-sm" *ngIf="benificiaryForm.valid" (click)="updateBenificiary('normal')">
+               Click Here To Update Benificiary Details</button>
+        </div>
+    </div>
+</form>
+<form [formGroup]="internationalBenificiaryForm" *ngIf="showInternationalBenificiaryForm">
+    <h4 class="d-flex justify-content-center col-12"><b>Benificiary Details</b></h4>
+
+    <div class="row">
+        <div class="col">
+            <mat-form-field color="accent" appearance="outline">
+                <mat-label>Currency</mat-label>
+                <mat-select (valueChange)="onCurrencyTypeDropDownChanges($event,'international')"
+                    formControlName="currencyTypeForInternational">
+                    <mat-option value="INR">INR</mat-option>
+                    <mat-option value="EURO">Euro</mat-option>
+                    <mat-option value="Others">Other</mat-option>
+                </mat-select>
+            </mat-form-field>
+
+            <mat-form-field color="accent" appearance="outline">
+                <mat-label>Benificiary Name</mat-label>
+                <input matInput placeholder="Enter Benificiary Name"
+                    (ngModelChange)="onBenificiaryNameChange($event, 'international')"
+                    [ngModelOptions]="{standalone: true}" [(ngModel)]="internationalBenficiaryName"
+                    [matAutocomplete]="vendorAutoComplete">
+
+                <mat-autocomplete #vendorAutoComplete="matAutocomplete">
+                    <mat-option *ngFor="let vendor of filteredVendorsForMatAutoComplete"
+                        (click)="onVendorOptionSelect('international',vendor.VendorId)"
+                        value={{vendor.BeneficiaryName}}>{{vendor.BeneficiaryName}}</mat-option>
+                </mat-autocomplete>
+            </mat-form-field>
+
+            <!-- <div *ngIf="showVendorAddButton">
+                <button (click)="openMasters('vendor')" class="btn btn-sm btn-primary" routerLink="">Add Vendor</button>
+            </div> -->
+
+            <mat-form-field color="accent" appearance="outline">
+                <mat-label>Swift Code</mat-label>
+                <input matInput placeholder="Swift Code" formControlName="swiftCode">
+            </mat-form-field>
+
+            <mat-form-field color="accent" appearance="outline">
+                <mat-label>Email ID (optional)</mat-label>
+                <input matInput placeholder="Mention Your Email ID " formControlName="emailIdForInternational">
+            </mat-form-field>
+
+            <div class="m-2" *ngIf="showInternaionalVendorTaxPreview || showInternationalVendorTaxUpload">
+                <mat-form-field color="accent" appearance="outline">
+                    <mat-label>Tax Residence Certificate Date</mat-label>
+                    <input matInput type="date" formControlName="taxResidenceCertificateDate">
+                </mat-form-field>
+            </div>
+
+        </div>
+
+
+
+        <div class="col">
+
+            <mat-form-field *ngIf="showInternationalCurrencyTextBox" color="accent" appearance="outline">
+                <mat-label>Other Currency</mat-label>
+                <input matInput placeholder="Enter Currency" formControlName="otherCurrencyTypeForInternational">
+
+            </mat-form-field>
+
+            <mat-form-field color="accent" appearance="outline">
+                <mat-label>Bank Account Name</mat-label>
+                <input matInput placeholder="Enter Bank Account Name r"
+                    formControlName="bankAccountNameForInternational">
+            </mat-form-field>
+
+
+            <mat-form-field color="accent" appearance="outline">
+                <mat-label>Bank Account Number</mat-label>
+                <input matInput placeholder="Enter Bank Account Number"
+                    formControlName="bankAccountNumberForInternational">
+            </mat-form-field>
+
+            <mat-form-field color="accent" appearance="outline">
+                <mat-label>IBN Number</mat-label>
+                <input matInput placeholder="Enter IBN Number" formControlName="ibnNumber">
+            </mat-form-field>
+
+
+            <div class="m-3" *ngIf="showInternationalVendorTaxUpload">
+                <mat-label>Tax Residence Certificate Upload</mat-label><br>
+                <input type="file" (change)="onFileSelected($event,'other','uploadTaxResidenceCertificate')"
+                    accept=".png, .jpg, .jpeg, .txt , .doc, .pdf" formControlName="uploadTaxResidenceCertificate"><br>
+                <span class="text-danger"><small>Allowed File Types (.png, .jpg, .txt , .doc)</small></span><br>
+                <span class="text-danger"><small>Size Should be greater than 0 KB and less than 30MB</small></span>
+            </div>
+
+            <div *ngIf="showInternaionalVendorTaxPreview">
+                <mat-label>Tax Residence Certificate File</mat-label>
+                <iframe style="border: 1px solid red;" width="100%" height="200" frameBorder="0"
+                    [src]="internationalVendorTaxIframeUrl"></iframe>
+                <!-- <embed  width="100%" height="200" [src]="vendorChequeIframeUrl" type="file"> -->
+            </div>
+
+
+
+        </div>
+    </div>
+    <!-- <div class="row">
+        <div class="col d-flex justify-content-center">
+            <button type="button" class="btn btn-danger btn-sm" *ngIf="internationalBenificiaryForm.valid" (click)="updateBenificiary('international')">
+                Click Here To Update Benificiary Details</button>
+        </div>
+    </div> -->
+</form>
+
+<form [formGroup]="aggregateDeviationForm">
+    <div class="m-3" *ngIf="showExpenseAggregateDeviation">
+        <mat-label>Upload Deviation</mat-label><br>
+        <input type="file" (change)="onFileSelected($event,'deviation','aggregateDeviationUpload')"
+            formControlName="aggregateDeviationUpload" accept=".png, .jpg, .jpeg, .txt , .doc, .pdf"><br>
+        <span class="text-danger"><small>Allowed File Types (.png, .jpg, .txt , .doc)</small></span><br>
+        <span class="text-danger"><small>Size Should be greater than 0 KB and less than 30MB</small></span>
+    </div>
+</form>
+<div class="row">
+    <div class="col">
+        <mat-form-field color="accent" appearance="outline">
+            <mat-label>Total Amount For HCP</mat-label>
+            <input matInput placeholder="Total Amount For HCP" disabled [value]="honorariumForm.value.honorariumAmountIncludingTax + 
+                                                                                  travelForm.value.travelAmountwithTax + localConveyanceForm.value.localAmountWithTax + accomodationForm.value.accomAmountWithTax   ">
+        </mat-form-field>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col d-flex justify-content-center">
+        <button type="button" class="btn btn-primary btn-sm" (click)="addToHCPTable()">AddNew</button>
+    </div>
+</div>
+<div class="container table-responsive">
+    <table class="table text-center table-bordered">
+        <thead>
+            <tr>
+                <th><b><small>S.no</small></b></th>
+                <th><b><small>HCP Role</small></b></th>
+                <th><b><small>HCP Name</small></b></th>
+                <th><b><small>MIS Code</small></b></th>
+                <th><b><small>Category</small></b></th>
+                <th><b><small>Honorarium</small></b></th>
+                <th><b><small>Honorarium amount</small></b></th>
+                <th><b><small>Travel Amount</small></b></th>
+                <th><b><small>ACC Amount</small></b></th>
+                <th><b><small>LC Amount</small></b></th>
+                <th><b><small>Actions</small></b></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let Hcp of hcpTableDetails; index as i">
+                <th scope="row">{{i+1}}</th>
+                <td>{{Hcp.HcpRole}}</td>
+                <td>{{Hcp.HcpName}}</td>
+                <td>{{Hcp.MisCode}}</td>
+                <td>{{Hcp.GOorNGO}}</td>
+                <td>{{Hcp.HonorariumRequired}}</td>
+                <td>{{Hcp.HonarariumAmount}}</td>
+                <td>{{Hcp.Travel}}</td>
+                <td>{{Hcp.Accomdation}}</td>
+                <td>{{Hcp.LocalConveyance}}</td>
+                <td style="cursor: pointer;">
+                    <!-- <i (click)="openHCPTableUpdateModal(Hcp)" class="material-icons" style="margin-right: 5px;">edit</i> -->
+                    <i (click)="deletHcp(i,Hcp)" class="material-icons">delete</i>
+                </td>
+
+            </tr>
+        </tbody>
+
+    </table>
+</div>
+
+<app-spinner-loader [isLoading]="loadingIndicator"></app-spinner-loader>
+
+
+
+
+<!-- 
+    <form [formGroup]="internationalHcpForm" *ngIf="showInternationHcpForm">
+    <div class="row">
+        <div class="col">
+            <mat-form-field color="accent" appearance="outline">
+                <mat-label>HCP Name</mat-label>
+                <input matInput type="text" placeholder="Enter HCP Name" formControlName="internationalHcpName">
+            </mat-form-field>
+
+            <mat-form-field color="accent" appearance="outline">
+                <mat-label>HCP Country</mat-label>
+                <input matInput type="text" placeholder="Enter HCP Country" formControlName="internationalHcpCountry">
+            </mat-form-field>
+
+            <mat-form-field color="accent" appearance="outline">
+                <mat-label>HCP Code</mat-label>
+                <input matInput type="text" placeholder="Enter HCP Code" formControlName="internationalHcpCode">
+            </mat-form-field>
+
+            <div class="m-3">
+                <mat-label>Brochure/Request Letter</mat-label><br>
+                <input type="file" (change)="onFileSelected($event,'other','uploadBrochure')"
+                    accept=".png, .jpg, .jpeg, .txt , .doc, .pdf" formControlName="uploadBrochure"><br>
+                <span class="text-danger"><small>Allowed File Types (.png, .jpg, .txt , .doc)</small></span><br>
+                <span class="text-danger"><small>Size Should be greater than 0 KB and less than 30MB</small></span>
+            </div>
+        </div>
+        <div class="col">
+            <mat-form-field color="accent" appearance="outline">
+                <mat-label>HCP Speciality</mat-label>
+                <input matInput type="text" placeholder="Enter Speciality" formControlName="internationalHcpSpeciality">
+            </mat-form-field>
+
+            <mat-form-field color="accent" appearance="outline">
+                <mat-label>HCP Tier</mat-label>
+                <input matInput type="text" placeholder="Enter HCP Tier" formControlName="internationalHcpTier">
+            </mat-form-field>
+
+            <mat-form-field color="accent" appearance="outline">
+                <mat-label>HCP Type</mat-label>
+                <input matInput type="text" placeholder="Enter HCP Type" formControlName="internationalHcpType">
+            </mat-form-field>
+        </div>
+    </div>
+
+</form>
+
+<form [formGroup]="internationalHonorariumForm" *ngIf="showInternationalHonorariumForm">
+    <h4 class="d-flex justify-content-center col-12"><b>Honararium Details</b></h4>
+    <div class="row">
+        <div class="col">
+            <mat-form-field color="accent" appearance="outline">
+                <mat-label>Enter Honararium Amount Excluding Tax</mat-label>
+                <input matInput type="number" placeholder="Enter Honararium Amount"
+                    formControlName="internationHonorariumAmountExcludingTax" [max]="100000">
+            </mat-form-field>
+        </div>
+        <div class="col">
+            <mat-form-field color="accent" appearance="outline">
+                <mat-label>Enter Honararium Amount Including Tax</mat-label>
+                <input matInput type="number" placeholder="Enter Honararium Amount"
+                    formControlName="internationHonorariumAmountIncludingTax" [max]="100000">
+            </mat-form-field>
+        </div>
+    </div>
+</form>
+ -->

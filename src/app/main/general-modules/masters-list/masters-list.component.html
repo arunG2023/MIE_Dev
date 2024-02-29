@@ -1,0 +1,85 @@
+<div class="main-content">
+    <div class="container-fluid">
+        <div class="row">
+
+            <div class="col-lg-4 col-md-6 col-sm-6">
+                <div class="card card-stats">
+                    <div class="card-header card-header-info card-header-icon">
+                        <div class="card-icon">
+                            <i class="material-icons">person</i>
+                        </div>
+                        <h3 class="card-title">HCP Master</h3>
+                    </div>
+                    <div class="card-footer">
+                        <div class="stats" (click)="navAction('add_hcp')" *ngIf="userRoles == 'Admin'">
+                            <i class="material-icons">add</i> Add HCP
+                        </div>
+                        <div class="stats" (click)="navAction('view_hcp')">
+                            <i class="material-icons">list</i> View HCP
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- <div class="col-lg-4 col-md-6 col-sm-6">
+                <div class="card card-stats">
+                    <div class="card-header card-header-danger card-header-icon">
+                        <div class="card-icon">
+                            <i class="material-icons">person</i>
+                        </div>
+                        <h3 class="card-title">Vendor Master</h3>
+                    </div>
+                    <div class="card-footer">
+                        <div class="stats" (click)="navAction('add-vendor')">
+                            <i class="material-icons">add</i> Add Vendor
+                        </div>
+                        <div class="stats" (click)="navAction('view-vendors')">
+                            <i class="material-icons">list</i> View Vendor
+                        </div>
+                    </div>
+                </div>
+            </div> -->
+
+            <div class="col-lg-4 col-md-6 col-sm-6">
+                <div class="card card-stats">
+                    <div class="card-header card-header-success card-header-icon">
+                        <div class="card-icon">
+                            <i class="material-icons">person</i>
+                        </div>
+                        <h3 class="card-title">Speaker Code</h3>
+                    </div>
+                    <div class="card-footer">
+                        <div class="stats" (click)="navAction('add-speaker')">
+                            <i class="material-icons">add</i> Add Speaker
+                        </div>
+                        <div class="stats" (click)="navAction('view-speakers')">
+                            <i class="material-icons">list</i> View Speaker
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-4 col-md-6 col-sm-6">
+                <div class="card card-stats">
+                    <div class="card-header card-header-danger card-header-icon">
+                        <div class="card-icon">
+                            <i class="material-icons">person</i>
+                        </div>
+                        <h3 class="card-title">Trainer Code</h3>
+                    </div>
+                    <div class="card-footer">
+                        <div class="stats" (click)="navAction('add-trainer')">
+                            <i class="material-icons">add</i> Add Trainer
+                        </div>
+                        <div class="stats" (click)="navAction('view-trainers')">
+                            <i class="material-icons">list</i> View Trainer
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            
+        </div>
+
+    </div>
+</div>

@@ -1,0 +1,143 @@
+<div class="main-content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header card-header-danger">
+                        <h4 class="card-title">Post Event - HCP Consultant Post Event Follow Up</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="card ">
+                                    <div class="card-body" *ngIf="!showNoData">
+
+                                        <div class="row">
+                                            <div class="container table-responsive">
+                                                <table class="table table-striped">
+                                                    <thead>
+                                                        <tr>
+                                                            <th><small>S No.</small></th>
+                                                            <th><small>Event Id</small></th>
+                                                            <th><small>Event Name</small></th>
+                                                            <th><small>Event Type</small></th>
+                                                            <th><small>Venue</small></th>
+                                                            <th><small>Event Date</small></th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr *ngFor="let event of eventTableDetails | paginate: { itemsPerPage: pageRowLimit, currentPage: p }; index as i">
+                                                            <td scope="row">{{event.row}}</td>
+                                                            <td>{{event['EventId/EventRequestId']}}</td>
+                                                            <td>{{event['Event Topic']}}</td>
+                                                            <td>{{event.EventType}}</td>
+                                                            <td>{{event.VenueName || 'NA'}}</td>
+                                                            <td>{{event.EventDate}}</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td colspan="6" class="pagination-row"><pagination-controls (pageChange)="p = $event"></pagination-controls></td>
+                                                        </tr>
+
+                                                    </tbody>
+
+                                                </table>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-6">
+                                                <mat-form-field color="accent" appearance="outline">
+                                                    <mat-label>Select Event ID</mat-label>
+                                                    <mat-select (ngModelChange)="onEventSelect($event)"
+                                                        [ngModelOptions]="{standalone: true}"
+                                                        [(ngModel)]="selectedEvent">
+                                                        <mat-option *ngFor="let selectId of eventTableDetails"
+                                                            value="{{selectId['EventId/EventRequestId']}}">{{selectId['EventId/EventRequestId']}}
+                                                        </mat-option>
+                                                    </mat-select>
+                                                </mat-form-field>
+                                            </div>
+                                        </div>
+                                        <app-post-event-data-follow-up 
+                                            [showPostEventFollowUpContent] = "showEventSettlementContent"
+                                            [postEventHcpFollowUpTableDetails] = "expenseTableDetails"
+                                            >
+                                        </app-post-event-data-follow-up>
+                                        <!-- <form [formGroup]="deviationForm" *ngIf="showEventSettlementContent">
+                                            <div class="row">
+                                                
+                                                <div class="col-md-12 container table-responsive">
+                                                    <span class="text-danger text-secondary m-2"><h4><b>Follow Up Details:</b></h4></span>
+                                                    <table class="table table-striped">
+                                                        <thead>
+                                                            <tr>
+                                                                <th><small>S.No</small></th>
+                                                                <th><small>HCP Name</small></th>
+                                                                <th><small>MIS Code</small></th>
+                                                                <th><small>HCP Type</small></th>
+                                                                <th><small>Country</small></th>
+                                                                <th><small>How many days since the parent event completes?</small></th>
+                                                                <th><small>Follow Up Event Code</small></th>
+                                                                <th><small>Follow Up Event Date</small></th>
+                                                                <th><small>Agreement Upload</small></th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr *ngFor="let expense of expenseTableDetails; index as i">
+                                                                <td>{{i+1}}</td>
+                                                                <td>{{expense.HCPName}}</td>
+                                                                <td>{{expense.MISCode}}</td>
+                                                                <td>{{expense['HCP Type']}}</td>
+                                                                <td>{{expense.Travel || 0}}</td>
+                                                                <td>{{expense.Accomodation || 0}}</td>
+                                                                <td>{{expense.LocalConveyance || 0}}</td>
+                                                                <td>
+                                                                    <input matInput [value]="eventDate">
+                                                                </td>
+                                                                <td>
+                                                                    <input type="file"
+                                                                    (change)="onFileSelected($event,'other','signedAgreement')"
+                                                                    [accept]="allowedTypesForHTML" ><br>
+                                                                    <span class="text-danger"><small>Allowed File Types
+                                                                            (.png, .jpg, .txt , .doc)</small></span><br>
+                                                                    <span class="text-danger"><small>Size Should be
+                                                                            greater than 0 KB and less than
+                                                                            30MB</small></span>
+                                                                </td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                                <div class="container" *ngIf="showAggregateSpendDeviation">
+                                                    <mat-label>Upload Deviation<span class="red">*</span></mat-label><br>
+                                                    <input type="file"
+                                                        (change)="onFileSelected($event,'deviation','aggregateDeviation')"
+                                                        [accept]="allowedTypesForHTML"
+                                                        formControlName="aggregateDeviation"><br>
+                                                    <span class="text-danger"><small>Allowed File Types (.png, .jpg,
+                                                            .txt , .doc)</small></span><br>
+                                                    <span class="text-danger"><small>Size Should be greater than 0 KB
+                                                            and less than 30MB</small></span>
+                                                </div>
+
+                                                
+                                            </div>
+                                            <div class="col d-flex justify-content-center">
+                                                <button type="button" class="btn btn-sm btn-primary"> Reset
+                                                </button>
+                                                <button type="submit" class="btn btn-sm btn-warning" (click)="onSubmit()"> Submit </button>
+                                            </div>
+                                        </form> -->
+                                    </div>
+                                    <div class="card-body" *ngIf="showNoData">
+                                        <span class="text-danger">Sorry, there are no events for Post Event Follow Up Submission</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<app-spinner-loader [isLoading]="loadingIndicator"></app-spinner-loader>

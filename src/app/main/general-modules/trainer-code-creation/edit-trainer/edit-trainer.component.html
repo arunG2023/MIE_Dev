@@ -1,0 +1,328 @@
+<div class="main-content withscrollbar">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="card">
+            <div class="card-header card-header-danger">
+                <h4 class="card-title">Trainer Code Update</h4> 
+            </div>
+
+            
+            
+            <div class="card-body">
+              <div class="row">
+                <div class="col-md-12">
+                    <div class="card ">
+                        <div class="card-body">
+                            <form [formGroup]="editTrainerCodeCreationForm" (ngSubmit)="submit()">
+
+	                            <div class="row" >
+	                                <div class="col">
+	                                    <mat-form-field appearance="outline">
+	                                        <mat-label>MIS Code</mat-label>
+	                                        <input matInput placeholder="Enter MIS Code" formControlName="misCode"
+									        [matAutocomplete]="auto" 
+									        (optionSelected)="onMISCodeSelected($event)"
+									        (blur)="validateMisCode()" pattern="[a-zA-Z0-9/]*" maxlength="10"
+									      />
+									      <mat-autocomplete #auto="matAutocomplete" (optionSelected)="onMISCodeSelected($event)">
+									        <mat-option *ngFor="let code of _filteredMISCodes | async" [value]="code">
+									          {{ code }}
+									        </mat-option>
+									      </mat-autocomplete>                                       
+	                                        <!-- <mat-hint>Hint</mat-hint> -->
+	                                      </mat-form-field>
+	                                </div>
+	                            </div>
+	                            <div class="row" >
+	                                <div class="col">
+	                                    <mat-form-field appearance="outline">
+	                                        <mat-label>Trainer Name</mat-label>
+	                                        <input matInput  formControlName="trainerName" 							       
+									      />
+									     <!--  <mat-autocomplete #trainerAuto="matAutocomplete" (optionSelected)="onTrainerNameSelected($event)">
+									        <mat-option *ngFor="let name of _filteredTrainerNames | async" [value]="name">
+									          {{ name }}
+									        </mat-option>
+									      </mat-autocomplete>  -->                                      
+	                                        <!-- <mat-hint>Hint</mat-hint> -->
+	                                      </mat-form-field>
+	                                </div>  
+                            	</div>   
+
+	                            <div class="row" >
+	                                <div class="col">
+	                                    <mat-form-field appearance="outline">
+	                                        <mat-label>Speciality</mat-label>
+								            <mat-select formControlName="speciality" >
+								              <mat-option *ngFor="let spe of specialities"
+								                value={{spe.Speciality}}>{{spe.Speciality}}</mat-option>
+								            </mat-select> 	                                       
+	                                        <!-- <mat-hint>Hint</mat-hint> -->
+	                                      </mat-form-field>
+	                                </div>
+	                            </div>
+	                            <div class="row" >
+	                                <div class="col">
+	                                    <mat-form-field appearance="outline">
+	                                        <mat-label>Qualification</mat-label>
+	                                        <input  matInput  formControlName="qualification">	                                       
+	                                        <!-- <mat-hint>Hint</mat-hint> -->
+	                                      </mat-form-field>
+	                                </div>
+	                            </div>
+	                            <div class="row" >
+	                                <div class="col">
+	                                    <mat-form-field appearance="outline">
+	                                        <mat-label>HCP Type</mat-label>
+								            <mat-select formControlName="trainerType" >
+								              <mat-option *ngFor="let trainerType of trainerTypes"
+								                value={{trainerType}}>{{trainerType}}</mat-option>
+								            </mat-select>                                      
+	                                     
+	                                      </mat-form-field>
+
+										  <!-- <mat-form-field color="accent" appearance="outline">
+											<mat-label>Trainer Type</mat-label>
+											<mat-select formControlName="trainerTypesName">
+											  <mat-option value="NGO">NGO</mat-option>
+											  <mat-option value="GO-A">GO-A</mat-option>
+											  
+											</mat-select>
+										  </mat-form-field> -->
+	                                </div>
+	                            </div>
+	                            <div class="row" >
+	                                <div class="col">
+	                                    <mat-form-field appearance="outline">
+	                                        <mat-label>Country</mat-label>
+								            <mat-select formControlName="country" >
+								              <mat-option *ngFor="let ctr of countries"
+								                value={{ctr}}>{{ctr}}</mat-option>
+								            </mat-select>                                    
+	                                        <!-- <mat-hint>Hint</mat-hint> -->
+	                                      </mat-form-field>
+	                                </div>
+	                            </div>
+	                            <div class="row" >
+	                                <div class="col">
+	                                    <mat-form-field appearance="outline">
+	                                        <mat-label>Address</mat-label>
+	                                        <input  matInput  formControlName="address">	                                       
+	                                        <!-- <mat-hint>Hint</mat-hint> -->
+	                                      </mat-form-field>
+	                                </div>
+	                            </div> 
+	                            <div class="row" >
+	                                <div class="col">
+	                                    <mat-form-field appearance="outline">
+	                                        <mat-label>City</mat-label>
+								            <mat-select [disabled]="!isTrainerMISCodeNA()" formControlName="city" >
+								              <mat-option *ngFor="let ci of cities"
+								                value={{ci.CityName}}>{{ci.CityName}}</mat-option>
+								            </mat-select>	                                   
+	                                        <!-- <mat-hint>Hint</mat-hint> -->
+	                                      </mat-form-field>
+	                                </div>
+	                            </div>
+	                            <div class="row" >
+	                                <div class="col">
+	                                    <mat-form-field appearance="outline">
+	                                        <mat-label>State</mat-label>
+								            <mat-select [disabled]="!isTrainerMISCodeNA()" formControlName="state" >
+								              <mat-option *ngFor="let st of states"
+								                value={{st.StateName}}>{{st.StateName}}</mat-option>
+								            </mat-select>	                                       
+	                                        <!-- <mat-hint>Hint</mat-hint> -->
+	                                      </mat-form-field>
+	                                </div>
+	                            </div>
+	                            <div class="row" >
+	                                <div class="col">
+	                                    <mat-form-field appearance="outline">
+	                                        <mat-label>Contact Number</mat-label>
+	                                        <input matInput  formControlName="contactNumber">	                                       
+	                                        <!-- <mat-hint>Hint</mat-hint> -->
+	                                      </mat-form-field>
+	                                </div>
+	                            </div>
+ 
+	                            <div class="row"  *ngIf="false">
+	                                <div class="col">
+	                                    <mat-form-field appearance="outline">
+	                                        <mat-label>Trainer Code</mat-label>
+	                                        <input matInput  formControlName="trainerCode">	                                       
+	                                        <!-- <mat-hint>Hint</mat-hint> -->
+	                                      </mat-form-field>
+	                                </div>
+	                            </div>
+													    <div class="row">
+													        <div class="col">
+													          <mat-form-field color="accent" appearance="outline">
+													            <mat-label>Select Division</mat-label>
+													            <mat-select formControlName="divisionId" >
+													              <mat-option *ngFor="let division of divisions"
+													                value={{division.Name}}>{{division.Name}}</mat-option>
+													            </mat-select>
+							          						</mat-form-field>
+                                	</div>
+                            	 </div> 
+													    <div class="row">
+													        <div class="col">
+													          <mat-form-field color="accent" appearance="outline">
+													            <mat-label>Brand</mat-label>
+													            <mat-select formControlName="trainerBrand" >
+													              <!-- <mat-option *ngFor="let brand of trainerBrands"
+													                value={{brand}}>{{brand}}</mat-option> -->
+
+																	<mat-option value="Threads">Definisse Threads</mat-option>
+																	<mat-option value="Fillers">Definisse Fillers</mat-option>
+													            </mat-select>
+							          						</mat-form-field>
+
+															  <!-- <mat-form-field appearance="outline">
+																<mat-label>Brand</mat-label>
+																<mat-select formControlName="trainerBrand" >
+																  <mat-option *ngFor="let trainerType of trainerTypes"
+																	value={{trainerType}}>{{trainerType}}</mat-option>
+																</mat-select>                                      
+																
+															  </mat-form-field> -->
+                                	</div>
+                            	 </div>
+	                            <div class="row"  *ngIf="isThreads">
+	                                <div class="col">
+	                                    <mat-form-field appearance="outline">
+	                                        <mat-label>Trained By  <span *ngIf="isThreads" class="color_red">*</span></mat-label>
+	                                        <input matInput  placeholder="Trained by" formControlName="trainedBy">	
+	                                      </mat-form-field>
+	                                </div>
+	                            </div>
+	                            <div class="row"  *ngIf="isThreads">
+	                                <div class="col">
+	                                    <mat-form-field appearance="outline">
+	                                        <mat-label>Trained On   <span *ngIf="isThreads" class="color_red">*</span></mat-label>
+	                                        <input matInput  placeholder="Trained by" formControlName="trainedOn" [matDatepicker]="dobPicker" (focus)="dobPicker.open()">	
+	                                        <mat-datepicker-toggle matSuffix [for]="dobPicker"></mat-datepicker-toggle><mat-datepicker #dobPicker></mat-datepicker>
+	                                      </mat-form-field>
+	                                </div>
+	                            </div>
+							      <div class="row">
+							        <div class="col">
+							          <!-- <mat-form-field color="accent" appearance="outline">
+							            <mat-label>Trainer criteria selection</mat-label>
+							            <mat-select formControlName="trainerCriteriaSelectionId" >
+							              <mat-option *ngFor="let trainerCriteria of trainerCriterias"
+							                value={{trainerCriteria}}>{{trainerCriteria}}</mat-option>
+							            </mat-select>
+
+							          </mat-form-field> -->
+
+									    <div>
+									     <mat-radio-group class="trainerCriterias-radio-group" formControlName="trainerCriteriaSelectionId"   [ngClass]="{'invalid-field': editTrainerCodeCreationForm.get('trainerCriteriaSelectionId').invalid}">	
+							            	<mat-label>Trainer criteria selection  <span *ngIf="isThreads" class="color_red">*</span></mat-label>
+										      <mat-radio-button  class="trainerCriterias-radio-button"  *ngFor="let criteriaOption of trainerCriterias"  [value]="criteriaOption" (change)="onTrainerCriteriaSelectionIdChange($event)">
+										        <strong>{{ criteriaOption }}</strong>
+
+
+									      <div *ngIf="criteriaOption == 'Tier I Criteria'">
+									      	<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(Criteria 1 to 3 along with any two criteria from 4 to 6 to be met)* Criteria 1 not applicable for filler procedure</b>
+									      	<ol>
+									      		<li><mat-checkbox [disabled]="!isCriteriaOptionMatch('Tier I Criteria')" formControlName="trainerCriteriasTireIOptions1" value="Certified through Menarini training course to do the procedure (Not applicable for fillers)"> Certified through Menarini training course to do the procedure (Not applicable for fillers)</mat-checkbox></li>
+									      		<li>
+                                <mat-checkbox [disabled]="!isCriteriaOptionMatch('Tier I Criteria')"  formControlName="trainerCriteriasTireIOptions2" value="Duly qualified and recognized by peers/ other specialists as an expert within his/her field"> Duly qualified and recognized by peers/ other specialists as an expert within his/her field</mat-checkbox></li>
+									      		<li>
+                                <mat-checkbox [disabled]="!isCriteriaOptionMatch('Tier I Criteria')"  formControlName="trainerCriteriasTireIOptions3" value="Performed minimum 5 independent aesthetic procedure for the relevant product"> Performed minimum 5 independent aesthetic procedure for the relevant product</mat-checkbox></li>
+									      		<li>
+                                <mat-checkbox [disabled]="!isCriteriaOptionMatch('Tier I Criteria')"  formControlName="trainerCriteriasTireIOptions4" value="Speaks/chairs sessions at international conferences"> Speaks/chairs sessions at international conferences</mat-checkbox></li>
+									      		<li>
+                                <mat-checkbox [disabled]="!isCriteriaOptionMatch('Tier I Criteria')"  formControlName="trainerCriteriasTireIOptions5" value="Author/editor of leading textbooks or publishes in leading clinical peer-reviewed journals"> Author/editor of leading textbooks or publishes in leading clinical peer-reviewed journals</mat-checkbox></li>
+									      		<li>
+                                <mat-checkbox [disabled]="!isCriteriaOptionMatch('Tier I Criteria')"  formControlName="trainerCriteriasTireIOptions6" value="Practices as a specialist in their respective area of specialization with > 12 years of experience"> Practices as a specialist in their respective area of specialization with > 12 years of experience</mat-checkbox></li>
+									      	</ol>	
+    <!-- Error messages for "Tier I Criteria" validation -->
+    <mat-error *ngIf="editTrainerCodeCreationForm.hasError('tierICriteriaInvalid')">
+      Please select at least 3 options for Tier I Criteria, and any 2 from Options 4 to 6.
+    </mat-error>
+    <mat-error *ngIf="editTrainerCodeCreationForm.hasError('tierIAdditionalOptionsInvalid')">
+      Please select at least 2 options from Options 4 to 6.
+    </mat-error>	
+									      </div>
+									      <div *ngIf="criteriaOption == 'Tier II Criteria'">
+									      	<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(Criteria 1 to 3 along with any two criteria from 4 to 6 to be met) *Criteria 1 not applicable for filler procedure</b>
+									      	<ol>
+									      		<li><mat-checkbox [disabled]="!isCriteriaOptionMatch('Tier II Criteria')"  formControlName="trainerCriteriasTireIIOptions1" value="Certified through Menarini training course to do the procedure (Not applicable for fillers)"> Certified through Menarini training course to do the procedure (Not applicable for fillers)</mat-checkbox></li>
+									      		<li><mat-checkbox [disabled]="!isCriteriaOptionMatch('Tier II Criteria')"  formControlName="trainerCriteriasTireIIOptions2" value="Duly qualified and recognized by peers/ other specialists as an expert within his/her field"> Duly qualified and recognized by peers/ other specialists as an expert within his/her field</mat-checkbox></li>
+									      		<li><mat-checkbox [disabled]="!isCriteriaOptionMatch('Tier II Criteria')"  formControlName="trainerCriteriasTireIIOptions3" value="Performed minimum 5 independent aesthetic procedure for the relevant product"> Performed minimum 5 independent aesthetic procedure for the relevant product</mat-checkbox></li>
+									      		<li><mat-checkbox [disabled]="!isCriteriaOptionMatch('Tier II Criteria')"  formControlName="trainerCriteriasTireIIOptions4" value="Speaks/chairs sessions at national conferences"> Speaks/chairs sessions at national conferences</mat-checkbox></li>
+									      		<li><mat-checkbox [disabled]="!isCriteriaOptionMatch('Tier II Criteria')"  formControlName="trainerCriteriasTireIIOptions5" value="Publishes regularly in leading clinical or scientific journals"> Publishes regularly in leading clinical or scientific journals</mat-checkbox></li>
+									      		<li><mat-checkbox [disabled]="!isCriteriaOptionMatch('Tier II Criteria')"  formControlName="trainerCriteriasTireIIOptions6" value="Practices as a specialist in their respective area of specialization"> Practices as a specialist in their respective area of specialization</mat-checkbox></li>
+									      	</ol>	
+   <!-- Error messages for "Tier II Criteria" validation -->
+    <mat-error *ngIf="editTrainerCodeCreationForm.hasError('tierIICriteriaInvalid')">
+      Please select at least 3 options for Tier II Criteria, and any 2 from Options 4 to 6.
+    </mat-error>
+    <mat-error *ngIf="editTrainerCodeCreationForm.hasError('tierIIAdditionalOptionsInvalid')">
+      Please select at least 2 options from Options 4 to 6.
+    </mat-error>	
+									      </div>
+										      </mat-radio-button>
+									  	 </mat-radio-group>
+									    </div>
+                                	</div>
+                            	</div>
+	                            <div class="row" >
+	                                <div class="col">
+	                                    <mat-form-field appearance="outline">
+	                                        <mat-label>Trainer Category</mat-label>
+	                                        <input matInput  placeholder="Auto generate" formControlName="trainerCategory" readonly>	                                       
+	                                        <!-- <mat-hint>Hint</mat-hint> -->
+	                                      </mat-form-field>
+	                                </div>
+	                            </div>
+	                            <div class="row"  *ngIf="isThreads">
+	                                <div class="col">
+	                                    <div  class="justify-content-center">
+	                                        <mat-label  [ngClass]="{'invalid-field': editTrainerCodeCreationForm.get('trainerCertificate').invalid}">Upload Trainer Certificate  <span *ngIf="isThreads" class="color_red">*</span></mat-label> <br>
+	                                        <input 
+																					    type="file"
+																					    id="trainerCertificate"
+																					    formControlName="trainerCertificate"
+																					    (change)="onTrainerCertificateFileSelected($event)"  accept=".pdf, .docx, .jpg, .png" 
+																					  />
+	                                        <mat-icon matSuffix>attach_file</mat-icon>
+	                                      </div><br>
+	                                </div>
+	                            </div>
+	                            <div class="row"  *ngIf="isThreads">
+	                                <div class="col">
+	                                    <div  class="justify-content-center">
+	                                        <mat-label  [ngClass]="{'invalid-field': editTrainerCodeCreationForm.get('trainerCertificate').invalid}">Upload Trainer CV  <span *ngIf="isThreads" class="color_red">*</span></mat-label> <br>
+	                                        <input 
+																					    type="file"
+																					    id="trainerCV"
+																					    formControlName="trainerCV"
+																					    (change)="onTrainerCVFileSelected($event)"  accept=".pdf, .docx, .jpg, .png" 
+																					  />
+	                                        <mat-icon matSuffix>attach_file</mat-icon>
+	                                       <!--  <input matInput  placeholder="Upload File" formControlName="trainerCVFile"> -->
+	                                      </div><br>
+	                                </div>
+	                            </div>
+
+			                    <div class="row">
+			                        <div class="col">
+			                            <div class="col-12 d-flex justify-content-end">
+			                                <button class="btn btn-success btn-sm">Submit</button>
+			                            </div>
+			                        </div>
+			                    </div>
+                        	</form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<app-spinner-loader [isLoading]="loadingIndicator"></app-spinner-loader>

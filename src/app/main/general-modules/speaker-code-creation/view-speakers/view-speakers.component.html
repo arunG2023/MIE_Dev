@@ -1,0 +1,86 @@
+
+<div>
+  <mat-form-field class="search-box">
+      <input matInput  [(ngModel)]="searchInput" (input)="_applySavedSpeakerCodesFilter($event.target.value)" placeholder="Search...">
+      <button mat-icon-button  *ngIf="!searchInput" class="search-icon">
+        <mat-icon>search</mat-icon>
+      </button>
+      <!-- Clear button -->
+      <button mat-icon-button *ngIf="searchInput" (click)="clearSearchInput()" class="search-icon">
+        <mat-icon>clear</mat-icon>
+      </button>      
+  </mat-form-field>
+
+            <div class="table-responsive table-bordered ">
+
+
+  <table mat-table [dataSource]="savedSpeakerCodesDataSource" class="mat-elevation-z8 table text-center table-striped overflow-hidden">
+
+    <!-- Define columns -->
+    <ng-container matColumnDef="sno">
+      <th mat-header-cell *matHeaderCellDef> S.no </th>
+      <td mat-cell *matCellDef="let element; let i = index"> {{ paginator.pageIndex * paginator.pageSize + i + 1 }} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="misCode">
+      <th mat-header-cell *matHeaderCellDef> MIS Code </th>
+      <td mat-cell *matCellDef="let element"> {{ element.MisCode }} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="speakerName">
+      <th mat-header-cell *matHeaderCellDef> Speaker Name </th>
+      <td mat-cell *matCellDef="let element"> {{ element.SpeakerName }} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="specialty">
+      <th mat-header-cell *matHeaderCellDef> Specialty </th>
+      <td mat-cell *matCellDef="let element"> {{ element.Speciality }} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="qualification">
+      <th mat-header-cell *matHeaderCellDef> Qualification </th>
+      <td mat-cell *matCellDef="let element"> {{ element.Qualification }} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="speakerType">
+      <th mat-header-cell *matHeaderCellDef> Speaker Type </th>
+      <td mat-cell *matCellDef="let element"> {{ element['Speaker Type'] }} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="country">
+      <th mat-header-cell *matHeaderCellDef> Country </th>
+      <td mat-cell *matCellDef="let element"> {{ element.Country }} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="speakerCode">
+      <th mat-header-cell *matHeaderCellDef> Speaker Code </th>
+      <td mat-cell *matCellDef="let element"> {{ element['Speaker Code'] }} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="speakerCategory">
+      <th mat-header-cell *matHeaderCellDef> Speaker Category </th>
+      <td mat-cell *matCellDef="let element"> {{ element['Speaker Category'] }} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="actions">
+      <th mat-header-cell *matHeaderCellDef> Actions </th>
+      <td mat-cell *matCellDef="let element">
+        <button mat-icon-button (click)="editSpeakerCode(element)">Edit</button>
+       <!--  <button mat-icon-button (click)="deleteSpeakerCode(element)">Delete</button> -->
+      </td>
+    </ng-container>
+
+    <!-- No records found row -->
+    <ng-container *matNoDataRow>
+      <tr>
+        <td [attr.colspan]="displayedColumns.length" class="no-data-row">No records found</td>
+      </tr>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns; let i = index" [ngClass]="{ 'even-row': i % 2 === 0, 'odd-row': i % 2 !== 0 }"></tr>
+  </table>
+  <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+</div>
+          </div>
+<app-spinner-loader [isLoading]="loadingIndicator"></app-spinner-loader>          

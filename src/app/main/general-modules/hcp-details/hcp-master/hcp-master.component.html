@@ -1,0 +1,20 @@
+
+<div class="main-content">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-md-12">
+			<div>
+			  <mat-tab-group [selectedIndex]="selectedActionEvent">
+			    <mat-tab label="View Existing HCP">
+                    <app-view-hcp></app-view-hcp>			      
+			    </mat-tab>
+			    <mat-tab label="Add New HCP" *ngIf="userRoles == 'Admin'">
+                    <app-add-hcp></app-add-hcp>
+			    </mat-tab>
+			  </mat-tab-group>
+			</div>
+      </div>
+    </div>
+  </div>
+</div>
+      

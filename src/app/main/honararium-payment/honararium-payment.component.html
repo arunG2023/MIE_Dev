@@ -1,0 +1,309 @@
+<div class="main-content">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card">
+          <div class="card-header card-header-danger">
+            <h4 class="card-title">Finance Account View</h4>
+          </div>
+
+          <div class="card-body">
+            <div class="row">
+              <div class="col-md-12">
+                <form [formGroup]="honorarium">
+                  <app-event-pending
+                    [eventType]="'honararium'"
+                    (dataEvent)="gethonorariumdetails($event)"
+                    (financeAccountExpense)="getpostData($event)"
+                  ></app-event-pending>
+
+                  <div
+                    class="container table-responsive"
+                    *ngIf="showHonarariumContent"
+                  >
+                    <h4><b>Honorarium Request</b></h4>
+                    <table class="table table-bordered">
+                      <thead>
+                        <tr>
+                          <th><small>S.no</small></th>
+                          <th><small>HCP Role</small></th>
+                          <th><small>HCP Name</small></th>
+                          <th><small>MIS Code</small></th>
+                          <th><small>HCP Type</small></th>
+                          <th><small>AgreementAmount</small></th>
+                          <th><small>Jv Number</small></th>
+                          <th><small>Jv Date</small></th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr *ngFor="let honor of honortableDetails; index as i">
+                          <th scope="row">{{ i + 1 }}</th>
+                          <th>{{ honor.HcpRole }}</th>
+                          <th>{{ honor.HCPName }}</th>
+                          <th>{{ honor.MISCode }}</th>
+                          <th>{{ honor["HCP Type"] }}</th>
+                          <th>{{ honor.AgreementAmount || 0 }}</th>
+                          <th>
+                            <mat-form-field color="accent" appearance="outline">
+                              <mat-label
+                                >Enter JV Number
+                                <span class="red">*</span></mat-label
+                              >
+                              <input
+                                matInput
+                                type="Number"
+                                placeholder="Mention JV Number"
+                                formControlName="jvNumber"
+                                [(ngModel)]="honor.jvNumber"
+                              />
+                            </mat-form-field>
+                          </th>
+                          <th>
+                            <mat-form-field color="accent" appearance="outline">
+                              <mat-label>Jv Date</mat-label>
+                              <input
+                                matInput
+                                type="date"
+                                min="{{ today | date : 'yyyy-MM-dd' }}"
+                                formControlName="jvDate"
+                                [(ngModel)]="honor.jvDate"
+                              />
+                            </mat-form-field>
+                          </th>
+                        </tr>
+                      </tbody>
+                    </table>
+
+                    <div class="row margin_0">
+                      <div class="col-5"></div>
+                      <button mat-raised-button (click)="cancel()">
+                        Cancel
+                      </button>
+                      &nbsp;&nbsp;&nbsp;
+                      <button
+                        mat-raised-button
+                        color="primary"
+                        (click)="updatefinanceaccount()"
+                      >
+                        Submit
+                      </button>
+                    </div>
+                  </div>
+                </form>
+                <div
+                  class="container table-responsive"
+                  *ngIf="showexpense == true"
+                >
+                  <!-- <app-financepostevent
+                        [showexpense]="showexpense"
+                        [expense]="financeaccounts"
+                       
+                      ></app-financepostevent> -->
+                  <h4><b>Post Event Settlement Request</b></h4>
+                  <form [formGroup]="expensesummary">
+                    <div
+                      class="container table-responsive"
+                      *ngIf="btcSummaryTableDetails.length > 0"
+                    >
+                      <h5 class="font_size_27 font_weight_900">
+                        Expense Summary BTC
+                      </h5>
+                      <table class="table text-center table-bordered">
+                        <thead>
+                          <tr>
+                            <th>
+                              <b><small>S.no</small></b>
+                            </th>
+                            <th>
+                              <b><small>Expense</small></b>
+                            </th>
+                            <th>
+                              <b><small>Type</small></b>
+                            </th>
+
+                            <th>
+                              <b><small>BTC Amount</small></b>
+                            </th>
+                            <th>
+                              <b><small>Actual Amount</small></b>
+                            </th>
+                            <th>
+                              <b><small>Jv Number</small></b>
+                            </th>
+                            <th>
+                              <b><small>Jv Date</small></b>
+                            </th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr
+                            *ngFor="
+                              let summary of btcSummaryTableDetails;
+                              index as i
+                            "
+                          >
+                            <th scope="row">{{ i + 1 }}</th>
+
+                            <td>{{ summary.Expense }}</td>
+                            <td>{{ summary["BTC/BTE"] }}</td>
+                            <td>{{ summary.BTCAmount }}</td>
+                            <td>{{ summary.Amount }}</td>
+                            <th>
+                              <mat-form-field
+                                color="accent"
+                                appearance="outline"
+                              >
+                                <mat-label>Enter JV Number</mat-label>
+                                <input
+                                  matInput
+                                  type="Number"
+                                  placeholder="Mention JV Number"
+                                  formControlName="jvNumber"
+                                  [(ngModel)]="summary['JV Number']"
+                                />
+                              </mat-form-field>
+                            </th>
+                            <th>
+                              <mat-form-field
+                                color="accent"
+                                appearance="outline"
+                              >
+                                <mat-label>Jv Date</mat-label>
+                                <input
+                                  matInput
+                                  type="date"
+                                  min="{{ today | date : 'yyyy-MM-dd' }}"
+                                  formControlName="jvDate"
+                                  [(ngModel)]="summary['JV Date']"
+                                />
+                              </mat-form-field>
+                            </th>
+                          </tr>
+                        </tbody>
+                        <tfoot>
+                          <tr>
+                            <td colspan="3" class="text-right">
+                              <b><small>Total BTC Amount</small></b>
+                            </td>
+                            <td>{{ btcSummaryTotal }}</td>
+                            <td>{{ btcActualTotal }}</td>
+                          </tr>
+                        </tfoot>
+                      </table>
+                    </div>
+
+                    <div
+                      class="container table-responsive"
+                      *ngIf="bteSummaryTableDetails.length > 0"
+                    >
+                      <h5 class="font_size_27 font_weight_900">
+                        Expense Summary BTE
+                      </h5>
+                      <table class="table text-center table-bordered">
+                        <thead>
+                          <tr>
+                            <th>
+                              <b><small>S.no</small></b>
+                            </th>
+                            <th>
+                              <b><small>Expense</small></b>
+                            </th>
+                            <th>
+                              <b><small>Type</small></b>
+                            </th>
+
+                            <th>
+                              <b><small>BTE Amount</small></b>
+                            </th>
+                            <th>
+                              <b><small>Actual Amount</small></b>
+                            </th>
+                            <th>
+                              <b><small>Jv Number</small></b>
+                            </th>
+                            <th>
+                              <b><small>Jv Date</small></b>
+                            </th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr
+                            *ngFor="
+                              let summary of bteSummaryTableDetails;
+                              index as i
+                            "
+                          >
+                            <th scope="row">{{ i + 1 }}</th>
+                            <td>{{ summary.Expense }}</td>
+                            <td>{{ summary["BTC/BTE"] }}</td>
+                            <td>{{ summary.BTEAmount }}</td>
+                            <td>{{ summary.Amount }}</td>
+
+                            <th>
+                              <mat-form-field
+                                color="accent"
+                                appearance="outline"
+                              >
+                                <mat-label
+                                  >Enter JV Number
+                                  <span class="red">*</span></mat-label
+                                >
+                                <input
+                                  matInput
+                                  type="Number"
+                                  placeholder="Mention JV Number"
+                                  formControlName="jvNumber"
+                                />
+                              </mat-form-field>
+                            </th>
+                            <th>
+                              <mat-form-field
+                                color="accent"
+                                appearance="outline"
+                              >
+                                <mat-label>Jv Date</mat-label>
+                                <input
+                                  matInput
+                                  type="date"
+                                  min="{{ today | date : 'yyyy-MM-dd' }}"
+                                  formControlName="jvDate"
+                                />
+                              </mat-form-field>
+                            </th>
+                          </tr>
+                        </tbody>
+                        <tfoot>
+                          <tr>
+                            <td colspan="3" class="text-right">
+                              <b><small>Total BTC Amount</small></b>
+                            </td>
+                            <td>{{ bteSummaryTotal }}</td>
+                            <td>{{ bteActualTotal }}</td>
+                          </tr>
+                        </tfoot>
+                      </table>
+                    </div>
+                  </form>
+
+                  <div class="row margin_0">
+                    <div class="col-5"></div>
+                    <button mat-raised-button (click)="cancel()">Cancel</button>
+                    &nbsp;&nbsp;
+                    <button
+                      mat-raised-button
+                      color="primary"
+                      (click)="updatefinanceexpese()"
+                    >
+                      Submit
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <app-spinner-loader [isLoading]="loadingIndicator"></app-spinner-loader>
+  </div>
+</div>

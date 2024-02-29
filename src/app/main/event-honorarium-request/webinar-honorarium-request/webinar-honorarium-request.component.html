@@ -1,0 +1,183 @@
+<!-- Page Header -->
+<div class="main-content">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card" *ngIf="!showNoData">
+          <div class="card-header card-header-danger">
+            <h4 class="card-title">Webinar Honorarium Request</h4>
+          </div>
+          <div class="card-body">
+            <div class="container table-responsive table-bordered">
+              <table class="table text-center table-striped">
+                <thead>
+                  <tr>
+                    <th><small>S.no</small></th>
+                    <th><small>Event ID</small></th>
+                    <th><small>Event Name</small></th>
+                    <th><small>Event Type</small></th>
+                    <th><small>Venue</small></th>
+                    <th><small>Event Date</small></th>
+                  </tr>
+                </thead>
+                <tbody *ngFor="let events of eventListafter2days; index as i">
+                  <tr>
+                    <th scope="row">{{i+1}}</th>
+                    <td>{{events['EventId/EventRequestId']}}</td>
+                    <td>{{events['Event Topic']}}</td>
+                    <td>{{events.EventType}}</td>
+                    <td>{{events.VenueName}}</td>
+                    <td>{{events.EventDate}}</td>
+                  </tr>
+
+                </tbody>
+
+              </table>
+
+
+            </div>
+
+            <div class="row">
+
+              <div class="col">
+                <form [formGroup]="honorarium">
+
+                  <div class="row" *ngIf="show2DaysUpload">
+                    <div class="col m-3">
+                      <mat-label><b>Honorarium documentation not uploaded within 2 working days</b><span class="text-danger">*</span></mat-label><br>
+                      <input type="file" (change)="onFileSelected($event,'deviation','twoDaysDeviation')"
+                        [accept]="allowedTypesForHTML" formControlName="twoDaysDeviation"><br>
+                      <span class="text-danger"><small>Allowed File Types (.png, .jpg, .txt , .doc)</small></span><br>
+                      <span class="text-danger"><small>Size Should be greater than 0 KB and less than 30MB</small></span>
+                    </div>
+                  </div>
+                  <div class="col-6">
+                    <mat-form-field color="accent" appearance="outline" *ngIf="showEventSelect">
+                      <mat-label>Select Event ID</mat-label>
+                      <mat-select formControlName="EventId">
+                        <mat-option *ngFor="let selectId of eventListafter2days"
+                          value="{{selectId['EventId/EventRequestId']}}">{{selectId['EventId/EventRequestId']}}</mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+
+
+                  <div class="row"  *ngIf="showHonarariumContent">
+                    <div class="col m-3" >
+                      <mat-label>Upload Photos<span style="color: red;">*</span></mat-label><br>
+                      <input type="file" (change)="onFileSelected($event,'other','uploadPhotos')"
+                        accept=".png, .jpg" formControlName="uploadPhotos" multiple><br>
+                      <span class="text-danger"><small>Allowed File Types (.png, .jpg)</small></span><br>
+                      <span class="text-danger"><small>Size Should be greater than 0 KB and less than 30MB</small></span><br>
+                      <span class="text-success">Uploaded Photos: {{photosFiles.length}}</span>
+                    </div>
+
+                    <div class="col m-3">
+                      <mat-label>Upload Attendence</mat-label><br>
+                      <input type="file" (change)="onFileSelected($event,'other','uploadAttendecnce')"
+                      [accept]="allowedTypesForHTML" formControlName="uploadAttendecnce"><br>
+                      <span class="text-danger"><small>Allowed File Types (.png, .jpg)</small></span><br>
+                      <span class="text-danger"><small>Size Should be greater than 0 KB and less than 30MB</small></span><br>
+                    </div>
+                  </div>
+
+
+                 
+                 
+
+
+                  <div class="table-responsive "  *ngIf="showHonarariumContent">
+                    <table class="table table-bordered">
+                      <thead>
+                        <tr>
+                          <th><small>S.no</small></th>
+                          <th><small>HCP Role</small></th>
+                          <th><small>HCP Name</small></th>
+                          <th><small>MIS Code</small></th>
+                          <th><small>HCP Type</small></th>
+                          <th><small>Agreement Amount</small></th>
+                          <th><small>Is it including GST?</small></th>
+                         
+                          <th><small>Upload Speaker agreement</small></th>
+                          <th><small>Upload Honorarium invoice</small></th>
+                          <!-- <th><small>Actions</small></th> -->
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr *ngFor="let honor of honortableDetails ;index as i">
+                          <th scope="row">{{i+1}}</th>
+                          <th>{{honor.HcpRole}}</th>
+                          <th>{{honor.HCPName}}</th>
+                          <th>{{honor.MISCode}}</th>
+                          <th>{{honor['HCP Type']}}</th>
+                          <th>{{honor.AgreementAmount || honor.HonorariumAmount}}</th>
+                          <th>
+                            <div>
+
+                              <mat-radio-group (ngModelChange)="checkGST($event,gstRadio[i],i)"
+                                [ngModelOptions]="{standalone: true}" [(ngModel)]="gstRadio[i]">
+                                <mat-radio-button value="Yes">Yes</mat-radio-button>
+                                <mat-radio-button value="No">No</mat-radio-button>
+                              </mat-radio-group>
+                            </div>
+                          </th>
+                          <th>
+                            <div>
+                              <!-- <mat-label>Upload Deviation<span style="color: red;">*</span></mat-label><br> -->
+                              <input id={{i+1}} type="file" (change)="onFileSelected($event,'other','honarariumInvoice')"
+                                [accept]="allowedTypesForHTML"><br>
+                              <span class="text-danger"><small>Allowed File Types (.png, .jpg, .txt , .doc)</small></span><br>
+                              <span class="text-danger"><small>Size Should be greater than 0 KB and less than 30MB</small></span>
+                            </div>
+                          </th>
+                          <th>
+                            <div>
+                              <!-- <input type="file" style="width: 150px;" > -->
+                              <input id={{i+1}} type="file" [disabled]="disableGST[i]" (change)="onFileSelected($event,'other','speakerAggrement')"
+                                [accept]="allowedTypesForHTML"><br>
+                              <span class="text-danger"><small>Allowed File Types (.png, .jpg, .txt , .doc)</small></span><br>
+                              <span class="text-danger"><small>Size Should be greater than 0 KB and less than 30MB</small></span>
+                            </div>
+                          </th>
+                          <!-- <th>
+                            <div class="d-flex justify-content-center">
+                              <i (click)="openhonorariumUpdateModal(honorarium)" class="material-icons"
+                                style="margin-right: 5px;">edit</i>
+                              <i (click)="deletHcp(i)" class="material-icons">delete</i>
+                            </div>
+                          </th> -->
+
+
+                        </tr>
+                      </tbody>
+
+                    </table>
+                  </div>
+
+                  <div class="col-12 d-flex justify-content-center"  *ngIf="showHonarariumContent"> 
+                    <button type="submit" class="btn btn-sm btn-primary"> Reset </button>
+
+                    <button type="submit" class="btn btn-sm btn-warning" (click)="onSubmit()"> Submit </button>
+
+                  </div>
+
+                </form>
+
+              </div>
+
+        </div>
+          </div>
+        </div>
+        <div class="card" *ngIf="showNoData">
+          <div class="card-header card-header-danger">
+            <h4 class="card-title">Webinar Honorarium Request</h4>
+          </div>
+          <div class="card-body">
+            <span class="text-danger">Sorry, this event type has no event for Honorarium submission</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<app-spinner-loader [isLoading]="loadingIndicator"></app-spinner-loader>

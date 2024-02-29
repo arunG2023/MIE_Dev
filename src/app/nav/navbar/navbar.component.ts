@@ -2,7 +2,11 @@ import { Component, OnInit, ElementRef } from '@angular/core';
 import { ROUTES } from '../sidebar/sidebar.component';
 import {Location, LocationStrategy, PathLocationStrategy} from '@angular/common';
 import { Router } from '@angular/router';
-import { AuthService } from 'src/app/services/auth.service';
+import { AuthService } from 'src/app/shared/services/auth/auth.service';
+import { Config } from 'src/app/shared/config/common-config';
+import { SnackBarService } from 'src/app/shared/services/snackbar/snack-bar.service';
+// RxJs Imports
+import { Subject } from 'rxjs/internal/Subject';
 
 
 @Component({
@@ -17,15 +21,29 @@ export class NavbarComponent implements OnInit {
   private toggleButton: any;
   private sidebarVisible: boolean;
 
+  // Private
+  public username: string
+  public userrole:string
+
   constructor(location: Location,  
               private element: ElementRef, 
               private router: Router,
-              private auth: AuthService) {
+              private auth: AuthService,
+              private _snackBarService : SnackBarService) {
     this.location = location;
         this.sidebarVisible = false;
   }
 
   ngOnInit(){
+    
+    this.auth.getUserDetails$
+    .subscribe(res => {
+        if(res) {
+            this.username = res.unique_name
+            this.userrole = res.role
+        }        
+    })
+
     this.listTitles = ROUTES.filter(listTitle => listTitle);
     const navbar: HTMLElement = this.element.nativeElement;
     this.toggleButton = navbar.getElementsByClassName('navbar-toggler')[0];
@@ -122,16 +140,20 @@ export class NavbarComponent implements OnInit {
         titlee = titlee.slice( 1 );
     }
 
-    for(var item = 0; item < this.listTitles.length; item++){
-        if(this.listTitles[item].path === titlee){
-            return this.listTitles[item].title;
+    if(this.listTitles && this.listTitles.length > 0) {
+        for(var item = 0; item < this.listTitles.length; item++){
+            if(this.listTitles[item].path === titlee){
+                return this.listTitles[item].title;
+            }
         }
     }
+    
     return 'Dashboard';
   }
 
   // Log Out method
   logOut(){
       this.auth.logOut();
+      this._snackBarService.showSnackBar(Config.MESSAGE.SUCCESS.LOG_OUT, Config.SNACK_BAR.DELAY, Config.SNACK_BAR.SUCCESS);
   }
 }

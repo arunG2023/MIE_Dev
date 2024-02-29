@@ -1,0 +1,227 @@
+<p class="h5 m-t-40" *ngIf="eventType == 'stallfabric'">
+  Previous Events that are within 30 days from today
+</p>
+<div class="container table-responsive" *ngIf="eventType == 'stallfabric'">
+  <table class="table text-center table-bordered table-striped">
+    <thead>
+      <tr>
+        <th>
+          <b><small>S.no</small></b>
+        </th>
+        <th>
+          <b><small>Event ID</small></b>
+        </th>
+        <th>
+          <b><small>Event Type</small></b>
+        </th>
+        <th>
+          <b><small>Venue</small></b>
+        </th>
+        <th>
+          <b><small>Event Date</small></b>
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr
+        *ngFor="
+          let event of eventsWithin30Days
+            | paginate : { itemsPerPage: pageRowLimit, currentPage: page }
+        "
+      >
+        <th scope="row">{{ event.row }}</th>
+        <td>{{ event["EventId/EventRequestId"] }}</td>
+        <td>{{ event.EventType }}</td>
+        <td>{{ event.VenueName }}</td>
+        <td>{{ event.EventDate }}</td>
+      </tr>
+      <tr>
+        <td colspan="5" class="pagination-row">
+          <pagination-controls
+            (pageChange)="pageChanged($event)"
+          ></pagination-controls>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="container table-responsive" *ngIf="eventType == 'honararium'">
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th><small>S.no</small></th>
+        <th><small>Event ID</small></th>
+        <th><small>Event Name</small></th>
+        <th><small>Event Type</small></th>
+        <th><small>Venue</small></th>
+        <th><small>Event Date</small></th>
+        <th><small>Honorarium</small></th>
+        <th><small>Post Event</small></th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- <tr  *ngFor="
+      let events of after30DaysList
+        | paginate : { itemsPerPage: pageRowLimit, currentPage: page} ; index as i 
+    "> -->
+      <tr
+        *ngFor="
+          let events of allEventList
+            | paginate : { itemsPerPage: pageRowLimit, currentPage: page };
+          index as i
+        "
+      >
+        <td>{{ i + 1 }}</td>
+        <td>{{ events["EventId/EventRequestId"] }}</td>
+        <td>{{ events["Event Topic"] }}</td>
+        <td>{{ events.EventType }}</td>
+        <td>{{ events.VenueName }}</td>
+        <td>{{ events.EventDate }}</td>
+        <td>
+          <span
+            *ngIf="events.EventType == 'Class I' || events.EventType == 'Webinar'"
+          >
+          <span
+            class="text-primary pointer"
+            *ngIf="
+              events['Honorarium Request Status'] == 'Waiting for Finance Accounts Approval' || events['Honorarium Request Status'] == 'Rejected by Finance Accounts'"
+            (click)="honorariumSettlement(events)"
+            >Honorarium Request</span
+          >
+          <span
+            class="pointer"
+            *ngIf="  events['Honorarium Request Status'] !== 'Waiting for Finance Accounts Approval'  && events['Honorarium Request Status'] !== 'Rejected by Finance Accounts'">N/A</span
+          >
+          </span>
+
+          <span
+          *ngIf="
+            events.EventType == 'Medical Utility' ||
+            events.EventType == 'Stall Fabrication' ||
+            events.EventType == 'HCP Consultants'
+          "
+        >
+          <span>Not Applicable</span>
+        </span>
+        </td>
+        <td>
+          <span
+          class="text-primary pointer"
+            *ngIf="events['Post Event Request status'] == 'Waiting for Finance Accounts Approval'  || events['Post Event Request status'] == 'Rejected by Finance Accounts'"
+            (click)="eventSettlement(events)"
+            >Event Settlement Request</span
+          >
+          <span
+            class="pointer"
+            *ngIf="events['Post Event Request status'] !== 'Waiting for Finance Accounts Approval'  && events['Post Event Request status'] !== 'Rejected by Finance Accounts'"
+            >N/A</span
+          >
+        </td>
+      </tr>
+
+      <tr>
+        <td colspan="5" class="pagination-row">
+          <pagination-controls
+            (pageChange)="pageChanged($event)"
+          ></pagination-controls>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="container table-responsive" *ngIf="eventType == 'financeTreasury'">
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th><small>S.no</small></th>
+        <th><small>Event ID</small></th>
+        <th><small>Event Topic</small></th>
+        <th><small>Event Type</small></th>
+        <!-- <th><small>Venue</small></th> -->
+        <th><small>Event Date</small></th>
+        <!-- <th><small>Pre Event</small></th> -->
+        <th><small>Honorarium</small></th>
+        <th><small>Post Event</small></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr
+        *ngFor="
+          let event of allEventList
+            | paginate : { itemsPerPage: pageRowLimit, currentPage: page };
+          index as i
+        "
+      >
+        <td>{{ i + 1 }}</td>
+        <td>{{ event["EventId/EventRequestId"] }}</td>
+        <td>{{ event["Event Topic"] }}</td>
+        <td>{{ event.EventType }}</td>
+        <td>{{ event.EventDate }}</td>
+        <!-- <td>
+            <span (click)="onEventClick(event,'Pre Event')" class="text-primary" *ngIf="event['PRE-Marketing Head Approval'] == 'Approved'" style="cursor: pointer;">Advance Request</span>
+            <span *ngIf="event['PRE-Marketing Head Approval'] !== 'Approved'">N/A</span>
+        </td> -->
+        <td>
+          <span
+            *ngIf="event.EventType == 'Class I' || event.EventType == 'Webinar'"
+          >
+            <span
+              (click)="onEventClick(event, 'Honorarium')"
+              class="text-primary"
+              *ngIf="
+                event['Honorarium Request Status'] ==
+                'Waiting for Finance Treasury Approval' || event['Honorarium Request Status'] == 'Rejected by Finance Treasury'
+              "
+              style="cursor: pointer"
+              >Honorarium Request</span
+            >
+            <span
+              *ngIf="
+                event['Honorarium Request Status'] !==
+                'Waiting for Finance Treasury Approval' && event['Honorarium Request Status'] !== 'Rejected by Finance Treasury'"
+              >N/A</span
+            >
+          </span>
+          <span
+            *ngIf="
+              event.EventType == 'Medical Utility' ||
+              event.EventType == 'Stall Fabrication' ||
+              event.EventType == 'HCP Consultants'
+            "
+          >
+            <span>Not Applicable</span>
+          </span>
+        </td>
+        <td>
+          <span
+            (click)="onEventClick(event, 'Post Settlement')"
+            class="text-primary"
+            *ngIf="
+              event['Post Event Request status'] ==
+              'Waiting for Finance Treasury Approval'
+            "
+            style="cursor: pointer"
+            >Event Settlement Request</span
+          >
+          <span
+            *ngIf="
+              event['Post Event Request status'] !==
+              'Waiting for Finance Treasury Approval'
+            "
+            >N/A</span
+          >
+        </td>
+      </tr>
+      <tr>
+        <td colspan="10" class="pagination-row">
+          <pagination-controls
+            (pageChange)="pageChanged($event)"
+          ></pagination-controls>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+<app-spinner-loader [isLoading]="loadingIndicator"></app-spinner-loader>

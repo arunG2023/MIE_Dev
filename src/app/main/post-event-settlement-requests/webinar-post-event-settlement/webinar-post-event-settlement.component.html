@@ -1,0 +1,108 @@
+<div class="main-content">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card">
+          <div class="card-header card-header-danger">
+            <h4 class="card-title">Post Event Settlement request</h4>
+          </div>
+          <div class="card-body">
+            <div class="row">
+              <div class="col-md-12">
+                <div class="card ">
+                  <div class="card-body" *ngIf="!showNoData">
+
+                    <div class="row">
+
+
+                      <div class="container table-responsive">
+                        <table class="table table-striped">
+                          <thead>
+                            <tr>
+                              <th><small>S.no</small></th>
+                              <th><small>Event ID</small></th>
+                              <th><small>Event Name</small></th>
+                              <th><small>Event Type</small></th>
+                              <!-- <th><small>Venue</small></th> -->
+                              <th><small>Event Date</small></th>
+                            </tr>
+                          </thead>
+                          <tbody *ngFor="let events of after30DaysList; index as i">
+                            <tr>
+                              <th scope="row">{{i+1}}</th>
+                              <td>{{events['EventId/EventRequestId']}}</td>
+                              <td>{{events['Event Topic']}}</td>
+                              <td>{{events.EventType}}</td>
+                              <!-- <td>{{events.VenueName}}</td> -->
+                              <td>{{events.EventDate}}</td>
+                            </tr>
+
+                          </tbody>
+
+                        </table>
+                      </div>
+
+                      <div class="col mt-2" *ngIf="show30DaysUpload">
+                        <form [formGroup]="deviationForm">
+                          <mat-label><b>Upload Deviation<span style="color: red;">*</span></b></mat-label><br>
+                          <div class="m-2">
+                            <input type="file" id="thirtyDaysUpload"
+                              (change)="onFileSelected($event,'deviation','thirtyDaysUpload')"
+                              formControlName="thirtyDaysUpload" [accept]="allowedTypesForHTML"><br>
+                            <span class="text-danger"><small>Allowed File Types (.png, .jpg, .txt ,
+                                .doc)</small></span><br>
+                            <span class="text-danger"><small>Size Should be greater than 0 KB and less than
+                                30MB</small></span>
+                          </div>
+                        </form>
+                      </div>
+
+                      <div class="col-6">
+                        <mat-form-field color="accent" appearance="outline" *ngIf="showEventSelect">
+                          <mat-label>Select Event ID</mat-label>
+                          <mat-select (ngModelChange)="onEventSelect($event)" [ngModelOptions]="{standalone: true}"
+                            [(ngModel)]="selectedEvent">
+                            <mat-option *ngFor="let selectId of after30DaysList"
+                              value="{{selectId['EventId/EventRequestId']}}">{{selectId['EventId/EventRequestId']}}</mat-option>
+                          </mat-select>
+                        </mat-form-field>
+                      </div>
+
+                      <div class="container" *ngIf="showPostEventContent">
+
+                        <div class="col text-danger">
+                          <h4><b>Invitees Participation</b> (<button mat-button  (click)="openAddInviteeModal()">Add Invitee</button>)</h4>
+                        </div>
+
+
+                        <app-post-event-settlement-invitees-summary></app-post-event-settlement-invitees-summary>
+                       
+                          <div class="col text-danger">
+                            <h4><b>Expense Details</b></h4>
+                          </div>
+                          <app-post-event-settlement-expense-summary></app-post-event-settlement-expense-summary>
+              
+                            <div class="col-12 d-flex justify-content-center">
+                              <button class="btn btn-primary btn-sm">Reset</button>
+                              <button (click)="postEventSubmit()" class="btn btn-success btn-sm">Submit</button>
+                            </div>
+
+
+                          </div>
+                       
+                      </div>
+
+                    </div>
+                    <div class="card-body" *ngIf="showNoData">
+                      <span class="text-danger">Sorry, this event type has no events for Event Settlement submission</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+<app-spinner-loader [isLoading]="loadingIndicator"></app-spinner-loader>

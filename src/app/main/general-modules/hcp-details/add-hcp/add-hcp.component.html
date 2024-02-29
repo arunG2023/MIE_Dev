@@ -1,0 +1,48 @@
+<div class="main-content">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="card">
+            <div class="card-header card-header-danger">
+                <h4 class="card-title">HCP Creation</h4> 
+            </div>            
+            
+            <div class="card-body">
+              <div class="row">
+                <div class="col-md-12">
+                    <div class="card ">
+                        <div class="card-body">
+                            <div class="row" >
+                                <div class="col">
+                                    <div class="download-content">
+                                        <a href="../../../../../assets/downloads/HCPmas.xlsx" target="_blank">Click here to download HCP upload format</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <form [formGroup]="addHcpForm" (ngSubmit)="submit()">
+                                <div class="row" >
+                                    <div class="col">
+                                        <div class="justify-content-center">
+                                          <mat-label>Upload HCP's lists Excel Sheet</mat-label><br>
+                                          <input type="file" (change)="FileUpload($event.target.files)" accept=".xls, .xlsx" formControlName="hcpUpload"><br>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+			                        <div class="col">
+			                            <div class="col-12 d-flex justify-content-center">
+			                                <button class="btn btn-success btn-md" >Submit</button>
+			                            </div>
+			                        </div>
+			                    </div>
+                        	</form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<app-spinner-loader [isLoading]="loadingIndicator"></app-spinner-loader>

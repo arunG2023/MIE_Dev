@@ -1,0 +1,11 @@
+.trainerCriterias-radio-group {
+  display: inline-flex;
+  flex-direction: column;
+}
+
+.trainerCriterias-radio-button {
+  margin: 5px;
+}
+::ng-deep .mat-radio-label {
+  align-items: inherit!important;
+}

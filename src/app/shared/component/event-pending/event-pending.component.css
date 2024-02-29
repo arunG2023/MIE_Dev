@@ -1,0 +1,23 @@
+.m-t-40{
+    margin-top: 40px !important;
+}
+.pagination-row {
+    text-align: right;
+  }
+  
+  .pointer{
+    cursor: pointer !important;
+  }
+
+  table.table-bordered > thead > tr > th {
+    border:1px solid black;
+  }
+  table.table-bordered > tbody > tr > th,td {
+    border:1px solid rgb(209, 162, 162);
+  }
+  table.table-striped > thead > tr > th {
+    border:1px solid black;
+  }
+  table.table-striped > tbody > tr > th,td {
+    border:1px solid rgb(209, 162, 162);
+  }

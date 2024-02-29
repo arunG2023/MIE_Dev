@@ -1,0 +1,46 @@
+.color_red{
+    color: red !important;
+}
+
+.pointer{
+    cursor: pointer !important;
+}
+
+.m-r-5{
+    margin-right: 5px !important;
+}
+
+.m-t-52{
+    margin-top: 52px !important;
+}
+.mat-form-field-placeholder-required .mat-form-field-empty.mat-form-field-label {
+  color: red;
+}
+.expense-container{
+    border: 1px solid black;
+    padding:10px;
+    margin-bottom:10px;
+}
+
+/* Style for the table and cells */
+table.table-bordered > thead > tr > th {
+    border:1px solid black;
+  }
+  table.table-bordered > tbody > tr > th,td {
+   /* border:1px solid rgb(209, 162, 162);*/
+    border:1px solid black !important;
+  }
+  table.table-striped > thead > tr > th {
+    border:1px solid black !important;
+  }
+  table.table-striped > tbody > tr > th,td {
+   /* border:1px solid rgb(209, 162, 162);*/
+    border:1px solid black !important;
+  }
+
+
+th{
+   text-align: center !important;
+   color: black;
+    border:1px solid black !important;
+}

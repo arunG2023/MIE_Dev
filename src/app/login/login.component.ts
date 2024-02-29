@@ -7,9 +7,11 @@ import {CredentialResponse,PromptMomentNotification} from 'google-one-tap'
 import { Component, OnInit, NgZone } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { AuthService } from 'src/app/services/auth.service';
-import { UserServiceService } from 'src/app/services/user-service.service';
+import { AuthService } from '../shared/services/auth/auth.service';
+import { UserUtility } from '../shared/services/user-utility/user-utility.service';
 import { environment } from 'src/environments/environment';
+import { Config } from '../shared/config/common-config';
+import { SnackBarService } from '../shared/services/snackbar/snack-bar.service';
 
 @Component({
   selector: 'app-login',
@@ -23,20 +25,26 @@ export class LoginComponent implements OnInit {
   isInvalidCredentials: boolean = false;
   isFormError : boolean = false;
 
-  constructor(private userService: UserServiceService,
+  public loadingIndicator = false
+
+  constructor(private userService: UserUtility,
               private authService: AuthService, 
               private router: Router,
-              private _ngZone:NgZone) { 
+              private _ngZone:NgZone,
+              private _snackBarService : SnackBarService) { }
+
+  public ngOnInit(): void {   
     this.login = new FormGroup({
       emailId : new FormControl('', [Validators.required,Validators.email]),
       password : new FormControl('', [Validators.required,Validators.minLength(8)])
     })
+    // this.googleSignOn();
   }
 
-  loginUser(){
+ public loginUser(){
+    this.loadingIndicator = true
     
-  
-    if(this.login.valid){
+      if(this.login.valid){
 
       const loginRequestBody = {
         "emailId": this.login.value.emailId,
@@ -45,20 +53,24 @@ export class LoginComponent implements OnInit {
    
       this.userService.loginUser(loginRequestBody).subscribe(
         res => {
-          console.log(res)
+          this.loadingIndicator = false
           if(res.token){
             this.isInvalidCredentials = false
             this.authService.storeToken(res.token);
             this.router.navigate(['dashboard'])
+            this._snackBarService.showSnackBar(Config.MESSAGE.SUCCESS.LOGIN_SUCCESS, Config.SNACK_BAR.DELAY, Config.SNACK_BAR.SUCCESS);
           }
         },
         err => {
+          this.loadingIndicator = false
           if(err.error && typeof(err.error) == 'string'){
-            alert(err.error)
+            // alert(err.error)
+            this._snackBarService.showSnackBar(Config.MESSAGE.ERROR.INVALID_CREDENTIAL, Config.SNACK_BAR.DELAY, Config.SNACK_BAR.ERROR);
             this.isInvalidCredentials = true;
           }
           else{
-            alert("Unexpected Error Happened")
+            // alert("Unexpected Error Happened")
+            this._snackBarService.showSnackBar(Config.MESSAGE.ERROR.SERVER_ERR, Config.SNACK_BAR.DELAY, Config.SNACK_BAR.ERROR);
           }
           }
         
@@ -68,20 +80,17 @@ export class LoginComponent implements OnInit {
     
     }
     else{
+      this.loadingIndicator = false
       this.isFormError = true
     }
   }
 
-  ngOnInit(): void {
-    
-   
-    this.googleSignOn();
-  }
+  
 
   // Implementation of google single sign on
 
   private googleClientId : string = environment.googleClientId;
-  googleSignOn(){
+  private googleSignOn(){
     {
       google.accounts.id.initialize({
         client_id: this.googleClientId,
@@ -107,15 +116,18 @@ export class LoginComponent implements OnInit {
       this.isInvalidCredentials = false;
       this.authService.storeToken(x.token);
       this._ngZone.run(() => {
+        this._snackBarService.showSnackBar(Config.MESSAGE.SUCCESS.LOGIN_SUCCESS, Config.SNACK_BAR.DELAY, Config.SNACK_BAR.SUCCESS);
          this.router.navigate(['dashboard']);
       })},
       (error:any) => {
         if(error.error && typeof(error.error) == 'string'){
-          alert(error.error)
+          // alert(error.error)
+          this._snackBarService.showSnackBar(Config.MESSAGE.ERROR.INVALID_CREDENTIAL, Config.SNACK_BAR.DELAY, Config.SNACK_BAR.ERROR);
           this.isInvalidCredentials = true;
         }
         else{
-          alert("Unexpected Error Happened")
+          // alert("Unexpected Error Happened")
+          this._snackBarService.showSnackBar(Config.MESSAGE.ERROR.SERVER_ERR, Config.SNACK_BAR.DELAY, Config.SNACK_BAR.ERROR);
         }
         }
         );

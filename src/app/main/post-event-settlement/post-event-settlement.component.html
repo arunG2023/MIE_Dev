@@ -1,0 +1,54 @@
+<!-- Page Header -->
+<div class="main-content">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card">
+          <div class="card-header card-header-danger">
+            <h4 class="card-title">Post Event Settlement Request</h4>
+          </div>
+
+          <!-- <app-class1-post-event-settlement *ngIf="selectedEvent == 'EVTC1'"></app-class1-post-event-settlement> -->
+
+
+          <app-stall-posteventsettlement *ngIf="selectedEvent == 'EVTSF'"></app-stall-posteventsettlement>
+          <!-- <app-webinar-post-event-settlement *ngIf="selectedEvent == 'EVTWEB'"></app-webinar-post-event-settlement> -->
+          <!-- Page Body -->
+          <div class="card-body" *ngIf="selectedEvent=='select'">
+
+
+            <div class="row">
+              <div class="col-md-12">
+                <div class="card">
+
+                  <div class="card-body">
+                    <!-- DropDown to select the event type -->
+                    <div class="row">
+                      <div class="col-md-6">
+                        <mat-form-field color="accent" appearance="outline" class="example-full-width">
+                          <mat-label>Select Event Type</mat-label>
+                          <mat-select (ngModelChange)="onEventSelect($event)" required [(ngModel)]="selectedEvent">
+                            <mat-option *ngFor="let event of eventList"
+                              value="{{event.EventTypeId}}">{{event.EventType}}</mat-option>
+
+                          </mat-select>
+                        </mat-form-field>
+                      </div>
+                    </div>
+
+
+                    <div
+                      *ngIf="selectedEvent !== 'select' && selectedEvent !=='EVTC1' && selectedEvent !== 'EVTSF' && selectedEvent !== 'EVTWEB'">
+                      OOPS!!!! No other Event Forms yet developed
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+
+            </div>
+
+          </div>
+        </div>
+      </div>
+      <app-spinner-loader [isLoading]="loadingIndicator"></app-spinner-loader>

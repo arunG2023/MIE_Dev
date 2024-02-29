@@ -1,0 +1,143 @@
+<div class="container table-responsive" *ngIf="hcpInvitees.length>0">
+    <div class="col d-flex justify-content-center text-danger">
+        <h4><b>HCP Invitees</b></h4>
+    </div>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th><small>S.no</small></th>
+                <th><small>Is Present?</small></th>
+                <th><small>HCP Name</small></th>
+                <th><small>MIS Code</small></th>
+                <th><small>Local Conveyance Applicable</small></th>
+                <th><small>BTC/BTE</small></th>
+                <th><small>Local Conveyance Amount Including Tax</small></th>
+                <th><small>Actual Amount</small></th>
+                <!-- <th><small>Actions</small></th> -->
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let invitee of hcpInvitees; index as i">
+                <td>{{i+1}}</td>
+                <td><input type="checkbox" (ngModelChange)="onAttendanceCheckBoxChange($event)" [ngModelOptions]="{standalone: true}"  [(ngModel)]="invitee.isPresent"></td>
+                <td>{{invitee.InviteeName}}</td>
+                <td>{{invitee.MISCode || 'N/A'}}</td>
+                <td>{{invitee.LocalConveyance}}</td>
+                <td>{{invitee.BtcorBte || 'N/A'}}</td>
+                <td>{{invitee.LcAmount}}</td>
+                <td><input type="number" (ngModelChange)="onHcpInviteesActualAmountChanges($event,invitee,i)" [ngModelOptions]="{standalone: true}"  [(ngModel)]="invitee.actualExpense"></td>
+                <!-- <td style="cursor: pointer;">
+                    <button mat-icon-button color="warn" (click)="openDeleteInviteeConfirmationModal(invitee)"><i class="material-icons">delete</i></button> </td> -->
+            </tr>
+
+        </tbody>
+
+    </table>
+</div>
+
+<div class="container table-responsive" *ngIf="menariniInvitees.length > 0">
+    <div class="col d-flex justify-content-center text-danger">
+        <h4><b>Menarini Employees Invitees</b></h4>
+    </div>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th><small>S.no</small></th>
+                <th><small>Is Present?</small></th>
+                <th><small>Employee Name</small></th>
+                <th><small>Employee Code</small></th>
+                <th><small>Local Conveyance Applicable</small></th>
+                <th><small>BTC/BTE</small></th>
+                <th><small>Local Conveyance Amount Including Tax</small></th>
+                <th><small>Actual Amount</small></th>
+                <!-- <th><small>Actions</small></th> -->
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let invitee of menariniInvitees; index as i">
+                <td>{{i+1}}</td>
+                <td><input type="checkbox" (ngModelChange)="onAttendanceCheckBoxChange($event)" [ngModelOptions]="{standalone: true}"  [(ngModel)]="invitee.isPresent"></td>
+                <td>{{invitee.InviteeName}}</td>
+                <td>{{invitee.MISCode || 'N/A'}}</td>
+                <td>{{invitee.LocalConveyance}}</td>
+                <td>{{invitee.BtcorBte || 'N/A'}}</td>
+                <td>{{invitee.LcAmount}}</td>
+                <td><input type="number" (ngModelChange)="onMenariniInviteesActualAmountChanges($event,invitee,i)" [ngModelOptions]="{standalone: true}"  [(ngModel)]="invitee.actualExpense"></td>
+                <!-- <td style="cursor: pointer;">
+                    <button mat-icon-button color="warn" (click)="openDeleteInviteeConfirmationModal(invitee)"><i class="material-icons">delete</i></button> </td> -->
+            </tr>
+
+        </tbody>
+
+    </table>
+</div>
+
+<div class="container table-responsive" *ngIf="otherInvitees.length > 0">
+    <div class="col d-flex justify-content-center text-danger">
+        <h4><b>Non HCP Invitees</b></h4>
+    </div>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th><small>S.no</small></th>
+                <th><small>Is Present?</small></th>
+                <th><small>HCP Name</small></th>
+                <th><small>Specicality</small></th>
+                <th><small>HCP Type</small></th>
+                <th><small>Local Conveyance Applicable</small></th>
+                <th><small>BTC/BTE</small></th>
+                <th><small>Local Conveyance Amount Including Tax</small></th>
+                <th><small>Actual Amount</small></th>
+                <!-- <th><small>Actions</small></th> -->
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let invitee of otherInvitees; index as i">
+                <td>{{i+1}}</td>
+                <td><input type="checkbox" (ngModelChange)="onAttendanceCheckBoxChange($event)" [ngModelOptions]="{standalone: true}"  [(ngModel)]="invitee.isPresent"></td>
+                <td>{{invitee.InviteeName}}</td>
+                <td>{{invitee.speciality || 'N/A'}}</td>
+                <td>{{invitee.hcpType || 'N/A'}}</td>
+                <td>{{invitee.LocalConveyance}}</td>
+                <td>{{invitee.BtcorBte || 'N/A'}}</td>
+                <td>{{invitee.LcAmount}}</td>
+                <td><input type="number" (ngModelChange)="onOtherHcpInviteesActualAmountChanges($event,invitee,i)" [ngModelOptions]="{standalone: true}"  [(ngModel)]="invitee.actualExpense"></td>
+                <!-- <td style="cursor: pointer;">
+                    <button mat-icon-button color="warn" (click)="openDeleteInviteeConfirmationModal(invitee)"><i class="material-icons">delete</i></button> </td> -->
+            </tr>
+
+        </tbody>
+
+    </table>
+</div>
+
+<div class="container">
+    <form [formGroup]="inviteeForm">
+        <div class="row m-2">
+            <div class="col-md-6 m-1">
+                <mat-form-field color="accent" appearance="outline">
+                    <mat-label><b>Total Attendance</b></mat-label>
+                    <input type="number" matInput placeholder="Enter Expense amount" [value]="totalAttendance" formControlName="totalInvitees">
+                </mat-form-field>
+            </div>
+            <div class="col" *ngIf="showAttendanceDeviation">
+                <mat-label><b>Less than 5 attendees excluding speaker<span
+                            style="color: red;">*</span></b></mat-label><br>
+                <div class="m-2">
+                    <input type="file"  (change)="onFileSelected($event,'deviation','inviteeDeviation')" [accept]="allowedTypesForHTML"
+                        formControlName="inviteeDeviation"><br>
+                    <span class="text-danger"><small>Allowed File Types (.png, .jpg, .txt , .doc)</small></span><br>
+                    <span class="text-danger"><small>Size Should be greater than 0 KB and less than 30MB</small></span>
+                </div>
+            </div>
+        </div>
+    </form>
+
+    <div *ngIf="showAttendancePdf">
+        <mat-label>Attendance Sheet</mat-label>
+        <iframe style="border: 1px solid red;" width="100%" height="200" frameBorder="0"
+            [src]="attendancePdfIframeUrl"></iframe>
+        <!-- <embed  width="100%" height="200" [src]="vendorChequeIframeUrl" type="file"> -->
+    </div>
+</div>
+<app-spinner-loader [isLoading]="loadingIndicator"></app-spinner-loader>

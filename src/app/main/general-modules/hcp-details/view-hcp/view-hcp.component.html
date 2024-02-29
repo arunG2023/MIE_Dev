@@ -1,0 +1,88 @@
+<div>
+    <mat-form-field class="search-box">
+      <input matInput  [(ngModel)]="searchInput" placeholder="Search..." (input)="filterHcpMasterList($event.target.value)">
+      <button mat-icon-button  *ngIf="!searchInput" class="search-icon">
+        <mat-icon>search</mat-icon>
+      </button>
+      <!-- Clear button -->
+      <button mat-icon-button *ngIf="searchInput" (click)="clearSearchInput()" class="search-icon">
+        <mat-icon>clear</mat-icon>
+      </button>   
+    </mat-form-field>
+
+    <div class="row">
+        
+        <div class="col-md-12">
+            <div class="container table-responsive">
+                <!-- <input type="text" [(ngModel)]="searchText" placeholder="search"> -->
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th><small>S No.</small></th>
+                            <th><small>HCP Name</small></th>
+                            <th><small>First Name</small></th>
+                            <th><small>Last Name</small></th>
+                            <th><small>MIS Code</small></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let event of hcpMasterListDataSourceFiltered | paginate: { itemsPerPage: pageRowLimit, currentPage: page } ">
+                            <td scope="row">{{event.row}}</td>
+                            <td>{{event['HCPName']}}</td>
+                            <td>{{event['FirstName']}}</td>
+                            <td>{{event['LastName']}}</td>
+                            <td>{{event['MisCode']}}</td>
+                        </tr>
+                        <tr>
+                            <td colspan="6" class="pagination-row"><pagination-controls (pageChange)="pageChanged($event)"></pagination-controls></td>
+                        </tr>
+                    </tbody>
+
+                </table>
+            </div>
+        </div>
+    </div>
+  
+    <!-- <div class="table-responsive table-bordered ">
+  
+        <table mat-table [dataSource]="hcpMasterListDataSource" class="mat-elevation-z8 table text-center table-striped overflow-hidden">
+    
+        <ng-container matColumnDef="sno">
+            <th mat-header-cell *matHeaderCellDef> S.No </th>
+            <td mat-cell *matCellDef="let element; let i = index"> {{ i + 1 }} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="HCPName">
+            <th mat-header-cell *matHeaderCellDef> HCP Name </th>
+            <td mat-cell *matCellDef="let element"> {{ element.HCPName }} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="FirstName">
+            <th mat-header-cell *matHeaderCellDef> First Name </th>
+            <td mat-cell *matCellDef="let element"> {{ element.FirstName === null ? '' : element.FirstName }} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="LastName">
+            <th mat-header-cell *matHeaderCellDef> Last Name </th>
+            <td mat-cell *matCellDef="let element"> {{ element.LastName === null ? '' : element.LastName }} </td>
+        </ng-container>
+    
+        <ng-container matColumnDef="misCode">
+            <th mat-header-cell *matHeaderCellDef> MIS Code </th>
+            <td mat-cell *matCellDef="let element"> {{ element.MisCode }} </td>
+        </ng-container>
+    
+        <ng-container *matNoDataRow>
+            <tr>
+            <td [attr.colspan]="displayedColumns.length" class="no-data-row">No records found</td>
+            </tr>
+        </ng-container>
+    
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns; let i = index" [ngClass]="{ 'even-row': i % 2 === 0, 'odd-row': i % 2 !== 0 }"></tr>
+        </table>
+  </div> -->
+
+</div>
+
+<app-spinner-loader [isLoading]="loadingIndicator"></app-spinner-loader>

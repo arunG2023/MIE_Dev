@@ -1,0 +1,84 @@
+
+<div>
+	  <mat-form-field class="search-box">
+	    <input matInput  [(ngModel)]="searchInput" (input)="_applySavedTrainerCodesFilter($event.target.value)" placeholder="Search...">
+		<button mat-icon-button  *ngIf="!searchInput" class="search-icon">
+	      <mat-icon>search</mat-icon>
+	    </button>
+	    <!-- Clear button -->
+	    <button mat-icon-button *ngIf="searchInput" (click)="clearSearchInput()" class="search-icon">
+	      <mat-icon>clear</mat-icon>
+	    </button>	    
+	  </mat-form-field>
+
+    <div class="table-responsive table-bordered ">
+		  <table mat-table [dataSource]="savedTrainerCodesDataSource" class="mat-elevation-z8 table text-center table-striped overflow-hidden">
+
+		    <!-- Define columns -->
+		    <ng-container matColumnDef="sno">
+		      <th mat-header-cell *matHeaderCellDef> S.no </th>
+      		  <td mat-cell *matCellDef="let element; let i = index"> {{ paginator.pageIndex * paginator.pageSize + i + 1 }} </td>
+		    </ng-container>
+
+		    <ng-container matColumnDef="misCode">
+		      <th mat-header-cell *matHeaderCellDef> MIS Code </th>
+		      <td mat-cell *matCellDef="let element"> {{ element.MisCode }} </td>
+		    </ng-container>
+
+		    <ng-container matColumnDef="trainerName">
+		      <th mat-header-cell *matHeaderCellDef> Trainer Name </th>
+		      <td mat-cell *matCellDef="let element"> {{ element['Trainer Name'] }} </td>
+		    </ng-container>
+
+		    <ng-container matColumnDef="specialty">
+		      <th mat-header-cell *matHeaderCellDef> Specialty </th>
+		      <td mat-cell *matCellDef="let element"> {{ element.Speciality }} </td>
+		    </ng-container>
+
+		    <ng-container matColumnDef="qualification">
+		      <th mat-header-cell *matHeaderCellDef> Qualification </th>
+		      <td mat-cell *matCellDef="let element"> {{ element.Qualification }} </td>
+		    </ng-container>
+
+		    <ng-container matColumnDef="trainerType">
+		      <th mat-header-cell *matHeaderCellDef> Trainer Type </th>
+		      <td mat-cell *matCellDef="let element"> {{ element['Trainer Type'] }} </td>
+		    </ng-container>
+
+		    <ng-container matColumnDef="country">
+		      <th mat-header-cell *matHeaderCellDef> Country </th>
+		      <td mat-cell *matCellDef="let element"> {{ element.Country }} </td>
+		    </ng-container>
+
+		    <ng-container matColumnDef="trainerCode">
+		      <th mat-header-cell *matHeaderCellDef> Trainer Code </th>
+		      <td mat-cell *matCellDef="let element"> {{ element['Trainer Code'] }} </td>
+		    </ng-container>
+
+		    <ng-container matColumnDef="trainerCategory">
+		      <th mat-header-cell *matHeaderCellDef> Trainer Category </th>
+		      <td mat-cell *matCellDef="let element"> {{ element['Trainer Category'] }} </td>
+		    </ng-container>
+
+		    <ng-container matColumnDef="actions">
+		      <th mat-header-cell *matHeaderCellDef> Actions </th>
+		      <td mat-cell *matCellDef="let element">
+		        <button mat-icon-button (click)="editTrainerCode(element)">Edit</button>
+		        <!-- <button mat-icon-button (click)="deleteTrainerCode(element)">Delete</button> -->
+		      </td>
+		    </ng-container>
+
+		    <!-- No records found row -->
+		    <ng-container *matNoDataRow>
+		      <tr>
+		        <td [attr.colspan]="displayedColumns.length" class="no-data-row">No records found</td>
+		      </tr>
+		    </ng-container>
+
+		    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+		    <tr mat-row *matRowDef="let row; columns: displayedColumns; let i = index" [ngClass]="{ 'even-row': i % 2 === 0, 'odd-row': i % 2 !== 0 }"></tr>
+		  </table>
+  		  <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+		</div>
+</div>
+<app-spinner-loader [isLoading]="loadingIndicator"></app-spinner-loader>

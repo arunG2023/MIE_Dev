@@ -1,49 +1,54 @@
-<form [formGroup]="updateForm" *ngIf="!showBrandForm && !showHCPForm && !showInviteeForm && !showExpenseForm && !showhonorariumForm" >
+<form [formGroup]="updateForm"
+    *ngIf="!showBrandForm && !showHCPForm && !showInviteeForm &&  !inviteeUpdateForMenarini && !showInviteeFormForNonHcp &&
+    !showhonorariumForm && !summaryPreview && !showExpenseForm && !showstallExpenseForm && !HcpUpdateExpense && !hcpupdatedetails && !showHcpPreview 
+    && !showBenificiaryUpdateForm && !showInternationalBenificiaryUpdateForm ">
+
     <mat-form-field appearance="outline">
         <mat-label>First Name</mat-label>
-        <input  matInput placeholder="Prepopulate from Sheet" formControlName="firstName" >
+        <input matInput placeholder="Enter First Name" formControlName="firstName">
     </mat-form-field>
     <mat-form-field appearance="outline">
         <mat-label>Last Name</mat-label>
-        <input  matInput placeholder="Prepopulate from Sheet" formControlName="lastName">
+        <input matInput placeholder="Enter Last Name" formControlName="lastName">
     </mat-form-field>
     <mat-form-field appearance="outline">
         <mat-label>User Name</mat-label>
-        <input  matInput placeholder="Prepopulate from Sheet" formControlName="userName" >
+        <input matInput placeholder="Enter User Name" formControlName="userName">
     </mat-form-field>
     <mat-form-field appearance="outline">
         <mat-label>Role Name</mat-label>
-       
-        <mat-select formControlName="roleName" >
+
+        <mat-select formControlName="roleName">
             <mat-option *ngFor="let role of roleDetails" value={{role.RoleId}}>{{role.RoleName}}</mat-option>
         </mat-select>
     </mat-form-field>
-    
+
     <div class="d-flex justify-content-center align-items-center">
-        <button mat-raised-button color="primary" (click)="submit()" type="submit" class="mr-2" >Update</button>
-        <button mat-raised-button color="warn"  (click)="close()">Cancel</button>
+        <button mat-raised-button color="primary" (click)="submit()" type="submit" class="mr-2">Update</button>
+        <button mat-raised-button color="warn" (click)="close()">Cancel</button>
     </div>
 </form>
 
-<form [formGroup]="brandUpdateForm"  *ngIf="showBrandForm">
+<form [formGroup]="brandUpdateForm" *ngIf="showBrandForm">
     <mat-form-field appearance="outline">
         <mat-label>Brand Name</mat-label>
-        <input  matInput placeholder="Prepopulate from Sheet" formControlName="brandName" >
+        <input matInput placeholder="Enter Brand Name" formControlName="brandName">
     </mat-form-field>
     <mat-form-field appearance="outline">
         <mat-label>Percentage Allocation</mat-label>
-        <input  matInput placeholder="Prepopulate from Sheet" formControlName="percentageAllocation" >
+        <input type="number" [max]="100" matInput placeholder="Enter Percentage Allocation"
+            formControlName="percentageAllocation">
     </mat-form-field>
     <mat-form-field appearance="outline">
         <mat-label>Project Id</mat-label>
-        <input  matInput placeholder="Prepopulate from Sheet" formControlName="projectId" >
+        <input matInput placeholder="Enter Project Id" formControlName="projectId">
     </mat-form-field>
 
     <div class="d-flex justify-content-center align-items-center">
-        <button mat-raised-button color="primary" (click)="updateHCP()"  type="submit" class="mr-2" >Update</button>
-        <button mat-raised-button color="warn"  (click)="close()">Cancel</button>
+        <button mat-raised-button color="primary" (click)="updateBrand()" type="submit" class="mr-2">Update</button>
+        <button mat-raised-button color="warn" (click)="close()">Cancel</button>
     </div>
-    
+
 </form>
 
 <form [formGroup]="hcpUpdateForm" *ngIf="showHCPForm">
@@ -51,108 +56,194 @@
         <div class="col">
             <mat-form-field appearance="outline">
                 <mat-label>HCP Role</mat-label>
-                <input  matInput placeholder="Prepopulate from Sheet" formControlName="hcpRole" >
+                <input matInput placeholder="Enter HCP Role" formControlName="hcpRole">
             </mat-form-field>
-        
+
             <mat-form-field appearance="outline">
                 <mat-label>HCP Name</mat-label>
-                <input  matInput placeholder="Prepopulate from Sheet" formControlName="hcpName" >
+                <input matInput placeholder="Enter HCP Name" formControlName="hcpName">
             </mat-form-field>
 
             <mat-form-field appearance="outline">
                 <mat-label>MIS Code</mat-label>
-                <input  matInput placeholder="Prepopulate from Sheet" formControlName="misCode" >
-            </mat-form-field>
-        
-            <mat-form-field appearance="outline">
-                <mat-label>GO/NON GO</mat-label>
-                <input  matInput placeholder="Prepopulate from Sheet" formControlName="goNonGo" >
+                <input matInput placeholder="Enter MIS Code" formControlName="misCode">
             </mat-form-field>
 
-            
+            <mat-form-field appearance="outline">
+                <mat-label>GO/NON GO</mat-label>
+                <input matInput placeholder="Enter GO/NON GO" formControlName="goNonGo">
+            </mat-form-field>
+
+
 
         </div>
         <div class="col">
             <mat-form-field appearance="outline">
                 <mat-label>Honararium Amount</mat-label>
-                <input  matInput placeholder="Prepopulate from Sheet" formControlName="honarariumAmount" >
+                <input matInput placeholder="Enter Honararium Amount" formControlName="honarariumAmount">
             </mat-form-field>
 
             <mat-form-field appearance="outline">
                 <mat-label>Local Conveyance Amount</mat-label>
-                <input  matInput placeholder="Prepopulate from Sheet" formControlName="localConAmount" >
+                <input matInput placeholder="Enter Local Conveyance Amount" formControlName="localConAmount">
             </mat-form-field>
-        
+
             <mat-form-field appearance="outline">
                 <mat-label>Travel Amount</mat-label>
-                <input  matInput placeholder="Prepopulate from Sheet" formControlName="travelAmount" >
+                <input matInput placeholder="Enter Travel Amount" formControlName="travelAmount">
             </mat-form-field>
-        
+
             <mat-form-field appearance="outline">
                 <mat-label>Accomodation Amount</mat-label>
-                <input  matInput placeholder="Prepopulate from Sheet" formControlName="accomAmount" >
+                <input matInput placeholder="Enter Accomodation Amount" formControlName="accomAmount">
             </mat-form-field>
 
         </div>
     </div>
     <div class="d-flex justify-content-center align-items-center">
-        <button mat-raised-button color="primary" type="submit" class="mr-2" >Update</button>
-        <button mat-raised-button color="warn"  (click)="close()">Cancel</button>
+        <button mat-raised-button color="primary" (click)="close()" type="submit" class="mr-2">Update</button>
+        <button mat-raised-button color="warn" (click)="close()">Cancel</button>
     </div>
 
 </form>
 
-<form [formGroup]="inviteeUpdateForm" *ngIf="showInviteeForm">
+ <form [formGroup]="inviteeUpdateFormForHcp" *ngIf="showInviteeForm">
     <mat-form-field appearance="outline">
-        <mat-label>Invitee Name</mat-label>
-        <input  matInput placeholder="Prepopulate from Sheet" formControlName="inviteeName" >
+        <mat-label>HCP Name</mat-label>
+        <input matInput placeholder="Enter HCP Name" formControlName="hcpNameForHcpForm">
     </mat-form-field>
 
     <mat-form-field appearance="outline">
+        <mat-label>MIS Code</mat-label>
+        <input matInput placeholder="Enter MIS Code" formControlName="misCodeForHcp">
+    </mat-form-field>
+ 
+    <mat-form-field appearance="outline">
         <mat-label>Is Local Conveyance?</mat-label>
-        <input  matInput placeholder="Prepopulate from Sheet" formControlName="isLocalConveyance" >
+        <input matInput placeholder="" formControlName="isLocalConveyanceForHcp">
     </mat-form-field>
 
     <mat-form-field appearance="outline">
         <mat-label>BTC/BTE</mat-label>
-        <input  matInput placeholder="Prepopulate from Sheet" formControlName="btc" >
+        <input matInput placeholder="" formControlName="btcForHcp">
     </mat-form-field>
 
     <mat-form-field appearance="outline">
-        <mat-label>Local Conveyance Amount</mat-label>
-        <input  matInput placeholder="Prepopulate from Sheet" formControlName="lcAmount" >
+        <mat-label>Local Conveyance Amount Including Tax</mat-label>
+        <input matInput placeholder="Enter Amount" formControlName="lcAmountForHcpInculdingTaxForHcp">
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+        <mat-label>Local Conveyance Amount Excluding Tax</mat-label>
+        <input matInput placeholder="Enter Amount" formControlName="lcAmountForHcpExculdingTaxForHcp">
+    </mat-form-field> 
+
+    <div class="d-flex justify-content-center align-items-center">
+        <button mat-raised-button color="primary" (click)="updateInvitee()" type="submit" class="mr-2">Update</button>
+        <button mat-raised-button color="warn" (click)="close()">Cancel</button>
+    </div>
+</form> 
+<form [formGroup]="inviteeUpdateFormForMenarini" *ngIf="inviteeUpdateForMenarini">
+    <mat-form-field appearance="outline">
+        <mat-label>Invitee Name</mat-label>
+        <input matInput placeholder="Enter Invitee Name" formControlName="employeeName">
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+        <mat-label>MIS Code</mat-label>
+        <input matInput placeholder="Enter MIS Code" formControlName="employeeCode">
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+        <mat-label>Is Local Conveyance?</mat-label>
+        <input matInput placeholder="" formControlName="isLocalConveyance">
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+        <mat-label>BTC/BTE</mat-label>
+        <input matInput placeholder="" formControlName="btc">
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+        <mat-label>Local Conveyance Amount Including Tax</mat-label>
+        <input matInput placeholder="Enter Amount" formControlName="lcAmountForHcpInculdingTax">
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+        <mat-label>Local Conveyance Amount Excluding Tax</mat-label>
+        <input matInput placeholder="Enter Amount" formControlName="lcAmountForHcpExculdingTax">
     </mat-form-field>
 
     <div class="d-flex justify-content-center align-items-center">
-        <button mat-raised-button color="primary" (click)="updateInvitee()" type="submit" class="mr-2" >Update</button>
-        <button mat-raised-button color="warn"  (click)="close()">Cancel</button>
+        <button mat-raised-button color="primary" (click)="updateInvitee()" type="submit" class="mr-2">Update</button>
+        <button mat-raised-button color="warn" (click)="close()">Cancel</button>
+    </div>
+</form>
+<form [formGroup]="inviteeUpdateFormForNonHcp" *ngIf="showInviteeFormForNonHcp">
+    <mat-form-field appearance="outline">
+        <mat-label>HCP Name</mat-label>
+        <input matInput placeholder="Enter HCP Name" formControlName="hcpNameForNonHcp">
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+        <mat-label>Speciality</mat-label>
+        <input matInput placeholder="Enter Speciality" formControlName="specialityForNonHcp">
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+        <mat-label>HCP Type</mat-label>
+        <input matInput placeholder="Enter HCP Type" formControlName="hcpTypeForNonHcp">
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+        <mat-label>Is Local Conveyance?</mat-label>
+        <input matInput placeholder="" formControlName="isLocalConveyanceForNonHcp">
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+        <mat-label>BTC/BTE</mat-label>
+        <input matInput placeholder="" formControlName="btcForNonHcp">
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+        <mat-label>Local Conveyance Amount Including Tax</mat-label>
+        <input matInput placeholder="Enter Amount" formControlName="lcAmountForHcpInculdingTaxForNonHcp">
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+        <mat-label>Local Conveyance Amount Excluding Tax</mat-label>
+        <input matInput placeholder="Enter Amount" formControlName="lcAmountForHcpExculdingTaxForNonHcp">
+    </mat-form-field>
+
+    <div class="d-flex justify-content-center align-items-center">
+        <button mat-raised-button color="primary" (click)="updateInvitee()" type="submit" class="mr-2">Update</button>
+        <button mat-raised-button color="warn" (click)="close()">Cancel</button>
     </div>
 </form>
 
 <form [formGroup]="expenseUpdateForm" *ngIf="showExpenseForm">
     <mat-form-field appearance="outline">
         <mat-label>Expense Type</mat-label>
-        <input  matInput placeholder="Prepopulate from Sheet" formControlName="expenseType" >
+        <input matInput placeholder="Enter Expense Type" formControlName="expenseType">
     </mat-form-field>
 
     <mat-form-field appearance="outline">
         <mat-label>Expense Amount</mat-label>
-        <input  matInput placeholder="Prepopulate from Sheet" formControlName="expenseAmount" >
+        <input matInput placeholder="Enter Expense Amoun" formControlName="expenseAmount">
     </mat-form-field>
 
     <mat-form-field appearance="outline">
         <mat-label>Is Excluding Tax</mat-label>
-        <input  matInput placeholder="Prepopulate from Sheet" formControlName="isExclucingTax" >
+        <input matInput placeholder="" formControlName="isExclucingTax">
     </mat-form-field>
 
     <mat-form-field appearance="outline">
         <mat-label>BTC/BTE</mat-label>
-        <input  matInput placeholder="Prepopulate from Sheet" formControlName="isExpenseBtc" >
+        <input matInput placeholder="" formControlName="isExpenseBtc">
     </mat-form-field>
 
     <div class="d-flex justify-content-center align-items-center">
-        <button mat-raised-button color="primary" (click)="updateExpense()" type="submit" class="mr-2" >Update</button>
-        <button mat-raised-button color="warn"  (click)="close()">Cancel</button>
+        <button mat-raised-button color="primary" (click)="updateExpense()" type="submit" class="mr-2">Update</button>
+        <button mat-raised-button color="warn" (click)="close()">Cancel</button>
     </div>
 
 </form>
@@ -160,31 +251,640 @@
 <form [formGroup]="honorariumUpdateForm" *ngIf="showhonorariumForm">
     <mat-form-field appearance="outline">
         <mat-label>HCP Role</mat-label>
-        <input  matInput placeholder="Prepopulate from Sheet" formControlName="hcprole" >
+        <input matInput placeholder="Enter HCP Role" formControlName="hcprole">
     </mat-form-field>
- 
+
     <mat-form-field appearance="outline">
         <mat-label>HCP Name</mat-label>
-        <input  matInput placeholder="Prepopulate from Sheet" formControlName="hcpname" >
+        <input matInput placeholder="Enter HCP Name" formControlName="hcpname">
     </mat-form-field>
     <mat-form-field appearance="outline">
-    <mat-label>MIS Code</mat-label>
-    <input  matInput placeholder="Prepopulate from Sheet" formControlName="miscode" >
-</mat-form-field>
-<mat-form-field appearance="outline">
-    <mat-label>GONGO</mat-label>
-    <input  matInput placeholder="Prepopulate from Sheet" formControlName="GONGO" >
-</mat-form-field>
+        <mat-label>MIS Code</mat-label>
+        <input matInput placeholder="Enter MIS Code" formControlName="miscode">
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+        <mat-label>GONGO</mat-label>
+        <input matInput placeholder="Enter GONGO" formControlName="GONGO">
+    </mat-form-field>
     <mat-form-field appearance="outline">
         <mat-label>Is Excluding Tax</mat-label>
-        <input  matInput placeholder="Prepopulate from Sheet" formControlName="isExclucingTax" >
+        <input matInput placeholder="" formControlName="isExclucingTax">
     </mat-form-field>
- 
- 
- 
+
+
+
     <div class="d-flex justify-content-center align-items-center">
-        <button mat-raised-button color="primary" (click)="updateExpense()" type="submit" class="mr-2" >Update</button>
-        <button mat-raised-button color="warn"  (click)="close()">Cancel</button>
+        <button mat-raised-button color="primary" (click)="updateExpense()" type="submit" class="mr-2">Update</button>
+        <button mat-raised-button color="warn" (click)="close()">Cancel</button>
     </div>
- 
+
 </form>
+
+<div class="container overflow-hidden" *ngIf="summaryPreview">
+
+    <div class="col d-flex justify-content-end">
+        <i class="material-icons" (click)="close()">cancel</i>
+    </div>
+    <div class="col">
+        <h4><b><u>Event Details Summary</u></b></h4>
+        <div class="container shadow p-3 mb-5 bg-white rounded">
+            <div class="row">
+                <div class="col">
+                    <h5><b>Event Type</b></h5>
+                </div>
+                <span>:</span>
+                <div class="col">
+                    <h5><b>{{class1OrWebinarEventData.EventType }}</b></h5>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <h5><b>Event Topic</b></h5>
+                </div>
+                <span>:</span>
+                <div class="col">
+                    <h5><b>{{class1OrWebinarEventData.EventTopic}}</b></h5>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <h5><b>Event Date</b></h5>
+                </div>
+                <span>:</span>
+                <div class="col">
+                    <h5><b>{{class1OrWebinarEventData.EventDate}}</b></h5>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <h5><b>Event Start Time</b></h5>
+                </div>
+                <span>:</span>
+                <div class="col">
+                    <h5><b>{{class1OrWebinarEventData.StartTime}}</b></h5>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <h5><b>Event End Time</b></h5>
+                </div>
+                <span>:</span>
+                <div class="col">
+                    <h5><b>{{class1OrWebinarEventData.EndTime}}</b></h5>
+                </div>
+            </div>
+            <div *ngIf="class1PreviewData.Class1" class="row">
+                <div class="col">
+                    <h5><b>Event Venue</b></h5>
+                </div>
+                <span>:</span>
+                <div class="col">
+                    <h5><b>{{(class1OrWebinarEventData.VenueName)? class1OrWebinarEventData.VenueName : 'NA'}}</b></h5>
+                </div>
+            </div>
+            <div  *ngIf="class1PreviewData.Class1"  class="row">
+                <div class="col">
+                    <h5><b>State</b></h5>
+                </div>
+                <span>:</span>
+                <div class="col">
+                    <h5><b>{{(class1OrWebinarEventData.State)? class1OrWebinarEventData.State : 'NA'}}</b></h5>
+                </div>
+            </div>
+            <div  *ngIf="class1PreviewData.Class1"  class="row">
+                <div class="col">
+                    <h5><b>City</b></h5>
+                </div>
+                <span>:</span>
+                <div class="col">
+                    <h5><b>{{(class1OrWebinarEventData.City)? class1OrWebinarEventData.City : 'NA'}}</b></h5>
+                </div>
+            </div>
+            <div  *ngIf="class1PreviewData.Webinar"  class="row">
+                <div class="col">
+                    <h5><b>Metting Type</b></h5>
+                </div>
+                <span>:</span>
+                <div class="col">
+                    <h5><b>{{(class1OrWebinarEventData['Meeting_Type'])? class1OrWebinarEventData['Meeting_Type'] : 'NA'}}</b></h5>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <div class="col">
+        <h4><b><u>Brand Details Summary</u></b></h4>
+        <div class="container table-responsive">
+            <table class="table text-center table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th><b><small>S.no</small></b></th>
+                        <th><b><small>Brand Name</small></b></th>
+                        <th><b><small>Allocation</small></b></th>
+                        <th><b><small>Project Code</small></b></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let brand of class1PreviewData.RequestBrandsList ; index as i">
+                        <th scope="row">{{i+1}}</th>
+                        <td>{{brand.BrandName}}</td>
+                        <td>{{brand.PercentAllocation}}</td>
+                        <td>{{brand.ProjectId}}</td>
+                    </tr>
+
+                </tbody>
+
+            </table>
+        </div>
+
+    </div>
+    <div class="col">
+        <h4><b><u>Panelist Details Summary</u></b></h4>
+        <div class="container table-responsive">
+            <table class="table text-center table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th><b><small>S.no</small></b></th>
+                        <th><b><small>HCP Name</small></b></th>
+                        <th><b><small>HCP Role</small></b></th>
+                        <th><b><small>MIS Code</small></b></th>
+                        <th><b><small>HCP Type</small></b></th>
+                        <th><b><small>Honorarium</small></b></th>
+                        <th><b><small>Honorarium Amount</small></b></th>
+                        <th><b><small>Travel Amount</small></b></th>
+                        <th><b><small>Accomdation Amount</small></b></th>
+                        <th><b><small>Local Conveyance Amount</small></b></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let panel of class1PreviewData.EventRequestHcpRole ; index as i">
+                        <th scope="row">{{i+1}}</th>
+                        <td>{{panel.HcpName}}</td>
+                        <td>{{panel.HcpRole}}</td>
+                        <td>{{panel.MisCode}}</td>
+                        <td>{{panel.GOorNGO}}</td>
+                        <td>{{panel.HonorariumRequired}}</td>
+                        <td>{{panel.HonarariumAmount}}</td>
+                        <td>{{panel.Travel}}</td>
+                        <td>{{panel.Accomdation}}</td>
+                        <td>{{panel.LocalConveyance}}</td>
+                    </tr>
+
+                </tbody>
+
+            </table>
+        </div>
+
+    </div>
+    <div class="col">
+        <h4><b><u>Slide Kit Selection Summary</u></b></h4>
+        <div class="container table-responsive">
+            <table class="table text-center table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th><b><small>S.no</small></b></th>
+                        <th><b><small>HCP Name</small></b></th>
+                        <th><b><small>HCP Role</small></b></th>
+                        <th><b><small>MIS Code</small></b></th>
+                        <th><b><small>HCP Type</small></b></th>
+                        <th><b><small>Slide Kit Selection</small></b></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let slidekit of panelDetails ; index as i">
+                        <th scope="row">{{i+1}}</th>
+                        <td>{{slidekit.hcpName}}</td>
+                        <td>{{slidekit.hcpRole}}</td>
+                        <td>{{slidekit.misCode}}</td>
+                        <td>{{slidekit.hcpType}}</td>
+                        <td>{{slidekit.slideKitSelection}}</td>
+                    </tr>
+
+                </tbody>
+
+            </table>
+        </div>
+
+    </div>
+    <div class="col">
+        <h4><b><u>Invitees Summary</u></b></h4>
+        <div class="container table-responsive">
+            <table class="table text-center table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th><b><small>S.no</small></b></th>
+                        <th><b><small>Invitee Name</small></b></th>
+                        <th><b><small>Local Conveyance</small></b></th>
+                        <th><b><small>BTC/BTE</small></b></th>
+                        <th><b><small>Local Conveyance Amount</small></b></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let invitee of class1PreviewData.EventRequestInvitees; index as i">
+                        <td>{{i+1}}</td>
+                        <td>{{invitee.InviteeName}}</td>
+                        <td>{{invitee.LocalConveyance}}</td>
+                        <td>{{invitee.BtcorBte}}</td>
+                        <td>{{invitee.LcAmount}}</td>
+                    </tr>
+
+                </tbody>
+
+            </table>
+        </div>
+
+    </div>
+    <div class="col">
+        <h4><b><u>Expense Summary</u></b></h4>
+        <div class="container table-responsive">
+            <table class="table text-center table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th><b><small>S.no</small></b></th>
+                        <th><b><small>Expense</small></b></th>
+                        <th><b><small>Including Tax</small></b></th>
+                        <th><b><small>BTC/BTE</small></b></th>
+                        <th><b><small>Expense Amount</small></b></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let expense of class1PreviewData.EventRequestExpenseSheet; index as i">
+                        <td>{{i+1}}</td>
+                        <td>{{expense.Expense}}</td>
+                        <td>{{(expense.AmountExcludingTax == 'Yes')? 'Yes' : 'No'}}</td>
+                        <td>{{expense.BtcorBte}}</td>
+                        <td>{{expense.Amount}}</td>
+                    </tr>
+
+                </tbody>
+
+            </table>
+        </div>
+
+    </div>
+
+</div>
+
+
+<form [formGroup]="expenseUpdateForm" *ngIf="showstallExpenseForm">
+    <mat-form-field appearance="outline">
+        <mat-label>Expense Type</mat-label>
+        <input matInput placeholder="Enter Expense Type" formControlName="expenseType">
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+        <mat-label>Expense Amount</mat-label>
+        <input matInput placeholder="Enter Expense Amount" formControlName="expenseAmount">
+    </mat-form-field>
+
+    <!-- <mat-form-field appearance="outline">
+        <mat-label>Is Excluding Tax</mat-label>
+        <input  matInput placeholder="Enter 1" formControlName="isExclucingTax" >
+    </mat-form-field> -->
+
+    <mat-form-field appearance="outline">
+        <mat-label>BTC/BTE</mat-label>
+        <input matInput placeholder="" formControlName="isExpenseBtc">
+    </mat-form-field>
+
+    <div class="d-flex justify-content-center align-items-center">
+        <button mat-raised-button color="primary" (click)="updateExpense()" type="submit" class="mr-2">Update</button>
+        <button mat-raised-button color="warn" (click)="close()">Cancel</button>
+    </div>
+</form>
+
+
+<form [formGroup]="hcpExpenseUpdate" *ngIf="HcpUpdateExpense">
+    <mat-form-field appearance="outline">
+        <mat-label>Enter Registration Amount</mat-label>
+        <input matInput placeholder="Enter Registration Amount" formControlName="registrationAmount">
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+        <mat-label>BTC/BTE</mat-label>
+        <input matInput placeholder="" formControlName="expenseBtc">
+    </mat-form-field>
+
+
+    <button mat-raised-button color="primary" (click)="submit()" type="submit" class="mr-2">Update</button>
+    <button mat-raised-button color="warn" (click)="close()">Cancel</button>
+</form>
+
+<form [formGroup]="hcpupdate" *ngIf="hcpupdatedetails">
+    <mat-form-field appearance="outline">
+        <mat-label>HCP Name</mat-label>
+        <input matInput placeholder="Enter HCP Name" formControlName="hcpnamehcp">
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+        <mat-label>MIS Code</mat-label>
+        <input matInput placeholder="Enter MIS Code" formControlName="miscodehcp">
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+        <mat-label>HCP Type</mat-label>
+        <input matInput placeholder="Enter HCP Type" formControlName="hcptypehcp">
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+        <mat-label>Travel Amount</mat-label>
+        <input matInput placeholder="Enter Travel Amount" formControlName="travelAmounthcp">
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+        <mat-label>Accomdation Amount</mat-label>
+        <input matInput placeholder="Enter Accomdation Amount" formControlName="accAmounthcp">
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+        <mat-label>LocalConveyance Amount</mat-label>
+        <input matInput placeholder="Enter LocalConveyance Amount" formControlName="lcAmounthcp">
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+        <mat-label>Registration Amount</mat-label>
+        <input matInput placeholder="Enter Registration Amount" formControlName="registrationAmounthcp">
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+        <mat-label>Budget Amount</mat-label>
+        <input matInput placeholder="Enter Budget Amount" formControlName="budgetAmounthcp">
+    </mat-form-field>
+
+
+    <div class="d-flex justify-content-center align-items-center">
+        <button mat-raised-button color="primary" (click)="updateExpense()" type="submit" class="mr-2">Update</button>
+        <button mat-raised-button color="warn" (click)="close()">Cancel</button>
+    </div>
+</form>
+
+<form [formGroup]="HCPpreview" *ngIf="showHcpPreview">
+    <div class="col d-flex justify-content-end">
+        <i class="material-icons" (click)="close()">cancel</i>
+    </div>
+    <div class="col">
+        <h4><b><u>Event Details Summary</u></b></h4>
+        <div class="container shadow p-3 mb-5 bg-white rounded">
+            <div class="row">
+                <div class="col">
+                    <h5><b>Event Type</b></h5>
+                </div>
+                <span>:</span>
+                <div class="col">
+                    <h5><b>{{HcpConsultantsData.HcpConsultant.EventType}}</b></h5>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <h5><b>Event Topic</b></h5>
+                </div>
+                <span>:</span>
+                <div class="col">
+                    <h5><b>{{HcpConsultantsData.HcpConsultant.EventTopic}}</b></h5>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <h5><b>Event Date</b></h5>
+                </div>
+                <span>:</span>
+                <div class="col">
+                    <h5><b>{{HcpConsultantsData.HcpConsultant.EventDate}}</b></h5>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <h5><b>Event Start Time</b></h5>
+                </div>
+                <span>:</span>
+                <div class="col">
+                    <h5><b>{{HcpConsultantsData.HcpConsultant.StartTime}}</b></h5>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <h5><b>Event End Time</b></h5>
+                </div>
+                <span>:</span>
+                <div class="col">
+                    <h5><b>{{HcpConsultantsData.HcpConsultant.EndTime}}</b></h5>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <h5><b>Event Venue</b></h5>
+                </div>
+                <span>:</span>
+                <div class="col">
+                    <h5><b>{{(HcpConsultantsData.HcpConsultant.VenueName)? HcpConsultantsData.HcpConsultant.VenueName :
+                            'NA'}}</b></h5>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+    <div class="col">
+        <h4><b><u>Brand Details Summary</u></b></h4>
+        <div class="container table-responsive">
+            <table class="table text-center table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th><b><small>S.no</small></b></th>
+                        <th><b><small>Brand Name</small></b></th>
+                        <th><b><small>Allocation</small></b></th>
+                        <th><b><small>Project Code</small></b></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let brand of HcpConsultantsData.BrandsList ; index as i">
+                        <th scope="row">{{i+1}}</th>
+                        <td>{{brand.BrandName}}</td>
+                        <td>{{brand.PercentAllocation}}</td>
+                        <td>{{brand.ProjectId}}</td>
+                    </tr>
+
+                </tbody>
+
+            </table>
+        </div>
+
+    </div>
+
+    <div class="col">
+        <h4><b><u>Panelist Details Summary</u></b></h4>
+        <div class="container table-responsive">
+            <table class="table text-center table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th><b><small>S.no</small></b></th>
+                        <th><b><small>HCP Name</small></b></th>
+                        <th><b><small>MIS Code</small></b></th>
+                        <th><b><small>HCP Type</small></b></th>
+                        <th><b><small>Travel Amount</small></b></th>
+                        <th><b><small>Accomdation Amount</small></b></th>
+                        <th><b><small>Local Conveyance Amount</small></b></th>
+                        <th><b><small>Registration Amount</small></b></th>
+                        <th><b><small>Budget Amount</small></b></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let panel of HcpConsultantsData.HCPList ; index as i">
+                        <th scope="row">{{i+1}}</th>
+                        <td>{{panel.HcpName}}</td>
+                        <td>{{panel.MisCode}}</td>
+                        <td>{{panel.HcpType}}</td>
+                        <td>{{panel.TravelAmount}}</td>
+                        <td>{{panel.AccomAmount}}</td>
+                        <td>{{panel.LcAmount}}</td>
+                        <td>{{panel.RegistrationAmount}}</td>
+                        <td>{{panel.BudgetAmount}}</td>
+                    </tr>
+
+                </tbody>
+
+            </table>
+        </div>
+
+    </div>
+    <div class="col">
+        <h4><b><u>Expense Details Summary</u></b></h4>
+        <div class="container table-responsive">
+            <table class="table text-center table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th><b><small>S.no</small></b></th>
+                        <th><b><small>Expense Type</small></b></th>
+                        <th><b><small>Registration Amount</small></b></th>
+                        <th><b><small>Is Expense Btc</small></b></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let expense of HcpConsultantsData.ExpenseSheet ; index as i">
+                        <th scope="row">{{i+1}}</th>
+                        <td>{{expense.Expense}}</td>
+                        <td>{{expense.RegstAmount}}</td>
+                        <td>{{expense['BTC_BTE']}}</td>
+                    </tr>
+
+                </tbody>
+
+            </table>
+        </div>
+
+    </div>
+</form>
+
+<form [formGroup]="benificiaryForm" *ngIf="showBenificiaryUpdateForm">
+    <div class="row">
+        <div class="col">
+            <mat-form-field color="accent" appearance="outline">
+                <mat-label>Benificiary Name</mat-label>
+                <input matInput placeholder="Enter Benificiary Name" formControlName="benificiaryName">
+            </mat-form-field>
+
+            <mat-form-field color="accent" appearance="outline">
+                <mat-label>Name as per PAN</mat-label>
+                <input matInput placeholder="Enter Name as per PAN" formControlName="nameAsPerPAN">
+            </mat-form-field>
+
+            <mat-form-field color="accent" appearance="outline">
+                <mat-label>IFSC Code </mat-label>
+                <input matInput placeholder="Enter IFSC Code" formControlName="ifscCode">
+            </mat-form-field>
+
+            <!-- <mat-form-field color="accent" appearance="outline">
+                <mat-label>Bank Name</mat-label>
+                <input matInput placeholder="Enter Bank Account Number" formControlName="bankName">
+            </mat-form-field> -->
+            <div class="m-1" >
+                <mat-label>Upload Cheque</mat-label><br>
+                <input type="file" (change)="onFileSelected($event,'other','uploadCheque')"
+                    [accept]="allowedTypesForHTML" formControlName="uploadCheque"><br>
+                <span class="text-danger"><small>Allowed File Types (.png, .jpg, .txt , .doc)</small></span><br>
+                <span class="text-danger"><small>Size Should be greater than 0 KB and less than 30MB</small></span>
+            </div>
+
+        </div>
+        <div class="col">
+            <mat-form-field color="accent" appearance="outline">
+                <mat-label>Bank Account Number</mat-label>
+                <input matInput placeholder="Enter Bank Account Number" formControlName="bankAccountNumber">
+            </mat-form-field>
+
+            <mat-form-field color="accent" appearance="outline">
+                <mat-label>PAN Card Number</mat-label>
+                <input matInput placeholder="PAN Card Number" formControlName="panCardNumber">
+            </mat-form-field>
+
+            <mat-form-field color="accent" appearance="outline">
+                <mat-label>Email ID (optional)</mat-label>
+                <input matInput placeholder="Enter Your Email ID " formControlName="emailId">
+            </mat-form-field>
+
+            <div class="m-1">
+                <mat-label>Upload PAN Card</mat-label><br>
+                <input type="file" (change)="onFileSelected($event,'other','uploadPAN')"
+                    [accept]="allowedTypesForHTML" formControlName="uploadPAN"><br>
+                <span class="text-danger"><small>Allowed File Types (.png, .jpg, .txt , .doc)</small></span><br>
+                <span class="text-danger"><small>Size Should be greater than 0 KB and less than 30MB</small></span>
+            </div>
+        </div>
+    </div>
+    <div class="d-flex justify-content-center align-items-center">
+        <button mat-raised-button color="primary" (click)="updateBenificiaryDetails()" type="submit" class="mr-2">Update</button>
+        <button mat-raised-button color="warn" (click)="close()">Cancel</button>
+    </div>
+</form>
+
+<form [formGroup]="internationalBenificiaryForm" *ngIf="showInternationalBenificiaryUpdateForm">
+    <div class="row">
+        <div class="col">
+            <mat-form-field color="accent" appearance="outline">
+                <mat-label>Benificiary Name</mat-label>
+                <input matInput placeholder="Enter Benificiary Name" formControlName="benificiaryNameForInternational">
+            </mat-form-field>
+
+            <mat-form-field color="accent" appearance="outline">
+                <mat-label>Bank Account Number</mat-label>
+                <input matInput placeholder="Enter Bank Account Number"
+                    formControlName="bankAccountNumberForInternational">
+            </mat-form-field>
+
+            <mat-form-field color="accent" appearance="outline">
+                <mat-label>Swift Code</mat-label>
+                <input matInput placeholder="Swift Code" formControlName="swiftCode">
+            </mat-form-field>
+
+            <mat-form-field color="accent" appearance="outline">
+                <mat-label>Tax Residence Certificate Date</mat-label>
+                <input matInput type="date" formControlName="taxResidenceCertificateDate">
+            </mat-form-field>
+
+        </div>
+
+        <div class="col">
+            <mat-form-field color="accent" appearance="outline">
+                <mat-label>IBN Number</mat-label>
+                <input matInput placeholder="Enter IBN Number" formControlName="ibnNumber">
+            </mat-form-field>
+
+            <mat-form-field color="accent" appearance="outline">
+                <mat-label>Email ID (optional)</mat-label>
+                <input matInput placeholder="Enter Your Email ID " formControlName="emailIdForInternational">
+            </mat-form-field>
+
+            <div class="m-1">
+                <mat-label>Tax Residence Certificate Upload</mat-label><br>
+                <input type="file" (change)="onFileSelected($event,'other','uploadTaxResidenceCertificate')"
+                    [accept]="allowedTypesForHTML" formControlName="uploadTaxResidenceCertificate"><br>
+                <span class="text-danger"><small>Allowed File Types (.png, .jpg, .txt , .doc)</small></span><br>
+                <span class="text-danger"><small>Size Should be greater than 0 KB and less than 30MB</small></span>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="d-flex justify-content-center align-items-center">
+        <button mat-raised-button color="primary" (click)="updateInternationalBenificiaryDetails()" type="submit" class="mr-2">Update</button>
+        <button mat-raised-button color="warn" (click)="close()">Cancel</button>
+    </div>
+</form>
+
+<div class="loading-indicator" *ngIf="loadingIndicator">
+    <mat-progress-spinner class="mat-warn" mode="indeterminate"> </mat-progress-spinner>
+</div>
+  

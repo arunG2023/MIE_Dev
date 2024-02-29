@@ -8,3 +8,9 @@
     -webkit-box-orient: vertical;
     overflow: hidden; */
   }
+
+  .role {
+    font-size: 11px;
+    font-weight: 800;
+    color: red;
+ }

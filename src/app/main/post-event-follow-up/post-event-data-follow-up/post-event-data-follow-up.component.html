@@ -1,0 +1,94 @@
+<div class="row" *ngIf="showPostEventFollowUpContent">
+    <div class="col-md-12">
+        <form [formGroup]="hcpConsultantFollowUpForm">
+            <div class="row">
+
+                <div class="col-md-12 container table-responsive">
+                    <span class="text-danger text-secondary m-2">
+                        <h4><b>Follow Up Details:</b></h4>
+                    </span>
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th><small>S.No</small></th>
+                                <th><small>HCP Name</small></th>
+                                <th><small>MIS Code</small></th>
+                                <th><small>GO/N-GO</small></th>
+                                <th><small>Event Date</small></th>
+                                <th><small>How many days since the parent event completes?</small></th>
+                                <th><small>Follow Up Event Code</small></th>
+                                <th><small>Follow Up Event Date</small></th>
+                                <th><small>Agreement Upload</small></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let followup of postEventHcpFollowUpTableDetails; index as i">
+                                <td>{{i+1}}</td>
+                                <td>{{followup['HCPName']}}</td>
+                                <td>{{followup['MISCode']}}</td>
+                                <td>{{followup['HCP Type']}}</td>
+                                <td>{{followup['EventDate']}}</td>
+                                <td>{{followup['How many days since the parent event Completes']}}</td>
+                                <td>
+                                    <span *ngIf="followup['option'].length > 0">
+                                        <mat-form-field appearance="outline" color="accent">
+                                        <mat-label>Follow Up Event Ids</mat-label>
+                                        <mat-select (ngModelChange)="onEventSelect($event,followup['option'],i)" [ngModelOptions]="{standalone: true}"
+                                            [(ngModel)]="followup['follow_up_eventId']">
+                                            <mat-option *ngFor="let a of followup['option']"
+                                                value={{a.eventId}}>{{a.eventId}}</mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                    </span>
+                                    <span *ngIf="followup['option'].length == 0">
+                                        No Follow Up Events
+                                    </span>
+                                </td>
+                                <!-- <td>{{followup['Follow-up Event Date']}} -->
+                                <td>
+                                    <span *ngIf="followup['option'].length > 0">
+                                        <input type="date" disabled (ngModelChange)="onDateSelect($event)"
+                                        [ngModelOptions]="{standalone: true}" min="{{ today | date : 'yyyy-MM-dd' }}"
+                                        [(ngModel)]="followup['follow_up_Date']" />
+                                    </span>
+                                    <span *ngIf="followup['option'].length == 0">
+                                        No Follow Up Events
+                                    </span>
+                                    
+                                </td>
+                                <td>
+                                    <input type="file" [disabled]="followup['option'].length == 0" (change)="onFileSelected($event,'other','agreement',i)"
+                                        [accept]="allowedTypesForHTML"><br>
+                                    <span class="text-danger"><small>Allowed File Types
+                                            (.png, .jpg, .txt , .doc)</small></span><br>
+                                    <span class="text-danger"><small>Size Should be
+                                            greater than 0 KB and less than
+                                            30MB</small></span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <!-- <div class="container" *ngIf="showAggregateSpendDeviation">
+                    <mat-label>Upload Deviation<span class="red">*</span></mat-label><br>
+                    <input type="file"
+                        (change)="onFileSelected($event,'deviation','aggregateDeviation')"
+                        [accept]="allowedTypesForHTML"
+                        formControlName="aggregateDeviation"><br>
+                    <span class="text-danger"><small>Allowed File Types (.png, .jpg,
+                            .txt , .doc)</small></span><br>
+                    <span class="text-danger"><small>Size Should be greater than 0 KB
+                            and less than 30MB</small></span>
+                </div> -->
+
+
+            </div>
+            <div class="col d-flex justify-content-center">
+                <button type="button" class="btn btn-sm btn-primary">Reset</button>
+                <button type="submit" class="btn btn-sm btn-warning" (click)="onSubmit()">Submit</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<app-spinner-loader [isLoading]="loadingIndicator"></app-spinner-loader>

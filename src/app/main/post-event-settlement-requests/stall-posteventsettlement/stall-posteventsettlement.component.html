@@ -1,0 +1,371 @@
+<div class="card-body">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-body">
+          <div class="row">
+            <div class="container table-responsive">
+              <table class="table table-striped">
+                <thead>
+                  <tr>
+                    <th><small>S.no</small></th>
+                    <th><small>Event ID</small></th>
+                    <th><small>Event Name</small></th>
+                    <th><small>Event Type</small></th>
+                    <!-- <th><small>Venue</small></th> -->
+                    <th><small>Event Date</small></th>
+                  </tr>
+                </thead>
+                <tbody *ngFor="let events of after30DaysList; index as i">
+                  <tr>
+                    <th scope="row">{{ i + 1 }}</th>
+                    <td>{{ events["EventId/EventRequestId"] }}</td>
+                    <td>{{ events["Event Topic"] }}</td>
+                    <td>{{ events.EventType }}</td>
+                    <!-- <td>{{ events.VenueName }}</td> -->
+                    <td>{{ events.EventDate }}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="col mt-2" *ngIf="show30DaysUpload">
+              <form [formGroup]="deviationForm">
+                <div class="col m-3">
+                  <mat-label
+                    ><b
+                      >Upload Deviation<span style="color: red">*</span></b
+                    ></mat-label
+                  ><br />
+
+                  <input
+                    type="file"
+                    id="thirtyDaysUpload"
+                    (change)="
+                      onFileSelected($event, 'deviation', 'thirtyDaysUpload')
+                    "
+                    formControlName="thirtyDaysUpload"
+                    [accept]="allowedTypesForHTML"
+                  /><br />
+                  <span class="text-danger"
+                    ><small
+                      >Allowed File Types (.png, .jpg, .txt , .doc)</small
+                    ></span
+                  ><br />
+                  <span class="text-danger"
+                    ><small
+                      >Size Should be greater than 0 KB and less than
+                      30MB</small
+                    ></span
+                  >
+                </div>
+
+                <div class="col m-3" *ngIf="showPostEventContent">
+                  <mat-label
+                    >Upload Photos<span style="color: red">*</span></mat-label
+                  ><br />
+                  <input
+                    type="file"
+                    (change)="onFileSelected($event, 'other', 'uploadPhotos')"
+                    accept=".png, .jpg"
+                    formControlName="uploadPhotos"
+                    multiple
+                  /><br />
+                  <span class="text-danger"
+                    ><small>Allowed File Types (.png, .jpg)</small></span
+                  ><br />
+                  <span class="text-danger"
+                    ><small
+                      >Size Should be greater than 0 KB and less than
+                      30MB</small
+                    ></span
+                  ><br />
+                  <!-- <span class="text-success">Uploaded Photos: {{photosFiles.length}}</span> -->
+                </div>
+
+                <div class="col m-3" *ngIf="showPostEventContent">
+                  <mat-label
+                    >Upload Attendence<span style="color: red">*</span></mat-label
+                  ><br />
+                  <input
+                    type="file"
+                    (change)="onFileSelected($event, 'other', 'uploadAttendence')"
+                    accept=".png, .jpg"
+                    formControlName="uploadAttendence"
+                    multiple
+                  /><br />
+                  <span class="text-danger"
+                    ><small>Allowed File Types (.png, .jpg)</small></span
+                  ><br />
+                  <span class="text-danger"
+                    ><small
+                      >Size Should be greater than 0 KB and less than
+                      30MB</small
+                    ></span
+                  ><br />
+                  <!-- <span class="text-success">Uploaded Photos: {{photosFiles.length}}</span> -->
+                </div>
+              </form>
+            </div>
+
+            <div class="col-5">
+              <mat-form-field
+                color="accent"
+                appearance="outline"
+                *ngIf="showEventSelect"
+              >
+                <mat-label>Select Event ID</mat-label>
+                <mat-select
+                  (ngModelChange)="onEventSelect($event)"
+                  [ngModelOptions]="{ standalone: true }"
+                  [(ngModel)]="selectedEvent"
+                >
+                  <mat-option
+                    *ngFor="let selectId of after30DaysList"
+                    value="{{ selectId['EventId/EventRequestId'] }}"
+                    >{{ selectId["EventId/EventRequestId"] }}</mat-option
+                  >
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </div>
+
+          <div class="container" *ngIf="showPostEventContent">
+            <div class="container table-responsive">
+              <div class="col text-danger">
+                <h4><b>Expense Details</b></h4>
+              </div>
+
+              <table class="table table-striped">
+                <thead>
+                  <tr>
+                    <th>
+                      <b><small>S.no</small></b>
+                    </th>
+                    <th>
+                      <b><small>Expense</small></b>
+                    </th>
+                    <th>
+                      <b><small>Expense Amount</small></b>
+                    </th>
+                    <th>
+                      <b><small>Actual Amount</small></b>
+                    </th>
+                    <th>
+                      <b><small>BTE/BTC</small></b>
+                    </th>
+                    <th>
+                      <b><small>Including GST</small></b>
+                    </th>
+                    <!-- <th><small>Invoice Upload</small></th> -->
+                    <!-- <th>
+                      <b><small>Actions</small></b>
+                    </th> -->
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let expense of expenseTabelDetails; index as i">
+                    <th scope="row">{{ i + 1 }}</th>
+                    <td>{{ expense.Expense }}</td>
+                    <td>{{ expense.Amount }}</td>
+                    <!-- <td>
+                      <input
+                        type="number"
+                        (ngModelChange)="
+                          onExpenseActualAmountChanges($event, i)
+                        "
+                        [ngModelOptions]="{ standalone: true }"
+                        [(ngModel)]="actual + expenseTableActualAmountInput[i]"
+                      />
+                    </td> -->
+                    <td>{{ expense.BtcorBte }}</td>
+                    <td>
+                      {{
+                        expense["AmountExcludingTax?"] == "Yes" ? "No" : "Yes"
+                      }}
+                    </td>
+                    <td>
+                      <div>
+                        <input
+                          id="{{ i + 1 }}"
+                          type="file"
+                          (change)="
+                            onFileSelected($event, 'other', 'InvoiceUpload')
+                          "
+                          [accept]="allowedTypesForHTML"
+                        /><br />
+                        <span class="text-danger"
+                          ><small
+                            >Allowed File Types (.png, .jpg, .txt , .doc)</small
+                          ></span
+                        ><br />
+                        <span class="text-danger"
+                          ><small
+                            >Size Should be greater than 0 KB and less than
+                            30MB</small
+                          ></span
+                        >
+                      </div>
+                    </td>
+                    <!-- <td>
+                      <i class="material-icons" style="margin-right: 5px"
+                        >edit</i
+                      >
+                      <i class="material-icons">delete</i>
+                    </td> -->
+                  </tr>
+                </tbody>
+              </table>
+
+              <!-- BTE BTC Summary -->
+              <div class="container table-responsive" *ngIf="BTCSummary.length > 0">
+                <div class="col d-flex justify-content-center text-danger">
+                    <h4><b>Expense Summary</b></h4>
+                </div>
+                <h5>Expense Summary BTC</h5>
+                <table class="table text-center table-bordered">
+                    <thead>
+                        <tr>
+                            <th><b><small>S.no</small></b></th>
+                            <th><b><small>Expense Type</small></b></th>
+                            <th><b><small>BTC Amount</small></b></th>
+                            <th><b><small>Upload Invoice</small></b></th>
+            
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let expense of BTCSummary; index as i">
+                            <th scope="row">{{i+1}}</th>
+                            <td>{{expense.expense}}</td>
+                            <td>{{expense.amount}}</td>
+                            <td>
+                               
+                                <input type="file"
+                                   (change)="onFileSelected($event,'other','btcInvoice')" [accept]="allowedTypesForHTML" [ngModelOptions]="{standalone: true}" [(ngModel)]="expense.invoiceFile"><br>
+                                <span class="text-danger"><small>Allowed File Types (.png, .jpg, .txt , .doc)</small></span><br>
+                                <span class="text-danger"><small>Size Should be greater than 0 KB and less than 30MB</small></span>
+                            </td>
+                        </tr>
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td colspan="2" class="text-right"><b><small>Total BTC
+                                        Amount</small></b></td>
+                            <td>{{BTCSummaryTotal}}</td>
+                        </tr>
+                    </tfoot>
+            
+                </table>
+            </div>
+            
+            <div class="container table-responsive" *ngIf="BTESummary.length > 0">
+                <h5>Expense Summary BTE</h5>
+                <table class="table text-center table-bordered">
+                    <thead>
+                        <tr>
+                            <th><b><small>S.no</small></b></th>
+                            <th><b><small>Expense Type</small></b></th>
+                            <th><b><small>BTE Amount</small></b></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let expense of BTESummary; index as i">
+                            <th scope="row">{{i+1}}</th>
+                            <td>{{expense.expense}}</td>
+                            <td>{{expense.amount}}</td>
+                        </tr>
+                        <tr>
+                        </tr>
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td colspan="2" class="text-right"><b><small>Total BTE
+                                        Amount</small></b></td>
+                            <td>{{BTESummaryTotal}}</td>
+                        </tr>
+                    </tfoot>
+            
+            
+                </table>
+                <div>
+                    <mat-label>Invoice Upload<span
+                        style="color: red;">*</span></mat-label><br>
+                    <input  (change)="onFileSelected($event,'other','bteInvoice')" type="file" [accept]="allowedTypesForHTML"><br>
+                    <span class="text-danger"><small>Allowed File Types (.png, .jpg, .txt , .doc)</small></span><br>
+                    <span class="text-danger"><small>Size Should be greater than 0 KB and less than 30MB</small></span>
+                </div>
+            </div>
+
+              <div class="container table-responsive">
+                <div class="col text-danger">
+                  <h4><b>Total Expense Details</b></h4>
+                </div>
+                <table class="table table-striped">
+                  <thead>
+                    <tr>
+                      <th><small>Event ID</small></th>
+
+                      <th><small>Total Budget amount For the Event</small></th>
+                      <th><small>Actual Budget amount For the Event</small></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <th>{{ selectedEvent }}</th>
+
+                      <td>{{ amountTableFinalAmount }}</td>
+                      <td>{{ amountTableFinalAmount }}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <div class="container table-responsive">
+                <div class="col text-danger">
+                  <h4><b>Advance Details</b></h4>
+                </div>
+                <table class="table table-striped">
+                  <thead>
+                    <tr>
+                      <th><small>Event ID</small></th>
+                      <th><small>Advance Provided</small></th>
+                      <th><small>Advance utilized for event</small></th>
+                      <th><small>Pay back amount to Company</small></th>
+                      <th>
+                        <small
+                          >Additional Amount needed to pay for Initiator</small
+                        >
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <th>{{ selectedEvent }}</th>
+                      <td>{{ amountTableFinalAmount }}</td>
+                      <td>{{ advancedUtilized }}</td>
+                      <td>{{ amountToPayForCompany }}</td>
+                      <td>{{ amountToPayForInitiator }}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <div class="col-12 d-flex justify-content-center">
+                <button mat-raised-button color="primary">Reset</button>
+                &nbsp;&nbsp;&nbsp;&nbsp;
+                <button
+                  (click)="postEventSubmit()"
+                  mat-raised-button
+                  color="primary"
+                >
+                  Submit
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<app-spinner-loader [isLoading]="loadingIndicator"></app-spinner-loader>

@@ -1,0 +1,9 @@
+<!-- error-dialog.component.html -->
+
+<h4>Error</h4>
+<ul>
+  <li *ngFor="let error of data.errors">{{ error }}</li>
+</ul>
+<p class="text-center">
+<button mat-button class="btn btn-danger" (click)="closeDialog()">Close</button>
+</p>

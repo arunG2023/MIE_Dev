@@ -1,0 +1,659 @@
+<mat-stepper [linear]="isLinear" #stepper orientation="{{ orientation }}" labelPosition="bottom">
+  <mat-step [completed]="isStep1Valid" label="1">
+    <ng-template matStepLabel>
+      <div matTooltip="Pre Event Check">Pre Event Check</div>
+    </ng-template>
+    <p class="text-danger h5">Previous Events that are within 30 days from today</p>
+    <div class="container table-responsive">
+      <table class="table text-center table-bordered table-striped">
+        <thead>
+          <tr>
+            <th><b><small>S.no</small></b></th>
+            <th><b><small>Event ID</small></b></th>
+            <th><b><small>Event Type</small></b></th>
+            <th><b><small>Venue</small></b></th>
+            <th><b><small>Event Date</small></b></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr
+            *ngFor="let event of eventsWithin30Days | paginate: { itemsPerPage: pageRowLimit, currentPage: page }, index as i">
+            <th scope="row">{{i+1}}</th>
+            <td>{{event['EventId/EventRequestId']}}</td>
+            <td>{{event.EventType}}</td>
+            <td>{{event.VenueName}}</td>
+            <td>{{event.EventDate}}</td>
+          </tr>
+          <tr>
+            <td colspan="5" class="pagination-row"><pagination-controls
+                (pageChange)="pageChanged($event)"></pagination-controls></td>
+          </tr>
+
+        </tbody>
+
+      </table>
+    </div>
+
+    <form [formGroup]="eventInitiation1">
+      <div class="row" *ngIf="show30DaysUploaDeviation">
+        <div class="col">
+          <div class="p-2 m-1">
+            <mat-label>Outstanding with intiator for more than 45 days<span class="color_red">*</span></mat-label><br />
+            <input type="file" (change)="
+                onFileSelected($event, 'deviation', 'withIn30DaysDeviation')
+              " accept=".png, .jpg, .jpeg, .txt , .doc, .pdf" formControlName="withIn30DaysDeviation" /><br />
+            <span class="text-danger"><small>Allowed File Types (.png, .jpg, .txt , .doc)</small></span><br />
+            <span class="text-danger"><small>Size Should be greater than 0 KB and less than 30MB</small></span>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col">
+          <div class="p-2 m-1">
+            <mat-form-field color="accent" appearance="outline">
+              <mat-label>Event Initiation Date</mat-label>
+              <input matInput  type="date" min="{{ today | date : 'yyyy-MM-dd' }}" formControlName="eventDate" />
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="col">
+          <div class="p-2 m-1" *ngIf="show7DaysUploadDeviation">
+            <mat-label><b>5 days from the Event Date</b><span class="color_red">*</span></mat-label><br />
+            <input type="file" (change)="
+                onFileSelected($event, 'deviation', 'next7DaysDeviation')
+              " accept=".png, .jpg, .jpeg, .txt , .doc, .pdf" formControlName="next7DaysDeviation" /><br />
+            <span class="text-danger"><small>Allowed File Types (.png, .jpg, .txt , .doc)</small></span><br />
+            <span class="text-danger"><small>Size Should be greater than 0 KB and less than 30MB</small></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="d-flex justify-content-end align-items-center">
+        <button mat-raised-button color="primary" [disabled]="!isStep1Valid" matStepperNext class="m-1">
+          Next
+        </button>
+      </div>
+    </form>
+  </mat-step>
+  <mat-step [completed]="isStep2Valid" label="Event-Details">
+    <ng-template matStepLabel>
+      <div matTooltip="Event Details">Event Details</div>
+    </ng-template>
+    <form [formGroup]="eventInitiation2">
+      <div class="row">
+        <div class="col">
+          <mat-form-field color="accent" appearance="outline">
+            <mat-label>Event Type <span class="color_red">*</span></mat-label>
+            <mat-select [value]="eventType" disabled>
+              <mat-option *ngFor="let event of eventDetails" value="{{ event.EventTypeId }}">Medical
+                Utility</mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <mat-form-field color="accent" appearance="outline">
+            <mat-label>Select medical utility type</mat-label>
+            <mat-select formControlName="medicalUtilityType" multiple>
+              <mat-option *ngFor="let medicalUtility of medicalUtilityTypes"
+                value="{{ medicalUtility.MedicalUtilityType }}">{{ medicalUtility.MedicalUtilityType }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field color="accent" appearance="outline" *ngIf="showMedicalUtilityTypeOther">
+            <mat-label>Enter medical utility type</mat-label>
+            <input matInput disabled placeholder="Enter medical utility type"
+              formControlName="medicalUtilityTypeOther" />
+          </mat-form-field>
+          <mat-form-field color="accent" appearance="outline">
+            <mat-label>Enter medical utility description</mat-label>
+            <textarea matInput disabled placeholder="Enter medical utility description"
+              formControlName="medicalUtilityDescription" matTextareaAutosize matAutosizeMinRows="3"
+              matAutosizeMaxRows="5"></textarea>
+          </mat-form-field>
+          <mat-form-field color="accent" appearance="outline">
+            <mat-label>Event Name </mat-label>
+            <input matInput placeholder="Enter Event Name" formControlName="eventTopic" />
+          </mat-form-field>
+
+          <mat-form-field color="accent" appearance="outline" *ngIf="false">
+            <mat-label>Event Date</mat-label>
+            <input matInput type="date" min="{{ today | date : 'yyyy-MM-dd' }}" formControlName="eventDate1" />
+          </mat-form-field>
+
+          <mat-form-field color="accent" appearance="outline" *ngIf="showScientificMedicalConference">
+            <mat-label>Valid from</mat-label>
+            <input [min]="eventDate | date: 'yyyy-MM-dd'" matInput placeholder="Valid from date" formControlName="eventValidFromDate"
+              [matDatepicker]="dobPickerValidFrom" (focus)="dobPickerValidFrom.open()">
+            <mat-datepicker-toggle matSuffix [for]="dobPickerValidFrom"></mat-datepicker-toggle><mat-datepicker
+              #dobPickerValidFrom></mat-datepicker>
+          </mat-form-field>
+          <mat-form-field color="accent" appearance="outline" *ngIf="showScientificMedicalConference">
+            <mat-label>Valid till</mat-label>
+            <input [min]="eventInitiation2.value.eventValidFromDate | date: 'yyyy-MM-dd'" matInput placeholder="Valid till date" formControlName="eventValidToDate"
+              [matDatepicker]="dobPickerValidTo" (focus)="dobPickerValidTo.open()">
+            <mat-datepicker-toggle matSuffix [for]="dobPickerValidTo"></mat-datepicker-toggle><mat-datepicker
+              #dobPickerValidTo></mat-datepicker>
+          </mat-form-field>
+
+          <!-- <mat-form-field color="accent" appearance="outline">
+            <mat-label>Class -III Event Code</mat-label>
+            <mat-select [value]="eventType">
+              <mat-option
+                *ngFor="let event of eventDetails"
+                value="{{ event.EventTypeId }}"
+                >{{ event.EventType }}</mat-option
+              >
+            </mat-select>
+          </mat-form-field> -->
+
+          <div class="d-flex justify-content-end">
+            <button mat-raised-button color="primary" class="m-1" matStepperPrevious>
+              Previous
+            </button>
+            <button mat-raised-button color="primary" class="m-1" [disabled]="!isStep2Valid" matStepperNext>
+              Next
+            </button>
+          </div>
+        </div>
+      </div>
+    </form>
+  </mat-step>
+
+  <mat-step [completed]="isStep3Valid" label="Brand Allocation">
+    <ng-template matStepLabel>
+      <div matTooltip="Brand Allocation">Brand Allocation</div>
+    </ng-template>
+    <form [formGroup]="eventInitiation3">
+      <div class="row">
+        <div class="col">
+          <mat-form-field color="accent" appearance="outline">
+            <mat-label>Brand Name</mat-label>
+            <mat-select formControlName="brandName">
+              <mat-option *ngFor="let brand of brandNames" value="{{ brand.BrandId }}">{{ brand.BrandName
+                }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <mat-form-field color="accent" appearance="outline">
+            <mat-label>% Allocation <span class="color_red">*</span></mat-label>
+            <input number matInput placeholder="Enter % Allocation"
+              formControlName="percentageAllocation" />
+          </mat-form-field>
+        </div>
+
+        <div class="col">
+          <mat-form-field color="accent" appearance="outline">
+            <mat-label>Project-ID<span class="color_red">*</span></mat-label>
+            <input matInput placeholder="Project Id " disabled [value]="projectId" />
+          </mat-form-field>
+
+          <mat-form-field color="accent" appearance="outline">
+            <mat-label>EventCode<span class="color_red">*</span></mat-label>
+            <input matInput placeholder="EventCode auto populated" disabled [value]="eventCode" />
+          </mat-form-field>
+        </div>
+        <div class="col-12 d-flex justify-content-center">
+          <button mat-raised-button color="primary" (click)="addToBrandTable()" class="m-1">
+            Add New Brand
+          </button>
+        </div>
+
+        <div class="container table-responsive">
+          <table class="table text-center table-bordered">
+            <thead>
+              <tr>
+                <th>
+                  <b><small>S.no</small></b>
+                </th>
+                <th>
+                  <b><small>Brand Name</small></b>
+                </th>
+                <th>
+                  <b><small>Allocation</small></b>
+                </th>
+                <th>
+                  <b><small>Project ID</small></b>
+                </th>
+                <th>
+                  <b><small>Actions</small></b>
+                </th>
+              </tr>
+            </thead>
+            <tbody *ngIf="showBrandTable">
+              <tr *ngFor="let brand of brandTableDetails; index as i">
+                <th scope="row">{{ i + 1 }}</th>
+                <td>{{ brand.BrandName }}</td>
+                <td>{{ brand.PercentAllocation }}%</td>
+                <td>{{ brand.ProjectId }}</td>
+                <td class="pointer">
+                  <!-- <i
+                    (click)="openBrandUpdateModal(brand)"
+                    class="material-icons m-r-5"
+                    >edit</i
+                  > -->
+                  <i (click)="deleteBrand(brand, i)" class="material-icons">delete</i>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="container d-flex justify-content-end">
+            <button mat-raised-button class="m-1 btn" matStepperPrevious>
+              Previous
+            </button>
+            <button (click)="slideKitBrandMatch()" mat-raised-button color="primary" class="m-1"
+              [disabled]="!isStep3Valid" matStepperNext>
+              Next
+            </button>
+          </div>
+        </div>
+      </div>
+    </form>
+  </mat-step>
+
+  <mat-step label="HCP’s">
+    <ng-template matStepLabel>
+      <div matTooltip="HCP’s">HCP’s</div>
+    </ng-template>
+    <form [formGroup]="eventInitiation4Other">
+
+
+
+      <div class="row">
+        <div class="col">
+
+          <mat-form-field color="accent" appearance="outline">
+            <mat-label>MIS Code</mat-label>
+            <input matInput type="text" formControlName="otherMisCode" [matAutocomplete]="autoMisCode"
+              (focus)="this.hpcnameEditing=false;this.misCodeEditing=true;">
+            <mat-autocomplete #autoMisCode="matAutocomplete">
+              <mat-option *ngFor="let a of filteredOthers" value={{a.MisCode}}>{{a.MisCode}}</mat-option>
+            </mat-autocomplete>
+          </mat-form-field>
+
+          <mat-form-field color="accent" appearance="outline">
+            <mat-label>HCP Name</mat-label>
+            <input matInput type="text" placeholder="Enter HCP Name" formControlName="otherName"
+              [matAutocomplete]="auto" (focus)="this.hpcnameEditing=true;this.misCodeEditing=false;">
+            <mat-autocomplete #auto="matAutocomplete">
+              <mat-option *ngFor="let a of filteredOthers" value={{a.HCPName}}>{{a.HCPName}}</mat-option>
+            </mat-autocomplete>
+          </mat-form-field>
+
+
+          <!-- 
+          <mat-form-field *ngIf="!hideOtherMisCode" color="accent" appearance="outline">
+            <mat-label>MIS Code</mat-label>
+            <mat-select formControlName="otherMisCode">
+              <mat-option *ngFor="let a of filteredOthersByName" value={{a.MisCode}}>{{a.MisCode}}</mat-option>
+            </mat-select>
+          </mat-form-field> -->
+
+          <!-- <button *ngIf="showHCPAddButton" type="button" class="btn btn-primary btn-sm"
+            (click)="openMaters('hcpmaster')">Add HCP</button> -->
+
+
+          <mat-form-field color="accent" appearance="outline">
+            <mat-label>HCP Type</mat-label>
+            <input matInput type="text" placeholder="Enter HCP Type" disabled [value]="otherGoNonGo">
+          </mat-form-field>
+        </div>
+
+        <!-- <div class="col">
+
+          <mat-form-field color="accent" appearance="outline">
+            <mat-label>Speciality</mat-label>
+            <input matInput type="text" placeholder="Speciality prepopulated" disabled [value]="otherSpeciality">
+          </mat-form-field>
+
+          <mat-form-field color="accent" appearance="outline">
+            <mat-label>Tier</mat-label>
+            <input matInput type="text" placeholder="Tier prepopulated" disabled [value]="otherTier">
+          </mat-form-field>
+        </div> -->
+      </div>
+
+      <div class="row">
+        <div class="col">
+          <mat-form-field color="accent" appearance="outline">
+            <mat-label>Rationale<span class="red">*</span></mat-label>
+            <input disabled matInput placeholder="Rationale" formControlName="rationale" />
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col">
+          <div class="justify-content-center">
+            <mat-label>Upload FCPA</mat-label> <br>
+            <input disabled type="file" id="FCPA" formControlName="FCPA" (change)="onFCPAFileSelected($event)"
+              accept=".pdf, .docx, .jpg, .png" />
+            <mat-icon matSuffix>attach_file</mat-icon>
+          </div><br>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col">
+          <mat-form-field appearance="outline">
+            <mat-label>FCPA Issue Date</mat-label>
+            <input matInput placeholder="FCPA Issue Date" formControlName="FCPAIssueDate"
+              [matDatepicker]="dobFCPAIssueDate" (focus)="dobFCPAIssueDate.open()">
+            <mat-datepicker-toggle matSuffix [for]="dobFCPAIssueDate"></mat-datepicker-toggle><mat-datepicker
+              #dobFCPAIssueDate></mat-datepicker>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col">
+          <div class="justify-content-center">
+            <mat-label>Upload written request</mat-label> <br>
+            <input type="file" id="writtenRequest" formControlName="writtenRequest"
+              (change)="onWrittenRequestFileSelected($event)" accept=".pdf, .docx, .jpg, .png" />
+            <mat-icon matSuffix>attach_file</mat-icon>
+          </div><br>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col">
+          <mat-form-field appearance="outline">
+            <mat-label>Upload HCP request date</mat-label>
+            <input matInput placeholder="HCP request date" formControlName="hcpRequestDate" [matDatepicker]="dobPicker"
+              (focus)="dobPicker.open()">
+            <mat-datepicker-toggle matSuffix [for]="dobPicker"></mat-datepicker-toggle><mat-datepicker
+              #dobPicker></mat-datepicker>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col">
+          <div class="justify-content-center">
+            <mat-label>Invoice/brochure/Quotation</mat-label> <br>
+            <input type="file" id="invoiceBrochureQuotation" formControlName="invoiceBrochureQuotation"
+              (change)="onInvoiceBrochureQuotationSelected($event)" accept=".pdf, .docx, .jpg, .png" />
+            <mat-icon matSuffix>attach_file</mat-icon>
+          </div><br>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col">
+          <mat-form-field color="accent" appearance="outline">
+            <mat-label>Legitimate Need</mat-label>
+            <mat-select formControlName="legitimateNeed" multiple>
+              <mat-option *ngFor="let ln of legitimatesNeed" value="{{ln['Legitimate Need']}}">{{ln['Legitimate
+                Need']}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col">
+          <mat-form-field color="accent" appearance="outline">
+            <mat-label>Objective criteria</mat-label>
+            <mat-select formControlName="objectiveCriteria" multiple>
+              <mat-option *ngFor="let oc of objectiveCriterias" value="{{oc['Objective Criteria']}}">{{oc['Objective
+                Criteria']}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+      <!-- <div class="row">
+	        <div class="col">
+	          <mat-form-field color="accent" appearance="outline">
+	            <mat-label>Enter amount (medical utility cost)</mat-label>
+	            <input
+	              matInput type="number"
+	              placeholder="Enter amount"
+	              formControlName="medicalUtilityCostAmount"
+	            />
+				</mat-form-field>
+	    	</div>
+		 </div> --><!-- 
+	    <div class="row" >
+	        <div class="col">
+	          <mat-form-field color="accent" appearance="outline">
+	            <mat-label>Selection of tax</mat-label>
+	            <mat-select formControlName="tax" >
+	              <mat-option *ngFor="let t of taxes"
+	                value={{t}}>{{t}}</mat-option>
+	            </mat-select>
+				</mat-form-field>
+	    	</div>
+		 </div> -->
+    </form>
+    <form [formGroup]="hpcExpenseSelectionForm">
+      <div class="row">
+        <div class="col">
+          <mat-form-field color="accent" appearance="outline">
+            <mat-label>Expense</mat-label>
+            <mat-select formControlName="expenseType">
+              <mat-option *ngFor="let exp of expenseTypeFiltered" value="{{ exp.ExpenseType }}">{{ exp.ExpenseType }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="expense-container">
+        <div class="row">
+          <div class="col">
+            <mat-form-field color="accent" appearance="outline">
+              <mat-label>Expense amount excluding Tax</mat-label>
+              <input disabled type="number" matInput placeholder="Enter Expense amount"
+                formControlName="expenseAmountExcludingTax" />
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col">
+            <mat-form-field color="accent" appearance="outline">
+              <mat-label>Expense amount including Tax</mat-label>
+              <input disabled type="number" matInput placeholder="Enter Expense amount"
+                formControlName="expenseAmountIncludingTax" />
+              <mat-error *ngIf="hpcExpenseSelectionForm.get('expenseAmountIncludingTax').hasError('amountComparison')">
+                Amount including tax should be greater than or equal to amount excluding tax.
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col">
+            <mat-label>Is BTC/BTE?</mat-label>
+            <mat-radio-group disabled formControlName="isExpenseBtc">
+              <div style="display: flex; justify-content: start">
+                <mat-radio-button value="BTC" class="m-2">BTC</mat-radio-button>
+                <mat-radio-button value="BTE" class="m-2">BTE</mat-radio-button>
+              </div>
+            </mat-radio-group>
+          </div>
+        </div>
+        <div class="col-12 d-flex justify-content-center">
+          <button [disabled]="!isAddNewHcpExpense" (click)="addToHpcExpenseTable()" mat-raised-button color="primary">
+            +Add New Expense
+          </button>
+        </div>
+      </div>
+    </form>
+
+    <form [formGroup]="expenseTotalSelectionForm">
+      <h4>Total expense Details</h4>
+      <div class="row">
+        <div class="col">
+          <mat-form-field color="accent" appearance="outline">
+            <mat-label>Total amount For HCP</mat-label>
+            <input disabled matInput placeholder="Enter Expense amount" formControlName="totalAmountPerHCP" />
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col">
+          <div class="m-2" *ngIf="showAggregateSpentonMedicalUtility">
+            <mat-label><b>Upload Deviation</b></mat-label><br />
+            <input type="file" (change)="
+		                onuploadHcpExpenseDeviationSelected($event)
+		              " accept=".png, .jpg, .jpeg, .txt , .doc, .pdf" formControlName="uploadHcpExpenseDeviation"
+              id="uploadHcpExpenseDeviation"/><br />
+            <span class="text-danger"><small>Allowed File Types (.png, .jpg, .txt , .doc)</small></span><br />
+            <span class="text-danger"><small>Size Should be greater than 0 KB and less than 30MB</small></span>
+          </div>
+        </div>
+      </div>
+    </form>
+    <div class="col-12 d-flex justify-content-center">
+      <button [disabled]="!isAddNewHcpPanel" (click)="addToHcpTable()" mat-raised-button color="primary">
+        Add HCP
+      </button>
+    </div>
+
+    <br>
+    <br>
+
+    <div class="container table-responsive">
+      <table class="table text-center table-bordered">
+        <thead>
+          <tr>
+            <th>
+              <b><small>S.no</small></b>
+            </th>
+            <th>
+              <b><small>HCP Name</small></b>
+            </th>
+            <th>
+              <b><small>MIS Code</small></b>
+            </th>
+            <th>
+              <b><small>GO/ N-GO</small></b>
+            </th>
+            <th>
+              <b><small>Total Expenses</small></b>
+            </th>
+            <th>
+              <b><small>Medical utility type</small></b>
+            </th>
+            <th>
+              <b><small>Budget Amount</small></b>
+            </th> <!--   
+            <th>
+              <b><small>Action</small></b>
+            </th>    -->
+          </tr>
+        </thead>
+        <tbody>
+          <ng-container *ngFor="let hpcDetail of hpcTableDetails; index as i">
+            <tr *ngIf="hpcDetail.otherName!=''">
+              <td scope="row">{{ i + 1 }}</td>
+              <td>{{ hpcDetail.otherName }}</td>
+              <td>{{ hpcDetail.otherMisCode }}</td>
+              <td>{{ hpcDetail.otherGoNonGo }}</td>
+              <td>{{ hpcDetail.medicalUtilityCostAmount }}</td>
+              <td>{{ medicalUtilityTypeName }} </td>
+              <td>{{ hpcDetail.totalAmountPerHCP }}</td>
+              <!-- <td style="cursor: pointer">
+	              <i
+	                (click)="openExpenseUpdateModal(expense)"
+	                class="material-icons"
+	                style="margin-right: 5px"
+	                >edit</i
+	              >
+	              <i (click)="deleteExpense(i)" class="material-icons">delete</i>
+	            </td> -->
+            </tr>
+            <tr *ngIf="hpcDetail.otherName!=''">
+              <td colspan="7">
+                <table class="table text-center table-bordered">
+                  <thead>
+                    <tr>
+                      <th>
+                        <b><small>S.no</small></b>
+                      </th>
+                      <th>
+                        <b><small>Expense</small></b>
+                      </th>
+                      <th>
+                        <b><small>Amount</small></b>
+                      </th>
+                      <th>
+                        <b><small>BTC/BTE</small></b>
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let hpcExpense of hpcDetail.hpcExpenses; index as j">
+                      <td scope="row">{{ j + 1 }}</td>
+                      <td width="60%">{{ hpcExpense.Expense }}</td>
+                      <td>{{ hpcExpense.Amount }}</td>
+                      <td>{{ hpcExpense.BtcorBte }}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </td>
+            </tr>
+          </ng-container>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="container table-responsive">
+      <h5>Expense Summary BTE</h5>
+      <table class="table text-center table-bordered">
+        <thead>
+          <tr>
+            <th><b><small>S.no</small></b></th>
+            <th><b><small>Expense Type</small></b></th>
+            <th><b><small>BTE Amount</small></b></th>
+
+
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let expense of BTESummaryTable; index as i">
+            <th scope="row">{{i+1}}</th>
+            <td>{{expense.Expense}}</td>
+            <td>{{expense.Amount}}</td>
+          </tr>
+        </tbody>
+        <tfoot>
+          <tr>
+            <td colspan="2" class="text-right"><b><small>Total BTE Amount</small></b></td>
+            <td>{{hpcBTETotalAmount}}</td>
+          </tr>
+        </tfoot>
+
+      </table>
+    </div>
+
+    <div class="container table-responsive">
+      <h5>Expense Summary BTC</h5>
+      <table class="table text-center table-bordered">
+        <thead>
+          <tr>
+            <th><b><small>S.no</small></b></th>
+            <th><b><small>Expense Type</small></b></th>
+            <th><b><small>BTC Amount</small></b></th>
+
+
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let expense of BTCSummaryTable; index as i">
+            <th scope="row">{{i+1}}</th>
+            <td>{{expense.Expense}}</td>
+            <td>{{expense.Amount}}</td>
+          </tr>
+        </tbody>
+        <tfoot>
+          <tr>
+            <td colspan="2" class="text-right"><b><small>Total BTE Amount</small></b></td>
+            <td>{{hpcBTCTotalAmount}}</td>
+          </tr>
+        </tfoot>
+
+      </table>
+    </div>
+
+    <div class="col-12 d-flex justify-content-center">
+      <button mat-raised-button class="m-1 btn" matStepperPrevious>
+        Previous
+      </button>
+      &nbsp;&nbsp;&nbsp;
+      <button [disabled]="!isSubmitMedicalUtility" (click)="submitForm()" mat-raised-button
+        color="primary">Submit</button>
+    </div>
+
+  </mat-step>
+</mat-stepper>
+
+<app-spinner-loader [isLoading]="loadingIndicator"></app-spinner-loader>

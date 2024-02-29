@@ -1,0 +1,64 @@
+/* Style for the table and cells */
+table.table-bordered > thead > tr > th {
+    border:1px solid black;
+  }
+  table.table-bordered > tbody > tr > th,td {
+   /* border:1px solid rgb(209, 162, 162);*/
+    border:1px solid black !important;
+  }
+  table.table-striped > thead > tr > th {
+    border:1px solid black !important;
+  }
+  table.table-striped > tbody > tr > th,td {
+   /* border:1px solid rgb(209, 162, 162);*/
+    border:1px solid black !important;
+  }
+
+
+th{
+   text-align: center !important;
+   color: black;
+    border:1px solid black !important;
+}
+
+/* Style for the search box */
+.mat-form-field {
+  width: 50%;
+  border-radius: 20px; /* Adjust the value for the desired border radius */
+}
+/* Style for the no records found row */
+.no-data-row {
+  text-align: center;
+  color: black;
+  font-style: italic;
+}
+/* Style for the search box */
+.search-box {
+  display: flex;
+  align-items: center;
+  width: 50%;
+  border-radius: 10px;
+  position: relative;
+  margin: 20px auto;
+}
+
+/* Style for the search icon */
+.search-icon {
+  position: absolute;
+  right: 10px;
+  cursor: pointer;
+  margin-top: -10px;
+}
+/* Style for the search input */
+.search-box input {
+}
+
+/* Style for the search input placeholder */
+.search-box ::ng-deep .mat-form-field-placeholder {
+  text-align: center;
+  color: black; /* Optional: Change the color of the placeholder */
+}
+.mat-dialog-container {
+  max-height: 400px; /* Set the maximum height as needed */
+  overflow-y: auto; /* Enable vertical scrollbar if content overflows */
+}

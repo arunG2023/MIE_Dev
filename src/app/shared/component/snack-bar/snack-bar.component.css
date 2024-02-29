@@ -1,0 +1,13 @@
+::ng-deep .mat-snack-bar-container.success{
+    background-color: #66CC00;
+    color: #000;
+}
+
+::ng-deep .mat-snack-bar-container.error{
+    background-color: red;
+    color: #fff;
+}
+
+.snackbar-content{
+    text-align: center;
+}

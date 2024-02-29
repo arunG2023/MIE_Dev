@@ -1,0 +1,117 @@
+ <!-- <div class="main-content">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card">
+          <div class="card-header card-header-danger">
+            <h4 class="card-title">Post Event Settlements</h4>
+          </div>
+
+          <div class="card-body"> 
+            <div class="row">
+              <div class="col-md-12">
+                <div class="card">
+                  <div class="card-body"> -->
+                    <!-- <app-event-pending [eventType]="'honararium'"></app-event-pending> -->
+
+                    <!-- <div class="container table-responsive">
+                      <form [formGroup]="honorarium">
+                        <mat-form-field color="accent" appearance="outline">
+                          <mat-label>Select Event ID</mat-label>
+                          <mat-select formControlName="EventId">
+                            <mat-option
+                              (onSelectionChange)="change($event)"
+                              *ngFor="let selectId of eventListafter2days"
+                              value="{{ selectId['EventId/EventRequestId'] }}"
+                              >{{
+                                selectId["EventId/EventRequestId"]
+                              }}</mat-option
+                            >
+                          </mat-select>
+                        </mat-form-field>
+                      </form>
+                    </div> -->
+
+                    <div class="container table-responsive" *ngIf="expense">
+                      <h5 class="font_size_27 font_weight_900">Expense Summary BTC</h5>
+                      <table class="table text-center table-bordered">
+                        <thead>
+                          <tr>
+                            <th><b><small>S.no</small></b></th>
+                            <th><b><small>Expense</small></b></th>
+                            <th><b><small>Type</small></b></th>
+                           
+                            <th><b><small>BTC Amount</small></b></th>
+                            <th><b><small>Actual Amount</small></b></th>
+                            <th><b><small>Jv Number</small></b></th>
+                            <th><b><small>Jv Date</small></b></th>
+                          </tr>
+                        </thead>
+                        <tbody >
+                          <!-- <tr *ngFor="let summary of BTCSummaryTable; index as i">
+                            <th scope="row">{{i+1}}</th>
+                            <td>{{summary.expense}}</td>
+                            <td>{{summary.includingTax}}</td>
+                            <td>{{summary.amount}}</td>
+                          </tr> -->
+                        </tbody>
+                        <tfoot>
+                          <tr>
+                            <td colspan="3" class="text-right"><b><small>Total BTC Amount</small></b></td>
+                            <!-- <td>{{BTCTotalAmount}}</td>   -->
+                          </tr>
+                        </tfoot>
+                 
+                      </table>
+                    </div>
+
+                    <div class="container table-responsive" *ngIf="expense">
+                      <h5 class="font_size_27 font_weight_900">Expense Summary BTE</h5>
+                      <table class="table text-center table-bordered">
+                        <thead>
+                          <tr>
+                            <th><b><small>S.no</small></b></th>
+                            <th><b><small>Expense</small></b></th>
+                            <th><b><small>Type</small></b></th>
+                           
+                            <th><b><small>BTC Amount</small></b></th>
+                            <th><b><small>Actual Amount</small></b></th>
+                            <th><b><small>Jv Number</small></b></th>
+                            <th><b><small>Jv Date</small></b></th>
+                          </tr>
+                        </thead>
+                        <tbody >
+                          <!-- <tr *ngFor="let summary of BTCSummaryTable; index as i">
+                            <th scope="row">{{i+1}}</th>
+                            <td>{{summary.expense}}</td>
+                            <td>{{summary.includingTax}}</td>
+                            <td>{{summary.amount}}</td>
+                          </tr> -->
+                        </tbody>
+                        <tfoot>
+                          <tr>
+                            <td colspan="3" class="text-right"><b><small>Total BTC Amount</small></b></td>
+                            <!-- <td>{{BTCTotalAmount}}</td>   -->
+                          </tr>
+                        </tfoot>
+                 
+                      </table>
+                    </div>
+
+                    <div class="row margin_0" *ngIf="expense">
+                      <div class="col-5"></div>
+                      <button mat-raised-button color="primary">
+                        Submit
+                      </button>
+                    </div>
+                 <!-- </div>
+                </div>
+              </div>
+            </div>
+           </div>
+        </div>
+      </div>
+    </div>
+   
+  </div>
+</div> -->

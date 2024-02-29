@@ -1,0 +1,381 @@
+<h4 class="d-flex justify-content-center">Invitee Selection</h4>
+<div class="row">
+    <div class="col">
+        <mat-form-field color="accent" appearance="outline">
+            <mat-label>Invitees From</mat-label>
+            <mat-select (ngModelChange)="onInviteeValueChange($event)" [ngModelOptions]="{standalone: true}"
+                [(ngModel)]="isInviteeSelect">
+                <mat-option value="HCP Master">from HCP master</mat-option>
+                <mat-option value="Menarini Employees">from Menarini</mat-option>
+                <mat-option value="Others">Non-HCP </mat-option>
+            </mat-select>
+        </mat-form-field>
+    </div>
+</div>
+<form [formGroup]="hcpMasterForm" *ngIf="showHcpForm">
+    <h4 class="d-flex justify-content-center">HCP Master</h4>
+    <div class="row">
+        <div class="col">
+            <mat-form-field color="accent" appearance="outline">
+                <mat-label>Invitee MIS Code</mat-label>
+                <input (ngModelChange)="misCodeChange($event)" matInput type="text" placeholder="Mention Invitees Name"
+                    [ngModelOptions]="{standalone: true}" [(ngModel)]="MisCode" [matAutocomplete]="auto">
+
+                <!-- <mat-autocomplete #auto="matAutocomplete">
+                    <mat-option *ngFor="let a of hcpFilteredByMisCode" value={{a.MisCode}}>{{a.HCPName +" ("
+                        +a.MisCode+")"}}</mat-option>
+                </mat-autocomplete> -->
+                <mat-autocomplete #auto="matAutocomplete">
+                    <mat-option *ngFor="let a of hcpFilteredByMisCode" value={{a.MisCode}}>{{a.MisCode}}</mat-option>
+                </mat-autocomplete>
+            </mat-form-field>
+        </div>
+        <div class="col">
+            <mat-form-field color="accent" appearance="outline">
+                <mat-label>Invitee Name</mat-label>
+                <input matInput type="text" formControlName="inviteeName">
+            </mat-form-field>
+        </div>
+    </div>
+
+    <div>
+        <form [formGroup]="localForHcpForm">
+            <div class="row">
+                <div class="col">
+                    <mat-label><b>Is Local Conveyance applicable?</b></mat-label>
+                    <mat-radio-group value="No" formControlName="localYesorNoForHcp">
+                        <div class="mt-2 ">
+                            <mat-radio-button value="Yes">Yes</mat-radio-button>
+                            <mat-radio-button value="No" class="m-1">No</mat-radio-button>
+                        </div>
+                    </mat-radio-group>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <div>
+        <form [formGroup]="inviteeLCFormForHcp" *ngIf="showLCFormForHcp">
+            <div class="row">
+                <!-- <h4 class="d-flex justify-content-center">Local Conveyance</h4> -->
+
+                <div class="col">
+                    <mat-label><b>Is BTC / BTE?</b></mat-label>
+                    <mat-radio-group formControlName="inviteeBTC">
+                        <div class="mt-2 ">
+                            <mat-radio-button value="BTC">BTC</mat-radio-button>
+                            <mat-radio-button value="BTE" class="m-1">BTE</mat-radio-button>
+                        </div>
+                    </mat-radio-group>
+
+                    <mat-form-field color="accent" appearance="outline">
+                        <mat-label>Enter Local Conveyance Amount Excluding tax</mat-label>
+                        <input matInput type="number" formControlName="inviteeLocalConveyanceAmountExcludingTax">
+                    </mat-form-field>
+                </div>
+                <div class="col">
+                    <mat-form-field color="accent" appearance="outline">
+                        <mat-label>Enter Local Conveyance Amount Including Tax</mat-label>
+                        <input matInput type="number" 
+                         formControlName="inviteeLocalConveyanceAmountIncludingTax">
+                    </mat-form-field>
+                </div>
+            </div>
+        </form>
+    </div>
+
+
+    <div class="col-12 d-flex justify-content-center">
+        <button type="button" class="btn btn-primary btn-sm" (click)="addToInviteeTableForHcp()">Add New</button>
+    </div>
+
+    <div class="container table-responsive">
+        <table class="table text-center table-bordered">
+            <thead>
+                <tr>
+                    <th><b><small>S.no</small></b></th>
+                    <th><b><small>HCP Name</small></b></th>
+                    <th><b><small>MIS Code</small></b></th>
+                    <th><b><small>Local Conveyance Applicable</small></b></th>
+                    <th><b><small>BTC/BTE</small></b></th>
+                    <th><b><small>Local Conveyance Amount Including Tax </small></b></th>
+                    <th><b><small>Local Conveyance Amount Excluding Tax </small></b></th>
+                    <th><b><small>Actions</small></b></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let invitee of inviteeTableDetailsForHcp; index as i">
+                    <td>{{i+1}}</td>
+                    <td>{{invitee.hcpName || invitee.NewInviteeName}}</td>
+                    <td>{{invitee.misCode}}</td>
+                    <td>{{invitee.localConvenyence}}</td>
+                    <td>{{invitee.btcBte}}</td>
+                    <td>{{invitee.localAmountIncludingtax }} </td>
+                    <td>{{invitee.localAmountExcludingTax }} </td>
+                    <td style="cursor: pointer;">
+                        <!-- <i (click)="openInviteeUpdateModalForHcp(invitee)" class="material-icons"
+                            style="margin-right: 5px;">edit</i> -->
+                        <i (click)="deleteInviteeForHcp(i,invitee)" class="material-icons">delete</i>
+                    </td>
+
+
+                </tr>
+            </tbody>
+
+        </table>
+    </div>
+
+</form>
+<form [formGroup]="menariniForm" *ngIf="showMenariniForm">
+    <h4 class="d-flex justify-content-center">Menarini Employee Master</h4>
+
+    <div class="row">
+        <div class="col">
+            <!-- <mat-form-field color="accent" appearance="outline">
+                <mat-label>Employee Code</mat-label>
+                <input matInput type="text" placeholder="Mention Employee Code" formControlName="employeeCode"> -->
+
+                <mat-form-field color="accent" appearance="outline">
+                    <mat-label>Employee Code</mat-label>
+                    <input (ngModelChange)="employeeCodeChange($event)" matInput type="text" placeholder="Mention Invitees EmployeeCode"
+                        [ngModelOptions]="{standalone: true}" [(ngModel)]="EmployeeId" [matAutocomplete]="auto">
+                        <mat-autocomplete #auto="matAutocomplete">
+                            <mat-option *ngFor="let a of hcpFilteredByEmployeeId" value={{a.EmployeeId}}>{{a.EmployeeId}}</mat-option>
+                        </mat-autocomplete>
+                    </mat-form-field>
+                <!--  <mat-autocomplete #auto="matAutocomplete">
+                    <mat-option  *ngFor="let a of hcpFilteredByMisCode" value={{a.MisCode}}>{{a.HCPName +" (" +a.MisCode+")"}}</mat-option>
+                </mat-autocomplete> -->
+            <!-- </mat-form-field> -->
+        </div>
+        <div class="col">
+            <mat-form-field color="accent" appearance="outline">
+                <mat-label>Employee Name</mat-label>
+                <input matInput type="text" formControlName="employeeName">
+            </mat-form-field>
+        </div>
+    </div>
+    <div>
+        <form [formGroup]="localForMenarini">
+            <div class="row">
+                <div class="col">
+                    <mat-label><b>Is Local Conveyance applicable?</b></mat-label>
+                    <mat-radio-group value="No" formControlName="localYesorNoForMenarini">
+                        <div class="mt-2 ">
+                            <mat-radio-button value="Yes">Yes</mat-radio-button>
+                            <mat-radio-button value="No" class="m-1">No</mat-radio-button>
+                        </div>
+                    </mat-radio-group>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div>
+        <form [formGroup]="inviteeLCFormForMenarini" *ngIf="showLCFormMenarini">
+
+
+            <div class="row">
+                <div class="col">
+                    <mat-label><b>Is BTC / BTE?</b></mat-label>
+                    <mat-radio-group formControlName="inviteeBTCForMenarini">
+                        <div class="mt-2 ">
+                            <mat-radio-button value="BTC">BTC</mat-radio-button>
+                            <mat-radio-button value="BTE" class="m-1">BTE</mat-radio-button>
+                        </div>
+                    </mat-radio-group>
+
+                    <mat-form-field color="accent" appearance="outline">
+                        <mat-label>Enter Local Conveyance Amount Excluding tax</mat-label>
+                        <input matInput type="number"
+                            formControlName="inviteeLocalConveyanceAmountExcludingTaxForMenarini">
+                    </mat-form-field>
+                </div>
+                <div class="col">
+                    <mat-form-field color="accent" appearance="outline">
+                        <mat-label>Enter Local Conveyance Amount Including Tax</mat-label>
+                        <input matInput type="number" 
+                            formControlName="inviteeLocalConveyanceAmountIncludingTaxForMeanrini">
+                    </mat-form-field>
+                </div>
+            </div>
+
+
+        </form>
+    </div>
+    <div class="col-12 d-flex justify-content-center">
+        <button type="button" class="btn btn-primary btn-sm" (click)="addToInviteeTableForMenarini()">Add New</button>
+    </div>
+
+    <div class="container table-responsive">
+        <table class="table text-center table-bordered">
+            <thead>
+                <tr>
+                    <th><b><small>S.no</small></b></th>
+                    <th><b><small>Employee Name</small></b></th>
+                    <th><b><small>Employee Code</small></b></th>
+                    <th><b><small>Local Conveyance Applicable</small></b></th>
+                    <th><b><small>BTC/BTE</small></b></th>
+                    <th><b><small>Local Conveyance Amount Including Tax</small></b></th>
+                    <th><b><small>Local Conveyance Amount Excluding Tax</small></b></th>
+                    <th><b><small>Actions</small></b></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let invitee of inviteeTableDetailsForMenarini; index as i">
+                    <td>{{i+1}}</td>
+                    <td>{{invitee.empolyeeName || invitee.NewInviteeName}}</td>
+                    <td>{{invitee.employeeCode}}</td>
+                    <td>{{invitee.localConvenyence}}</td>
+                    <td>{{invitee.btcBte}}</td>
+                    <td>{{invitee.localAmountIncludingtax }} </td>
+                    <td>{{invitee.localAmountExcludingTax }} </td>
+                    <td style="cursor: pointer;">
+                        <!-- <i (click)="openInviteeUpdateModalForMenarini(invitee)" class="material-icons"
+                            style="margin-right: 5px;">edit</i> -->
+                        <i (click)="deleteInviteeForMenarini(i,invitee)" class="material-icons">delete</i>
+                    </td>
+
+
+                </tr>
+            </tbody>
+
+        </table>
+    </div>
+</form>
+<form [formGroup]="nonHcpForm" *ngIf="showNonHcpForm">
+    <h4 class="d-flex justify-content-center">Non HCP Master</h4>
+
+    <div class="row">
+        <div class="col">
+            <mat-form-field color="accent" appearance="outline">
+                <mat-label>HCP Name</mat-label>
+                <input matInput type="text" formControlName="hcpName">
+            </mat-form-field>
+
+            <mat-form-field color="accent" appearance="outline">
+                <mat-label>Speciality</mat-label>
+                <input matInput type="text" formControlName="speacility">
+            </mat-form-field>
+        </div>
+        <div class="col">
+            <mat-form-field color="accent" appearance="outline">
+                <mat-label>HCP Type</mat-label>
+                <mat-select formControlName="hcpType">
+                    <mat-option value="NGO">NGO</mat-option>
+                    <mat-option value="GO-A">GO-A</mat-option>
+
+                </mat-select>
+            </mat-form-field>
+        </div>
+    </div>
+    <div>
+        <form [formGroup]="localForNonHcp">
+            <div class="row">
+                <div class="col">
+                    <mat-label><b>Is Local Conveyance applicable?</b></mat-label>
+                    <mat-radio-group value="No" formControlName="localYesorNoForNonHcp">
+                        <div class="mt-2 ">
+                            <mat-radio-button value="Yes">Yes</mat-radio-button>
+                            <mat-radio-button value="No" class="m-1">No</mat-radio-button>
+                        </div>
+                    </mat-radio-group>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div>
+        <form [formGroup]="inviteeLCFormForNonHcp" *ngIf="showLCFormNonHcp">
+
+            <div class="row">
+
+                <div class="col">
+                    <mat-label><b>Is BTC / BTE?</b></mat-label>
+                    <mat-radio-group formControlName="inviteeBTCForNonHcp">
+                        <div class="mt-2 ">
+                            <mat-radio-button value="BTC">BTC</mat-radio-button>
+                            <mat-radio-button value="BTE" class="m-1">BTE</mat-radio-button>
+                        </div>
+                    </mat-radio-group>
+
+                    <mat-form-field color="accent" appearance="outline">
+                        <mat-label>Enter Local Conveyance Amount Excluding tax</mat-label>
+                        <input matInput type="number"
+                            formControlName="inviteeLocalConveyanceAmountExcludingTaxForNonHcp">
+                    </mat-form-field>
+                </div>
+                <div class="col">
+                    <mat-form-field color="accent" appearance="outline">
+                        <mat-label>Enter Local Conveyance Amount Including Tax</mat-label>
+                        <input matInput type="number"
+                            formControlName="inviteeLocalConveyanceAmountIncludingTaxForNonHcp">
+                    </mat-form-field>
+                </div>
+            </div>
+
+
+        </form>
+    </div>
+    <div class="col-12 d-flex justify-content-center">
+        <button type="button" class="btn btn-primary btn-sm" (click)="addToInviteeTableForNonHcp()">Add New</button>
+    </div>
+
+    <div class="container table-responsive">
+        <table class="table text-center table-bordered">
+            <thead>
+                <tr>
+                    <th><b><small>S.no</small></b></th>
+                    <th><b><small>HCP Name</small></b></th>
+                    <th><b><small>Speciality</small></b></th>
+                    <th><b><small>HCP Type</small></b></th>
+                    <th><b><small>Local Conveyance Applicable</small></b></th>
+                    <th><b><small>BTC/BTE</small></b></th>
+                    <th><b><small>Local Conveyance Amount Including Tax</small></b></th>
+                    <th><b><small>Local Conveyance Amount Excluding Tax</small></b></th>
+                    <th><b><small>Actions</small></b></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let invitee of inviteeTableDetailsForNonHcp; index as i">
+                    <td>{{i+1}}</td>
+                    <td>{{invitee.hcpName || invitee.NewInviteeName}}</td>
+                    <td>{{invitee.speciality}}</td>
+                    <td>{{invitee.hcpType}}</td>
+                    <td>{{invitee.localConvenyence}}</td>
+                    <td>{{invitee.btcBte}}</td>
+                    <td>{{invitee.localAmountIncludingtax}} </td>
+                    <td>{{invitee.localAmountExcludingTax}} </td>
+                    <td style="cursor: pointer;">
+                        <!-- <i (click)="openInviteeUpdateModalForNonHcp(invitee)" class="material-icons"
+                            style="margin-right: 5px;">edit</i> -->
+                        <i (click)="deleteInviteeForNonHcp(i,invitee)" class="material-icons">delete</i>
+                    </td>
+
+
+                </tr>
+            </tbody>
+
+        </table>
+    </div>
+</form>
+<form [formGroup]="uploadFilesForm">
+<div class="row">
+    <div class="col">
+        <div class="p-2 m-1">
+            <mat-label><b>Upload Agenda</b> <span style="color: red;">*</span></mat-label><br>
+            <input type="file" (change)="onFileSelected($event,'other','agendaUpload')" [accept]="allowedTypesForHTML"
+                formControlName="agendaUpload"><br>
+            <span class="text-danger"><small>Allowed File Types (.png, .jpg, .txt , .doc)</small></span><br>
+            <span class="text-danger"><small>Size Should be greater than 0 KB and less than 30MB</small></span>
+        </div>
+
+        <div class="p-2 m-1">
+            <mat-label><b>Upload Invitation</b> <span style="color: red;">*</span></mat-label><br>
+            <input type="file" (change)="onFileSelected($event,'other','invitationUploadFile')" [accept]="allowedTypesForHTML"
+                formControlName="invitationUploadFile"><br>
+            <span class="text-danger"><small>Allowed File Types (.png, .jpg, .txt , .doc)</small></span><br>
+            <span class="text-danger"><small>Size Should be greater than 0 KB and less than 30MB</small></span>
+        </div>
+    </div>
+</div>
+</form>
+<app-spinner-loader [isLoading]="loadingIndicator"></app-spinner-loader>

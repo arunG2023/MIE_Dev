@@ -1,0 +1,98 @@
+<!-- <div class="main-content">
+    <div class="container-fluid">
+          <p>Dashboard Works</p>
+          <p>Welcome <b>{{userEmail}}</b></p>
+          <p>Role <b>{{role}}</b></p>
+        </div> -->
+  
+        <div class="main-content">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-lg-4 col-md-6 col-sm-6">
+                        <div class="card card-stats">
+                            <div class="card-header card-header-info card-header-icon">
+                                <div class="card-icon">
+                                    <i class="material-icons">schedule</i>
+                                </div>
+                                <p class="card-category">Outstanding Event</p>
+                                <h3 class="card-title">{{outstandingEventsCount}}</h3>
+                            </div>
+                            <div class="card-footer">
+                                <div class="stats">
+                                    <!-- <i class="material-icons">date_range</i> Last 24 Hours -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-6 col-sm-6">
+                        <div class="card card-stats">
+                            <div class="card-header card-header-success card-header-icon">
+                                <div class="card-icon">
+                                    <i class="material-icons">done</i>
+                                </div>
+                                <p class="card-category">Closed Events</p>
+                                <h3 class="card-title">{{completedEventCount}}</h3>
+                            </div>
+                            <div class="card-footer">
+                                <div class="stats">
+                                    <!-- <i class="material-icons">local_offer</i> Tracked from Github -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-6 col-sm-6">
+                        <div class="card card-stats">
+                            <div class="card-header card-header-danger card-header-icon">
+                                <div class="card-icon">
+                                    <i class="material-icons">cancel</i>
+                                </div>
+                                <p class="card-category">Approval Pending</p>
+                                <h3 class="card-title">{{outstandingEventsCount}}</h3>
+                            </div>
+                            <div class="card-footer">
+                                <div class="stats">
+                                    <!-- <i class="material-icons">update</i> Just Updated -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+        
+                <div class="row">
+                    <div class="col-lg-12 col-md-12">
+                        <div class="card">
+                            <div class="card-header card-header-warning">
+                                <h4 class="card-title">Event Details</h4>
+                                <p class="card-category">Outstanding Events</p>
+                            </div>
+                            <div class="card-body table-responsive">
+                                <table class="table table-hover">
+                                    <thead class="text-warning">
+                                        <th>Event ID</th>
+                                        <th>Event Type</th>
+                                        <th>Event Venue</th>
+                                        <th>Initiated By</th>
+                                    </thead>
+                                    <tbody>
+                                        <tr *ngFor="let events of outstandingEventList | paginate: { itemsPerPage: pageRowLimit, currentPage: page }" >
+                                            <td>{{events['EventId/EventRequestId']}}</td>   
+                                            <td>{{events.EventType}}</td> 
+                                            <td>{{events.VenueName || 'NA'}}</td>
+                                            <td>{{events.InitiatorName}}</td>
+                                            
+                                        
+                                        </tr>
+                                        <tr>
+                                            <td colspan="4" class="pagination-row"><pagination-controls (pageChange)="pageChanged($event)"></pagination-controls></td>
+                                          </tr>
+                                           
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+<app-spinner-loader [isLoading]="loadingIndicator"></app-spinner-loader>
+        

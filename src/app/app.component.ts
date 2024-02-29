@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { UtilityService } from './services/utility.service';
 
 @Component({
   selector: 'app-root',
@@ -8,8 +7,4 @@ import { UtilityService } from './services/utility.service';
 })
 export class AppComponent {
   title = 'MIE_TEMPLATE_NEW';
-
-  constructor(private utilityService : UtilityService){
-    utilityService.getPreviousEventsFast();
-  }
 }

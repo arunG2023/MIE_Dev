@@ -4,7 +4,7 @@ import { BrowserModule  } from '@angular/platform-browser';
 import { Routes, RouterModule } from '@angular/router';
 
 // import { AdminLayoutComponent } from './layouts/admin-layout/admin-layout.component';
-import { PublicLayoutComponent } from './public-layout/public-layout.component';
+import { PublicLayoutComponent } from './layout/public-layout.component';
 import { LoginComponent } from './login/login.component';
 
 const routes: Routes =[
@@ -16,7 +16,7 @@ const routes: Routes =[
     component: PublicLayoutComponent,
     children: [{
       path: '',
-      loadChildren: () => import('./public-layout/public-layout.module').then(m => m.PublicLayoutModule) 
+      loadChildren: () => import('./layout/public-layout.module').then(m => m.PublicLayoutModule) 
     }]
   }
 ];
@@ -25,9 +25,7 @@ const routes: Routes =[
   imports: [
     CommonModule,
     BrowserModule,
-    RouterModule.forRoot(routes,{
-       useHash: true
-    })
+    RouterModule.forRoot(routes, {useHash: false})
   ],
   exports: [
   ],

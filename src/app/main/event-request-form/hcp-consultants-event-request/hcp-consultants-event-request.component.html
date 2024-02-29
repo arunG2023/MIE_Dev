@@ -1,0 +1,708 @@
+<mat-stepper [linear]="isLinear" labelPosition="bottom">
+  <mat-step [completed]="isStep1Valid" label="Pre Event Check">
+    <ng-template matStepLabel>
+      <div matTooltip="Pre Event Check">Pre Event Check</div>
+    </ng-template>
+    <p class="text-danger h5">Previous Events that are within 45 days from today</p>
+    <div class="container table-responsive">
+      <table class="table text-center table-bordered table-striped">
+        <thead>
+          <tr>
+            <th><b><small>S.no</small></b></th>
+            <th><b><small>Event ID</small></b></th>
+            <th><b><small>Event Type</small></b></th>
+            <th><b><small>Venue</small></b></th>
+            <th><b><small>Event Date</small></b></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr
+            *ngFor="let event of eventsWithin30Days | paginate: { itemsPerPage: pageRowLimit, currentPage: page } , index as i">
+            <th scope="row">{{i+1}}</th>
+            <td>{{event['EventId/EventRequestId']}}</td>
+            <td>{{event.EventType}}</td>
+            <td>{{event.VenueName}}</td>
+            <td>{{event.EventDate}}</td>
+          </tr>
+          <tr>
+            <td colspan="5" class="pagination-row"><pagination-controls
+                (pageChange)="pageChanged($event)"></pagination-controls></td>
+          </tr>
+
+        </tbody>
+
+      </table>
+    </div>
+
+    <form [formGroup]="eventInitiation1">
+
+      <div class="row">
+        <div class="col" *ngIf="show30DaysUploaDeviation">
+          <div class="p-2 m-1">
+            <mat-label><b>Outstanding with intiator for more than 45 days</b><span
+                style="color: red;">*</span></mat-label><br>
+            <input type="file" (change)="onFileSelected($event,'deviation','withIn30DaysDeviation')"
+              [accept]="allowedTypesForHTML" formControlName="withIn30DaysDeviation"><br>
+            <span class="text-danger"><small>Allowed File Types (.png, .jpg, .txt , .doc)</small></span><br>
+            <span class="text-danger"><small>Size Should be greater than 0 KB and less than 30MB</small></span>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col">
+          <div class="p-2 m-1">
+            <mat-form-field color="accent" appearance="outline">
+              <mat-label>Event Start Date</mat-label>
+              <input matInput type="date" min="{{ today | date: 'yyyy-MM-dd'}}" formControlName="eventDate">
+            </mat-form-field>
+          </div>
+
+        </div>
+
+        <div class="col">
+          <div class="p-2 m-1" *ngIf="show7DaysUploadDeviation">
+            <mat-label><b>5 days from the Event Date</b><span style="color: red;">*</span></mat-label><br>
+            <input type="file" (change)="onFileSelected($event,'deviation','next7DaysDeviation')"
+              [accept]="allowedTypesForHTML" formControlName="next7DaysDeviation"><br>
+            <span class="text-danger"><small>Allowed File Types (.png, .jpg, .txt , .doc)</small></span><br>
+            <span class="text-danger"><small>Size Should be greater than 0 KB and less than 30MB</small></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="d-flex justify-content-end align-items-center">
+        <!-- <button mat-raised-button color="warn" matStepperNext  (click)="stepper.reset()" class="m-1">Reset</button> -->
+        <button mat-raised-button color="primary" [disabled]="!isStep1Valid" matStepperNext class="m-1">Next</button>
+      </div>
+    </form>
+  </mat-step>
+  <mat-step [stepControl]="eventInitiation2" [completed]="isStep2Valid" label="Event-Details">
+    <ng-template matStepLabel>
+      <div matTooltip="Event Details">Event Details</div>
+    </ng-template>
+    <form [formGroup]="eventInitiation2">
+      <div class="row">
+        <div class="col">
+          <mat-form-field color="accent" appearance="outline">
+            <mat-label>Event Type<span style="color: red;">*</span></mat-label>
+            <mat-select disabled [value]="eventType">
+              <mat-option *ngFor="let event of eventDetails"
+                value={{event.EventTypeId}}>{{event.EventType}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <mat-form-field color="accent" appearance="outline">
+            <mat-label>Event Name</mat-label>
+            <input matInput placeholder="Enter Event Name" formControlName="eventTopic">
+          </mat-form-field>
+
+          <mat-form-field color="accent" appearance="outline">
+            <mat-label>Event Start Date<span style="color: red;">*</span></mat-label>
+            <input matInput disabled [value]="eventDate" min="{{ today | date: 'yyyy-MM-dd'}}" >
+          </mat-form-field>
+
+          <mat-form-field color="accent" appearance="outline">
+            <mat-label>Event End Date</mat-label>
+            <input matInput type="date" [min]="eventDate | date: 'yyyy-MM-dd'" formControlName="eventEndDate">
+          </mat-form-field>
+
+
+         
+        </div>
+
+        <div class="col">
+
+          <mat-form-field color="accent" appearance="outline">
+            <mat-label>Sponsorship Society Name<span style="color: red;">*</span></mat-label>
+            <input matInput type="text" formControlName="sponsorshipSocietyName">
+          </mat-form-field>
+
+          <mat-form-field color="accent" appearance="outline">
+            <mat-label>Venue Name </mat-label>
+            <input matInput placeholder="Venue Name" formControlName="venueName">
+          </mat-form-field>
+
+          <mat-form-field color="accent" appearance="outline">
+            <mat-label>Venue Country</mat-label>
+            <mat-select formControlName="country">
+              <mat-option value="India">India</mat-option>
+              <mat-option value="Singapore">Singapore</mat-option>
+            </mat-select>
+          </mat-form-field>
+
+        
+
+
+          <div class="d-flex justify-content-end">
+            <button mat-raised-button color="accent" class="m-1" matStepperPrevious>Previous</button>
+            <button mat-raised-button color="primary" class="m-1" [disabled]="!isStep2Valid"
+              matStepperNext>Next</button>
+          </div>
+
+        </div>
+      </div>
+    </form>
+  </mat-step>
+  <mat-step [completed]="isStep3Valid" label="Brand Allocation">
+    <ng-template matStepLabel>
+      <div matTooltip="Brand Allocation">Brand Allocation</div>
+    </ng-template>
+    <form [formGroup]="eventInitiation3">
+      <div class="row">
+
+        <div class="col">
+          <mat-form-field color="accent" appearance="outline">
+            <mat-label>Brand Name</mat-label>
+            <mat-select formControlName="brandName">
+              <mat-option *ngFor="let brand of brandNames" value={{brand.BrandId}}>{{brand.BrandName}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <mat-form-field color="accent" appearance="outline">
+            <mat-label>% Allocation</mat-label>
+            <input matInput placeholder="Enter Brand Allocation" formControlName="percentageAllocation">
+          </mat-form-field>
+        </div>
+
+        <div class="col">
+          <mat-form-field color="accent" appearance="outline">
+            <mat-label>Project-ID<span style="color: red;">*</span></mat-label>
+            <input matInput placeholder="Project Id auto populated" disabled [value]="projectId">
+          </mat-form-field>
+
+          <mat-form-field color="accent" appearance="outline">
+            <mat-label>EventCode<span style="color: red;">*</span></mat-label>
+            <input matInput placeholder="EventCode auto populated" disabled [value]="eventCode">
+          </mat-form-field>
+
+        </div>
+
+        <div class="col-12 d-flex justify-content-center">
+          <button type="button" class="btn btn-primary btn-sm" (click)="addToBrandTable()">AddNew</button>
+        </div>
+
+        <div class="container table-responsive">
+          <table class="table text-center table-bordered">
+            <thead>
+              <tr>
+                <th><b><small>S.no</small></b></th>
+                <th><b><small>Brand Name</small></b></th>
+                <th><b><small>Allocation</small></b></th>
+                <th><b><small>Project ID</small></b></th>
+                <th><b><small>Actions</small></b></th>
+              </tr>
+            </thead>
+            <!-- *ngIf="showBrandTable" -->
+            <tbody >
+              <tr *ngFor="let brand of brandTableDetails; index as i">
+                <th scope="row">{{i+1}}</th>
+                <td>{{brand.BrandName}}</td>
+                <td>{{brand.PercentAllocation}}%</td>
+                <td>{{brand.ProjectId}}</td>
+                <td style="cursor: pointer;">
+                  <!-- <i (click)="openBrandUpdateModal(brand, i)" class="material-icons" style="margin-right: 5px;">edit</i> -->
+                  <i (click)="deleteBrand(brand,i)" class="material-icons">delete</i>
+                </td>
+
+              </tr>
+            </tbody>
+
+          </table>
+        </div>
+
+
+
+        <div class="container d-flex justify-content-end">
+          <button mat-raised-button color="accent" class="m-1" matStepperPrevious>Previous</button>
+          <button mat-raised-button color="primary" class="m-1" [disabled]="!isStep3Valid" matStepperNext>Next</button>
+        </div>
+
+      </div>
+    </form>
+  </mat-step>
+  <mat-step [completed]="isStep4Valid" label="Panel Selection">
+    <ng-template matStepLabel>
+      <div matTooltip="Panel Selection">Panel Selection</div>
+    </ng-template>
+
+
+    <form [formGroup]="eventInitiation4">
+      <div class="row">
+        <div class="col">
+         
+          <mat-form-field  color="accent" appearance="outline">
+            <mat-label>MIS Code</mat-label>
+            <input matInput type="text"  formControlName="otherName" [matAutocomplete]="auto">
+
+            <mat-autocomplete #auto="matAutocomplete">
+              <mat-option *ngFor="let a of filteredOthers" value={{a.MisCode}}>{{a.MisCode}}</mat-option>
+            </mat-autocomplete>
+          </mat-form-field>
+          
+          <button *ngIf="showHCPAddButton" type="button" class="btn btn-primary btn-sm"
+            routerLink="/master-list/hcp-master">Add HCP</button>
+            
+            <mat-form-field color="accent" appearance="outline" *ngIf="hideOtherMisCode">
+              <mat-label>HCP Name</mat-label>
+              <input matInput type="text" disabled [value]="hcpName" placeholder="HCP Name" >
+            </mat-form-field>
+
+
+          <!-- <mat-form-field *ngIf="!hideOtherMisCode" color="accent" appearance="outline">
+            <mat-label>MIS Code</mat-label>
+            <mat-select formControlName="otherMisCode">
+              <mat-option *ngFor="let a of filteredOthersByName" value={{a.MisCode}}>{{a.MisCode}}</mat-option>
+            </mat-select>
+          </mat-form-field> -->
+
+
+
+        </div>
+        <div class="col">
+          <mat-form-field color="accent" appearance="outline">
+            <mat-label>HCP Type</mat-label>
+            <input matInput type="text" placeholder="Go/N-Go prepopulated" disabled [value]="otherGoNonGo">
+          </mat-form-field>
+      
+        </div>
+      </div>
+    </form>
+
+    <form [formGroup]="eventInitiation4Sub">
+      <div class="row">
+        <div class="col">
+          <div class="m-2">
+            <mat-form-field *ngIf="showRationale" color="accent" appearance="outline">
+              <mat-label>Rationale <span class="red">*</span></mat-label>
+              <input matInput type="text" placeholder="Enter Rationale" formControlName="rationale">
+            </mat-form-field>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col" *ngIf="showFcpaUpload">
+          <mat-label><b>Upload FCPA<span style="color: red;">*</span></b></mat-label><br>
+          <div class="m-2">
+            <input type="file" (change)="onFileSelected($event,'other','uploadfcpa')" [accept]="allowedTypesForHTML"
+              formControlName="uploadfcpa"><br>
+            <span class="text-danger"><small>Allowed File Types (.png, .jpg, .txt , .doc)</small></span><br>
+            <span class="text-danger"><small>Size Should be greater than 0 KB and less than 30MB</small></span>
+          </div>
+          <span class="text-secondary" *ngIf="showFcpaUpload"><small>Your FCPA is Invalid, Please update
+              it</small></span>
+
+        </div>
+
+        <div class="col" *ngIf="showFcpaUpload">
+          <div class="m-2">
+            <mat-form-field color="accent" appearance="outline">
+              <mat-label>FCPA Date</mat-label>
+              <input matInput type="date" formControlName="fcpaDate" [min]="minDate" [max]="maxDate">
+            </mat-form-field>
+          </div>
+
+          <a href={{fcpaDownloadLink}} *ngIf="showFcpaDownload"><span>Download Your FCPA</span></a>
+
+        </div>
+      </div>
+      <div class="col" *ngIf="showRationale">
+        <div class="m-2">
+          <mat-form-field color="accent" appearance="outline">
+            <mat-label>FCPA Date</mat-label>
+            <input matInput type="date" formControlName="fcpaDate">
+          </mat-form-field>
+        </div>
+
+      </div>
+    </form>
+
+    <form [formGroup]="expenseSelectionForm">
+      <div class="col">
+        <mat-form-field color="accent" appearance="outline">
+          <mat-label>Expense</mat-label>
+          <mat-select formControlName="expenseType" (valueChange)="onExpenseSelect($event)" multiple>
+            <mat-option *ngFor="let exp of expenseType" value={{exp.ExpenseType}}>{{exp.ExpenseType}}</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+    </form>
+
+
+    <form [formGroup]="localconveyanceForm" *ngIf="showLocalConvenyenceForm">
+      <h5><b>Local Conveyence</b></h5>
+      <div class="row">
+
+        <div class="col">
+
+          <mat-form-field color="accent" appearance="outline">
+            <mat-label>Expense Amount Excluding tax</mat-label>
+            <input matInput type="number" formControlName="LCAmountExcludingTax">
+          </mat-form-field>
+
+          <mat-label><b>Is BTC/BTE?</b></mat-label>
+          <mat-radio-group formControlName="LCBTC">
+            <div>
+              <mat-radio-button value="BTC" class="m-2">BTC</mat-radio-button>
+              <mat-radio-button value="BTE" class="m-2">BTE</mat-radio-button>
+            </div>
+          </mat-radio-group>
+
+
+        </div>
+        <div class="col">
+
+
+
+          <mat-form-field color="accent" appearance="outline">
+            <mat-label>Expense Amount Including tax</mat-label>
+            <input matInput type="number" formControlName="LCAmountIncludingTax">
+          </mat-form-field>
+
+        </div>
+      </div>
+    </form>
+    <form [formGroup]="roadTravelForm" *ngIf="showRoadTravelForm">
+      <h5><b>Road Travel</b> </h5>
+      <div class="row">
+
+        <div class="col">
+
+          <mat-form-field color="accent" appearance="outline">
+            <mat-label>Expense Amount Excluding tax</mat-label>
+            <input matInput type="number" formControlName="RoadAmountExcludingTax">
+          </mat-form-field>
+
+          <mat-label><b>Is BTC/BTE?</b></mat-label>
+          <mat-radio-group formControlName="RoadBTC">
+            <div>
+              <mat-radio-button value="BTC" class="m-2">BTC</mat-radio-button>
+              <mat-radio-button value="BTE" class="m-2">BTE</mat-radio-button>
+            </div>
+          </mat-radio-group>
+
+
+        </div>
+        <div class="col">
+
+
+
+          <mat-form-field color="accent" appearance="outline">
+            <mat-label>Expense Amount Including tax</mat-label>
+            <input matInput type="number" formControlName="RoadAmountIncludingTax">
+          </mat-form-field>
+
+        </div>
+      </div>
+    </form>
+    <form [formGroup]="airTravelForm" *ngIf="showAirTravelForm">
+      <h5><b>Air Travel</b></h5>
+      <div class="row">
+
+        <div class="col">
+
+          <mat-form-field color="accent" appearance="outline">
+            <mat-label>Expense Amount Excluding tax</mat-label>
+            <input matInput type="number" formControlName="AirAmountExcludingTax">
+          </mat-form-field>
+
+          <mat-label><b>Is BTC/BTE?</b></mat-label>
+          <mat-radio-group formControlName="AirBTC">
+            <div>
+              <mat-radio-button value="BTC" class="m-2">BTC</mat-radio-button>
+              <mat-radio-button value="BTE" class="m-2">BTE</mat-radio-button>
+            </div>
+          </mat-radio-group>
+
+
+        </div>
+        <div class="col">
+
+
+
+          <mat-form-field color="accent" appearance="outline">
+            <mat-label>Expense Amount Including tax</mat-label>
+            <input matInput type="number" formControlName="AirAmountIncludingTax">
+          </mat-form-field>
+
+        </div>
+      </div>
+    </form>
+
+    <form [formGroup]="trainTravelForm" *ngIf="showTrainTravelForm">
+      <h5><b>Train Travel</b> </h5>
+      <div class="row">
+
+        <div class="col">
+
+          <mat-form-field color="accent" appearance="outline">
+            <mat-label>Expense Amount Excluding tax</mat-label>
+            <input matInput type="number" formControlName="TrainAmountExcludingTax">
+          </mat-form-field>
+
+          <mat-label><b>Is BTC/BTE?</b></mat-label>
+          <mat-radio-group formControlName="TrainBTC">
+            <div>
+              <mat-radio-button value="BTC" class="m-2">BTC</mat-radio-button>
+              <mat-radio-button value="BTE" class="m-2">BTE</mat-radio-button>
+            </div>
+          </mat-radio-group>
+
+
+        </div>
+        <div class="col">
+
+
+
+          <mat-form-field color="accent" appearance="outline">
+            <mat-label>Expense Amount Including tax</mat-label>
+            <input matInput type="number" formControlName="TrainAmountIncludingTax">
+          </mat-form-field>
+
+        </div>
+      </div>
+    </form>
+    <form [formGroup]="accomodationForm" *ngIf="showaccomdationForm">
+      <h5><b>Accomdation</b> </h5>
+      <div class="row">
+
+        <div class="col">
+
+          <mat-form-field color="accent" appearance="outline">
+            <mat-label>Expense Amount Excluding tax</mat-label>
+            <input matInput type="number" formControlName="AccomAmountExcludingTax">
+          </mat-form-field>
+
+          <mat-label><b>Is BTC/BTE?</b></mat-label>
+          <mat-radio-group formControlName="AccomBTC">
+            <div>
+              <mat-radio-button value="BTC" class="m-2">BTC</mat-radio-button>
+              <mat-radio-button value="BTE" class="m-2">BTE</mat-radio-button>
+            </div>
+          </mat-radio-group>
+
+
+        </div>
+        <div class="col">
+
+
+
+          <mat-form-field color="accent" appearance="outline">
+            <mat-label>Expense Amount Including tax</mat-label>
+            <input matInput type="number" formControlName="AccomAmountIncludingTax">
+          </mat-form-field>
+
+        </div>
+      </div>
+    </form>
+    <form [formGroup]="medicalRegistationForm" *ngIf="showmedicalRegistationForm">
+      <h5><b>Scientific/Medical Conference Registration</b> </h5>
+      <div class="row">
+
+        <div class="col">
+
+          <mat-form-field color="accent" appearance="outline">
+            <mat-label>Expense Amount Excluding tax</mat-label>
+            <input matInput type="number" formControlName="MedicalRegistationExcludingTax">
+          </mat-form-field>
+
+          <mat-label><b>Is BTC/BTE?</b></mat-label>
+          <mat-radio-group formControlName="MedicalRegistationBTC">
+            <div>
+              <mat-radio-button value="BTC" class="m-2">BTC</mat-radio-button>
+              <mat-radio-button value="BTE" class="m-2">BTE</mat-radio-button>
+            </div>
+          </mat-radio-group>
+
+
+        </div>
+        <div class="col">
+
+
+
+          <mat-form-field color="accent" appearance="outline">
+            <mat-label>Expense Amount Including tax</mat-label>
+            <input matInput type="number" formControlName="MedicalRegistationIncludingTax">
+          </mat-form-field>
+
+        </div>
+      </div>
+    </form>
+
+
+
+
+
+    <form [formGroup]="totalexpenseCalculationForm">
+      <h4 class="d-flex justify-content-start col-12"><b>Total expense Details</b></h4>
+      <div class="col">
+        <mat-form-field color="accent" appearance="outline">
+          <mat-label>Total Amount per HCP’s</mat-label>
+          <input matInput type="number" placeholder="Enter Accomodation Amount" formControlName="totalexpense">
+        </mat-form-field>
+        <div class="p-2 m-1" *ngIf="showDeviation">
+          <mat-label>Aggregate spent limit exceeded<span style="color: red;">*</span></mat-label><br>
+          <input type="file" (change)="onFileSelected($event,'deviation','expenseDevition')"
+            [accept]="allowedTypesForHTML" formControlName="expenseDevition"><br>
+          <span class="text-danger"><small>Allowed File Types (.png, .jpg, .txt , .doc)</small></span><br>
+          <span class="text-danger"><small>Size Should be greater than 0 KB and less than 30MB</small></span>
+        </div>
+      </div>
+
+
+    </form>
+
+    <form [formGroup]="finalForm">
+      <h4 class="d-flex justify-content-start col-12"><b>Additional Details</b></h4>
+      <div class="row">
+        <div class="col">
+          <mat-form-field>
+            <mat-label><b>Legitimate</b></mat-label>
+            <input matInput #message maxlength="2000" placeholder="Legitimate" formControlName="legitimate">
+            <mat-hint align="end">{{message.value.length}} / 2000</mat-hint>
+          </mat-form-field>
+        </div>
+        <div class="col">
+          <mat-form-field>
+            <mat-label><b>Objective Criteria</b></mat-label>
+            <input matInput #message maxlength="2000" placeholder="Objective Criteria" formControlName="Objective">
+            <mat-hint align="end">{{message.value.length}} / 2000</mat-hint>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="col-12 d-flex justify-content-center">
+        <button type="button" class="btn btn-primary btn-sm" (click)="addtoHcp()">AddNew</button>
+      </div>
+
+
+      <div class="container table-responsive">
+        <table class="table text-center table-bordered">
+          <thead>
+            <tr>
+              <th><b><small>S.no</small></b></th>
+              <th><b><small>HCP Name</small></b></th>
+              <th><b><small>MIS Code</small></b></th>
+              <th><b><small>HCP Type</small></b></th>
+              <th><b><small>Travel Amount</small></b></th>
+              <th><b><small>ACC Amount</small></b></th>
+              <th><b><small>LC Amount</small></b></th>
+              <th><b><small>Registration Amount</small></b></th>
+              <!-- <th><b><small>Insurance Amount</small></b></th> -->
+              <th><b><small>Actions</small></b></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let hcp of hcptableDetails; index as i">
+              <th scope="row">{{i+1}}</th>
+              <td>{{hcp.HcpName}}</td>
+              <td>{{hcp.MisCode}}</td>
+              <td>{{hcp.HcpType}}</td>
+              <td>{{hcp.TravelAmount}}</td>
+              <td>{{hcp.AccomAmount}}</td>
+              <td>{{hcp.LcAmount}}</td>
+              <td>{{hcp.RegistrationAmount}}</td>
+              <!-- <td>{{hcp.InsuranceAmount}}</td> -->
+              <td style="cursor: pointer;">
+                <!-- <i (click)="openHcpUpdateModal(hcp, i)" class="material-icons" style="margin-right: 5px;">edit</i> -->
+                <i (click)="deleteHcpModal(hcp,i)" class="material-icons">delete</i>
+              </td>
+            </tr>
+
+
+          </tbody>
+
+        </table>
+      </div>
+
+      <div class="col">
+        <div class="p-2 m-1">
+          <mat-label>Event Brochure Upload <span style="color: red;">*</span></mat-label><br>
+          <input type="file" (change)="onFileSelected($event,'other','brochureupload')" [accept]="allowedTypesForHTML"
+            formControlName="brochureupload"><br>
+          <span class="text-danger"><small>Allowed File Types (.png, .jpg, .txt , .doc)</small></span><br>
+          <span class="text-danger"><small>Size Should be greater than 0 KB and less than 30MB</small></span>
+        </div>
+      </div>
+
+      <div class="container table-responsive">
+        <h5>Expense Summary BTC</h5>
+        <table class="table text-center table-bordered">
+          <thead>
+            <tr>
+              <th><b><small>S.no</small></b></th>
+              <th><b><small>Expense</small></b></th>
+              <th><b><small>BTC Amount</small></b></th>
+
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let expense of TotalBTCSummary; index as i">
+              <th scope="row">{{i+1}}</th>
+              <td>{{expense.Expense}}</td>
+              <td>{{expense.RegstAmount}}</td>
+            </tr>
+          </tbody>
+          <tfoot>
+            <tr>
+              <td colspan="2" class="text-right"><b><small>Total BTC Amount</small></b></td>
+              <td>{{TotalBTCAmount}}</td>
+            </tr>
+          </tfoot>
+
+        </table>
+      </div>
+
+      <div class="container table-responsive">
+        <h5>Expense Summary BTE</h5>
+        <table class="table text-center table-bordered">
+          <thead>
+            <tr>
+              <th><b><small>S.no</small></b></th>
+              <th><b><small>Expense</small></b></th>
+              <th><b><small>BTE Amount</small></b></th>
+
+
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let expense of TotalBTESummary; index as i">
+              <th scope="row">{{i+1}}</th>
+              <td>{{expense.Expense}}</td>
+              <td>{{expense.RegstAmount}}</td>
+            </tr>
+          </tbody>
+          <tfoot>
+            <tr>
+              <td colspan="2" class="text-right"><b><small>Total BTE Amount</small></b></td>
+              <td>{{TotalBTEAmount}}</td>
+            </tr>
+          </tfoot>
+
+        </table>
+      </div>
+
+
+
+      <div class="d-flex justify-content-start">
+        <div>
+          <label>Budget Amount</label>
+          <div>
+            <input type="number" class="w-30 p-3" [value]="TotalBudgetAmount" disabled>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="container d-flex justify-content-center">
+        <button mat-raised-button color="accent" class="m-1" matStepperPrevious>Previous</button>
+        <button mat-raised-button color="accent" class="m-1" (click)="openPreview()">Preview</button>
+        <button mat-raised-button color="primary" class="m-1" (click)="submitForm()" matStepperNext>Submit</button>
+      </div>
+    </form>
+
+
+
+
+
+  </mat-step>
+</mat-stepper>
+<app-spinner-loader [isLoading]="loadingIndicator"></app-spinner-loader>

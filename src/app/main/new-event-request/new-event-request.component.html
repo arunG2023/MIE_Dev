@@ -1,0 +1,51 @@
+<!-- Page Header -->
+<div class="main-content">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="card">
+            <div class="card-header card-header-danger">
+                <h4 class="card-title">New Event Request</h4>
+            </div>
+
+            <!-- Page Body -->
+            <div class="card-body">
+                <div class="row">
+                  <div class="col-md-12">
+                      <div class="card">
+                         
+                          <div class="card-body">
+                            <!-- DropDown to select the event type -->
+                              <div class="row"  *ngIf="selectedEvent=='select'">
+                                  <div class="col-md-6">
+                                      <mat-form-field color="accent" appearance="outline" class="example-full-width" >
+                                          <mat-label>Select Event Type</mat-label>
+                                          <mat-select required [(ngModel)]="selectedEvent">
+                                            <mat-option *ngFor="let event of eventList" value="{{event.EventTypeId}}">{{event.EventType}}</mat-option>
+                                           
+                                          </mat-select>
+                                        </mat-form-field>                                      
+                                    </div>
+                              </div>
+
+                              <app-class1-event-request *ngIf="selectedEvent == 'EVTC1'"></app-class1-event-request>
+
+                              <app-stall-fabrication-event-request *ngIf="selectedEvent == 'EVTSF'"></app-stall-fabrication-event-request>
+                              <app-hcp-consultants-event-request *ngIf="selectedEvent == 'EVTHC'"></app-hcp-consultants-event-request>
+                              <app-webinar-event-request *ngIf="selectedEvent == 'EVTWEB'"></app-webinar-event-request>
+                              <app-medical-utility-request *ngIf="selectedEvent == 'EVTMU'"></app-medical-utility-request>
+                              <!-- <app-class2-event-request *ngIf="selectedEvent == 'EVTC2'"></app-class2-event-request> -->
+                              <div *ngIf="selectedEvent !== 'select' && selectedEvent !=='EVTC1' && selectedEvent !== 'EVTSF' && selectedEvent !== 'EVTWEB' && selectedEvent !== 'EVTHC' && selectedEvent !== 'EVTMU'">
+                                OOPS!!!! No other Event Forms yet developed
+                              </div>
+                      </div>
+                  </div>
+              </div>      
+              
+                
+        </div>
+          
+        </div>
+    </div>
+</div>
+<app-spinner-loader [isLoading]="loadingIndicator"></app-spinner-loader>

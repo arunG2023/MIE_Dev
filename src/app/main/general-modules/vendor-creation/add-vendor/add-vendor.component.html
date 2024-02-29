@@ -1,0 +1,177 @@
+<div class="main-content">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="card">
+            <div class="card-header card-header-danger">
+                <h4 class="card-title">Vendor Creation</h4> 
+            </div>
+
+            
+            <!-- (change)="onMISCodeChange($event)"  (optionSelected)="onMISCodeSelected($event)"-->
+            <div class="card-body">
+              <div class="row">
+                <div class="col-md-12">
+                    <div class="card ">
+                        <div class="card-body">
+                            <form [formGroup]="addVendorCodeCreationForm" (ngSubmit)="submit()">
+
+	                            <div class="row" >
+	                                <div class="col">
+	                                    <mat-form-field appearance="outline">
+	                                        <mat-label>MIS Code</mat-label>
+	                                        <input matInput placeholder="Enter MIS Code" formControlName="misCode"
+									        [matAutocomplete]="auto"    
+											(change)="onMISCodeChange($event)"
+									        (blur)="validateMisCode()"
+									        
+									      />
+									      <mat-autocomplete #auto="matAutocomplete">
+									        <mat-option *ngFor="let code of _filteredMISCodes | async" [value]="code">
+									          {{ code }}
+									        </mat-option>
+									      </mat-autocomplete>                                       
+	                                        <!-- <mat-hint>Hint</mat-hint> -->
+	                                      </mat-form-field>
+	                                </div>
+	                            </div>
+	                            <div class="row" >
+	                                <div class="col">
+	                                    <mat-form-field appearance="outline">
+	                                        <mat-label>Vendor account</mat-label>
+	                                        <input matInput placeholder="Enter Vendor account" formControlName="vendorAccount"/>
+	                                      </mat-form-field>
+	                                </div>  
+                            	</div>   
+	                            <div class="row" >
+	                                <div class="col">
+	                                    <mat-form-field appearance="outline">
+	                                        <mat-label>Benificiary name</mat-label>
+	                                        <input  matInput placeholder="Benificiary name" formControlName="benificiaryName">	                                       
+	                                        <!-- <mat-hint>Hint</mat-hint> -->
+	                                      </mat-form-field>
+	                                </div>
+	                            </div>
+	                            <div class="row" >
+	                                <div class="col">
+	                                    <mat-form-field appearance="outline">
+	                                        <mat-label>Pan Card Name</mat-label>
+	                                        <input  matInput placeholder="Pan Card Name" [disabled]="!isVendorMISCodeNA()" formControlName="panCardName">	                                       
+	                                        <!-- <mat-hint>Hint</mat-hint> -->
+	                                      </mat-form-field>
+	                                </div>
+	                            </div>
+	                            <div class="row" >
+	                                <div class="col">
+	                                    <mat-form-field appearance="outline">
+	                                        <mat-label>Bank Account Number</mat-label>
+	                                        <input  matInput placeholder="Bank Account Number" formControlName="bankAccountNumber">	                                       
+	                                      </mat-form-field>
+	                                </div>
+	                            </div>
+	                            <div class="row" >
+	                                <div class="col">
+	                                    <mat-form-field appearance="outline">
+	                                        <mat-label>IFSC Code</mat-label>
+	                                        <input  matInput placeholder="IFSC Code"  [disabled]="!isVendorMISCodeNA()" formControlName="ifscCode">	                                       
+	                                        <!-- <mat-hint>Hint</mat-hint> -->
+	                                      </mat-form-field>
+	                                </div>
+	                            </div>
+	                            <div class="row" >
+	                                <div class="col">
+	                                    <mat-form-field appearance="outline">
+	                                        <mat-label>Email ID</mat-label>
+	                                        <input  matInput placeholder="Email ID" formControlName="emailID">	                                       
+	                                        <!-- <mat-hint>Hint</mat-hint> -->
+	                                      </mat-form-field>
+	                                </div>
+	                            </div>
+	                            <div class="row" >
+	                                <div class="col">
+	                                    <mat-form-field appearance="outline">
+	                                        <mat-label>Pan Card Number</mat-label>
+	                                        <input  matInput placeholder="Pan Card Number"  [disabled]="!isVendorMISCodeNA()" formControlName="panCardNumber">	                                       
+	                                        <!-- <mat-hint>Hint</mat-hint> -->
+	                                      </mat-form-field>
+	                                </div>
+	                            </div>
+	                            <div class="row" >
+	                                <div class="col">
+	                                    <mat-form-field appearance="outline">
+	                                        <mat-label>Swift Code</mat-label>
+	                                        <input  matInput placeholder="Swift Code"  [disabled]="!isVendorMISCodeNA()" formControlName="swiftCode">	                                       
+	                                        <!-- <mat-hint>Hint</mat-hint> -->
+	                                      </mat-form-field>
+	                                </div>
+	                            </div>
+	                            <div class="row" >
+	                                <div class="col">
+	                                    <mat-form-field appearance="outline">
+	                                        <mat-label>IBN Number</mat-label>
+	                                        <input  matInput placeholder="IBN Number"  [disabled]="!isVendorMISCodeNA()" formControlName="ibnNumber">	                                       
+	                                        <!-- <mat-hint>Hint</mat-hint> -->
+	                                      </mat-form-field>
+	                                </div>
+	                            </div>
+	                            <div class="row" >
+	                                <div class="col">
+	                                    <div  class="justify-content-center">
+	                                        <mat-label>Pan Card Upload</mat-label> <br>
+	                                        <input  [disabled]="!isVendorMISCodeNA()" 
+																					    type="file"
+																					    id="vendorPanCard"
+																					    formControlName="vendorPanCard"
+																					    (change)="onVendorPanCardFileSelected($event)"  accept=".pdf, .docx, .jpg, .png" 
+																					  />
+	                                        <mat-icon matSuffix>attach_file</mat-icon>
+	                                      </div><br>
+	                                </div>
+	                            </div>
+	                            <div class="row" >
+	                                <div class="col">
+	                                    <div  class="justify-content-center">
+	                                        <mat-label>Cheque Upload</mat-label> <br>
+	                                        <input 
+																					    type="file"
+																					    id="vendorCheque"
+																					    formControlName="vendorCheque"
+																					    (change)="onVendorChequeFileSelected($event)"  accept=".pdf, .docx, .jpg, .png" 
+																					  />
+	                                        <mat-icon matSuffix>attach_file</mat-icon>
+	                                       <!--  <input matInput  placeholder="Upload File" formControlName="vendorCVFile"> -->
+	                                      </div><br>
+	                                </div>
+	                            </div>
+	                            <div class="row" >
+	                                <div class="col">
+	                                    <div  class="justify-content-center">
+	                                        <mat-label>Tax Residence certificate upload</mat-label> <br>
+	                                        <input  [disabled]="!isVendorMISCodeNA()" 
+																					    type="file"
+																					    id="vendorTaxResidenceCertificate"
+																					    formControlName="vendorTaxResidenceCertificate"
+																					    (change)="onVendorTaxResidenceCertificateFileSelected($event)"  accept=".pdf, .docx, .jpg, .png" 
+																					  />
+	                                        <mat-icon matSuffix>attach_file</mat-icon>
+	                                       <!--  <input matInput  placeholder="Upload File" formControlName="vendorCVFile"> -->
+	                                      </div><br>
+	                                </div>
+	                            </div>
+
+			                    <div class="row">
+			                        <div class="col">
+			                            <div class="col-12 d-flex justify-content-end">
+			                                <button class="btn btn-success btn-sm" >Submit</button>
+			                            </div>
+			                        </div>
+			                    </div>
+                        	</form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<app-spinner-loader [isLoading]="loadingIndicator"></app-spinner-loader>

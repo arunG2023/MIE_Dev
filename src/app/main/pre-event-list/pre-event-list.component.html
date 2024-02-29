@@ -1,0 +1,51 @@
+<div class="main-content">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card">
+          <div class="card-header card-header-danger">
+            <h4 class="card-title">Pre Event Request List</h4>
+          </div>
+          <div class="container table-responsive table-bordered ">
+            <table class="table text-center table-striped overflow-hidden ">
+              <thead>
+                <tr>
+                  <th><small><b>S.no</b></small></th>
+                  <th><small><b>Event ID</b></small></th>
+                  <th><small><b>Event Name</b></small></th>
+                  <th><small><b>Event Type</b></small></th>
+                  <th><small><b>Venue</b></small></th>
+                  <th><small><b>Event Date & Time</b></small></th>
+                  <th><small><b>Event Request Status</b></small></th>
+                  <th><small><b>Agreement</b></small></th>
+                  <th><small><b>Attendance Sheet</b></small></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let events of eventList | paginate: { itemsPerPage: pageRowLimit, currentPage: page } ; index as i">
+                  <th scope="row">{{i+1}}</th>
+                  <td>{{events['EventId/EventRequestId']}}</td>
+                  <td>{{events['Event Topic']}}</td>
+                  <td>{{events.EventType}}</td>
+                  <td>{{events.VenueName}}</td>
+                  <td>{{events.EventDate}}</td>
+                  <td>{{events['Event Request Status']}}</td>
+                  <td>download</td>
+                  <td>download</td>
+                </tr>
+                <tr>
+                  <td colspan="9" class="pagination-row"><pagination-controls (pageChange)="pageChanged($event)"></pagination-controls></td>
+                </tr>
+
+              </tbody>
+
+            </table>
+
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<app-spinner-loader [isLoading]="loadingIndicator"></app-spinner-loader>

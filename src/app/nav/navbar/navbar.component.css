@@ -1,3 +1,9 @@
 .pointer:hover{
     cursor: pointer;
  }
+
+ .role {
+    font-size: 11px;
+    font-weight: 800;
+    color: red;
+ }

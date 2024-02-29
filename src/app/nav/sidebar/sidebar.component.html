@@ -1,5 +1,5 @@
 <div class="logo">
-    <a href="#" class="simple-text">
+    <a href="#/dashboard" class="simple-text">
         <div class="logo-img">
             <img src="/assets/img/menarini-logo.png"/>
         </div>        
@@ -13,6 +13,13 @@
                 <p class="limit-text-to-1-lines">{{menuItem.title}}</p>
             </a>
         </li>
+
+        <li *ngIf="isMobileMenu()">
+            <a class="nav-link" (click)="logOut()">
+                <p>{{username}}<span class="role"> ({{userrole}})</span></p>
+            </a>
+        </li>
+
         <li *ngIf="isMobileMenu()">
             <a class="nav-link" (click)="logOut()">
                 <i class="material-icons">power_settings_new_icon</i>

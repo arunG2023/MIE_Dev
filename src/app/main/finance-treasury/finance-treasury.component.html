@@ -1,0 +1,287 @@
+<div class="main-content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header card-header-danger">
+                        <h4 class="card-title">Finance Treasury</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="card">
+                            <div class="card-body">
+                                <app-event-pending [eventType]="'financeTreasury'"></app-event-pending>
+                            </div>
+                        </div>
+
+                        <div class="card" *ngIf="showPreEventForm">
+                            <div class="card-body">
+                                <form [formGroup]="financeTreasuryForm">
+                                    <div class="row">
+                                        <div class="col">
+                                            <mat-form-field color="accent" appearance="outline">
+                                                <mat-label>Total Advance Amount</mat-label>
+                                                <input matInput placeholder="Total BTE Amount">
+                                            </mat-form-field>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col">
+                                            <mat-form-field color="accent" appearance="outline">
+                                                <mat-label>Advance Voucher Number</mat-label>
+                                                <input matInput placeholder="Advance Voucher Number">
+                                            </mat-form-field>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col">
+                                            <mat-form-field color="accent" appearance="outline">
+                                                <mat-label>Advance Voucher Date</mat-label>
+                                                <input matInput type="date" placeholder="Advance Voucher Date">
+                                            </mat-form-field>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col">
+                                            <mat-form-field color="accent" appearance="outline">
+                                                <mat-label> Bank Reference number</mat-label>
+                                                <input matInput placeholder=" Bank Reference number">
+                                            </mat-form-field>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col">
+                                            <mat-form-field color="accent" appearance="outline">
+                                                <mat-label>Bank Reference Date</mat-label>
+                                                <input matInput type="date" placeholder="Bank Reference Date">
+                                            </mat-form-field>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col d-flex justify-content-center">
+                                            <button class="btn btn-primary btn-sm">Reset</button>
+                                            <button class="btn btn-success btn-sm">Submit</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+
+                        <div class="card" *ngIf="showPanelTable">
+                            <div class="card-body">
+                                <div class="container table-responsive">
+                                    <div class="col d-flex justify-content-center text-danger">
+                                        <h4><b>Honorarium Request</b></h4>
+                                    </div>
+                                    <table class="table table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th><small>S.No</small></th>
+                                                <th><small>HCP Role</small></th>
+                                                <th><small>HCP Name</small></th>
+                                                <th><small>MIS Code</small></th>
+                                                <th><small>HCP Type</small></th>
+                                                <th><small>Agreement Amount</small></th>
+                                                <th><small>PV Number</small></th>
+                                                <th><small>PV Date</small></th>
+                                                <th><small>Bank Reference Number</small></th>
+                                                <th><small>Bank Reference Date</small></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr *ngFor="let panel of panelTableDetails; index as i">
+                                                <td>{{i+1}}</td>
+                                                <td>{{panel.HcpRole}}</td>
+                                                <td>{{panel.HCPName}}</td>
+                                                <td>{{panel.MISCode}}</td>
+                                                <td>{{panel['HCP Type']}}</td>
+                                                <td>{{panel.AgreementAmount}}</td>
+                                                <td>
+                                                    <mat-form-field color="accent" appearance="outline">
+                                                        <input matInput type="number" placeholder="PV Number"
+                                                            [(ngModel)]="panel.pvNumber">
+                                                    </mat-form-field>
+                                                </td>
+                                                <td>
+                                                    <mat-form-field color="accent" appearance="outline">
+                                                        <input matInput type="date" placeholder="PV Date"
+                                                            [(ngModel)]="panel.pvDate">
+                                                    </mat-form-field>
+                                                </td>
+                                                <td>
+                                                    <mat-form-field color="accent" appearance="outline">
+                                                        <input matInput type="number"
+                                                            placeholder="Bank Reference Number"
+                                                            [(ngModel)]="panel.bankNumber">
+                                                    </mat-form-field>
+                                                </td>
+                                                <td>
+                                                    <mat-form-field color="accent" appearance="outline">
+                                                        <input matInput type="date" placeholder="Bank Reference Date"
+                                                            [(ngModel)]="panel.bankDate">
+                                                    </mat-form-field>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="row">
+                                    <div class="col d-flex justify-content-center">
+                                        <button class="btn btn-warning btn-sm" (click)="close()">Close</button>
+                                        <button (click)="onHonorariumSubmit()"
+                                            class="btn btn-success btn-sm">Submit</button>
+                                            
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card" *ngIf="showExpenseTable">
+                            <div class="card-body">
+                                <div class="container table-responsive" *ngIf="btcSummaryTableDetails.length > 0">
+                                    <div class="col d-flex justify-content-center text-danger">
+                                        <h4><b>Post Event Settlement Request</b></h4>
+                                    </div>
+                                    <h5>Expense Summary BTC</h5>
+                                    <table class="table text-center table-bordered">
+                                        <thead>
+                                            <tr>
+                                                <th><b><small>S.no</small></b></th>
+                                                <th><b><small>Expense</small></b></th>
+                                                <th><b><small>Type</small></b></th>
+                                                <th><b><small>BTC Amount</small></b></th>
+                                                <th><b><small>Actual Amount</small></b></th>
+                                                <th><small>PV Number</small></th>
+                                                <th><small>PV Date</small></th>
+                                                <th><small>Bank Reference Number</small></th>
+                                                <th><small>Bank Reference Date</small></th>
+
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr *ngFor="let expense of btcSummaryTableDetails; index as i">
+                                                <th scope="row">{{i+1}}</th>
+                                                <td>{{expense.Expense}}</td>
+                                                <td>{{expense['BTC/BTE']}}</td>
+                                                <td>{{expense.BTCAmount}}</td>
+                                                <td>{{expense.Amount}}</td>
+                                                <td>
+                                                    <mat-form-field color="accent" appearance="outline">
+                                                        <input matInput type="number" placeholder="PV Number"
+                                                            [(ngModel)]="expense['PV Number']">
+                                                    </mat-form-field>
+                                                </td>
+                                                <td>
+                                                    <mat-form-field color="accent" appearance="outline">
+                                                        <input matInput type="date" placeholder="PV Date"
+                                                            [(ngModel)]="expense['PV Date']">
+                                                    </mat-form-field>
+                                                </td>
+                                                <td>
+                                                    <mat-form-field color="accent" appearance="outline">
+                                                        <input matInput type="number"
+                                                            placeholder="Bank Reference Number"
+                                                            [(ngModel)]="expense['Bank Reference Number']">
+                                                    </mat-form-field>
+                                                </td>
+                                                <td>
+                                                    <mat-form-field color="accent" appearance="outline">
+                                                        <input matInput type="date" placeholder="Bank Reference Date"
+                                                            [(ngModel)]="expense['Bank Reference Date']">
+                                                    </mat-form-field>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                        <tfoot>
+                                            <tr>
+                                                <td colspan="3" class="text-right"><b><small>Total BTC
+                                                            Amount</small></b></td>
+                                                <td>{{btcSummaryTotal}}</td>
+                                                <td>{{btcActualTotal}}</td>
+                                            </tr>
+                                        </tfoot>
+
+                                    </table>
+                                </div>
+
+                                <div class="container table-responsive" *ngIf="bteSummaryTableDetails.length > 0">
+                                    <h5>Expense Summary BTE</h5>
+                                    <table class="table text-center table-bordered">
+                                        <thead>
+                                            <tr>
+                                                <th><b><small>S.no</small></b></th>
+                                                <th><b><small>Expense</small></b></th>
+                                                <th><b><small>Type</small></b></th>
+                                                <th><b><small>BTE Amount</small></b></th>
+                                                <th><b><small>Actual Amount</small></b></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr *ngFor="let expense of bteSummaryTableDetails; index as i">
+                                                <th scope="row">{{i+1}}</th>
+                                                <td>{{expense.Expense}}</td>
+                                                <td>{{expense['BTC/BTE']}}</td>
+                                                <td>{{expense.BTEAmount}}</td>
+                                                <td>{{expense.Amount}}</td>
+                                            </tr>
+
+                                        </tbody>
+                                        <tfoot>
+                                            <tr>
+                                                <td colspan="3" class="text-right"><b><small>Total BTC
+                                                            Amount</small></b></td>
+                                                <td>{{bteActualTotal}}</td>
+                                                <td>{{bteActualTotal}}</td>
+                                            </tr>
+                                        </tfoot>
+
+
+
+                                    </table>
+                                </div>
+                                <div class="container" *ngIf="bteSummaryTableDetails.length > 0">
+                                    <form [formGroup]="bteSummaryForm">
+
+                                        <mat-form-field color="accent" appearance="outline">
+                                            <input matInput type="number" placeholder="PV Number"
+                                                formControlName="btePvNumber">
+                                        </mat-form-field>
+
+                                        <mat-form-field color="accent" appearance="outline">
+                                            <input matInput type="date" placeholder="PV Date"
+                                                formControlName="btePvDate">
+                                        </mat-form-field>
+
+                                        <mat-form-field color="accent" appearance="outline">
+                                            <input matInput type="number" placeholder="Bank Reference Number"
+                                                formControlName="btebankNumber">
+                                        </mat-form-field>
+
+                                        <mat-form-field color="accent" appearance="outline">
+                                            <input matInput type="date" placeholder="Bank Reference Date"
+                                                formControlName="btebankDate">
+                                        </mat-form-field>
+
+                                    </form>
+
+                                </div>
+
+
+                                <div class="row">
+                                    <div class="col d-flex justify-content-center">
+                                        <button class="btn btn-warning btn-sm" (click)="close()">Close</button>
+                                        <button (click)="onEvenstSettlementSubmit()"
+                                            class="btn btn-success btn-sm">Submit</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<app-spinner-loader [isLoading]="loadingIndicator"></app-spinner-loader>

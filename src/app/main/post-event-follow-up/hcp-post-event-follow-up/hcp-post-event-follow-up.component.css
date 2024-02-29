@@ -1,0 +1,21 @@
+.red{
+    color: red;
+}
+
+.pagination-row {
+    text-align: right;
+}
+
+
+table.table-bordered > thead > tr > th {
+    border:1px solid black;
+  }
+  table.table-bordered > tbody > tr > th,td {
+    border:1px solid rgb(209, 162, 162);
+  }
+  table.table-striped > thead > tr > th {
+    border:1px solid black;
+  }
+  table.table-striped > tbody > tr > th,td {
+    border:1px solid rgb(209, 162, 162);
+  }

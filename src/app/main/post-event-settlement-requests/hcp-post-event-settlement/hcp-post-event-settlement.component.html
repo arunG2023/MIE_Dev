@@ -1,0 +1,326 @@
+<div class="main-content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header card-header-danger">
+                        <h4 class="card-title">Post Event Settlement request</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="card ">
+                                    <div class="card-body" *ngIf="!showNoData">
+
+                                        <div class="row">
+                                            <div class="container table-responsive">
+                                                <table class="table table-striped">
+                                                    <thead>
+                                                        <tr>
+                                                            <th><small>S No.</small></th>
+                                                            <th><small>Event Id</small></th>
+                                                            <th><small>Event Name</small></th>
+                                                            <th><small>Event Type</small></th>
+                                                            <th><small>Venue</small></th>
+                                                            <th><small>Event Date</small></th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr *ngFor="let event of eventTableDetails; index as i">
+                                                            <td scope="row">{{i+1}}</td>
+                                                            <td>{{event['EventId/EventRequestId']}}</td>
+                                                            <td>{{event['Event Topic']}}</td>
+                                                            <td>{{event.EventType}}</td>
+                                                            <td>{{event.VenueName || 'NA'}}</td>
+                                                            <td>{{event.EventDate}}</td>
+                                                        </tr>
+
+                                                    </tbody>
+
+                                                </table>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-6">
+                                                <mat-form-field color="accent" appearance="outline"
+                                                    *ngIf="showEventSelectDropdown">
+                                                    <mat-label>Select Event ID</mat-label>
+                                                    <mat-select (ngModelChange)="onEventSelect($event)"
+                                                        [ngModelOptions]="{standalone: true}"
+                                                        [(ngModel)]="selectedEvent">
+                                                        <mat-option *ngFor="let selectId of eventTableDetails"
+                                                            value="{{selectId['EventId/EventRequestId']}}">{{selectId['EventId/EventRequestId']}}
+                                                        </mat-option>
+                                                    </mat-select>
+                                                </mat-form-field>
+                                            </div>
+                                        </div>
+                                        <form [formGroup]="deviationForm">
+                                            <div class="row" *ngIf="showEventSettlementContent">
+
+                                                <div class="container table-responsive">
+                                                    <span class="text-danger text-secondary m-2">
+                                                        <h4><b>Expense Details:</b></h4>
+                                                    </span>
+                                                    <table class="table table-striped">
+                                                        <thead>
+                                                            <tr>
+                                                                <th><small>S.No</small></th>
+                                                                <th><small>HCP Name</small></th>
+                                                                <th><small>MIS Code</small></th>
+                                                                <th><small>HCP Type</small></th>
+                                                                <th><small>Travel Amount</small></th>
+                                                                <th><small>Accomodation Amount</small></th>
+                                                                <th><small>Local Conveyance Amount</small></th>
+                                                                <th><small>Registration Amount</small></th>
+                                                                <th><small>Budget Amount</small></th>
+                                                                <th><small>Actual Amount</small></th>
+                                                                <th><small>Signed Agreement Upload</small></th>
+                                                                <!-- <th><small>Invoice Upload</small></th> -->
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr *ngFor="let expense of expenseTableDetails; index as i">
+                                                                <td>{{i+1}}</td>
+                                                                <td>{{expense.HCPName}}</td>
+                                                                <td>{{expense.MISCode}}</td>
+                                                                <td>{{expense['HCP Type']}}</td>
+                                                                <td>{{expense.Travel || 0}} <br>
+                                                                    <input type="number" placeholder="Actual Amount"
+                                                                        (ngModelChange)="onActualsChanges($event,i,expense,'Travel')"
+                                                                        [ngModelOptions]="{standalone: true}"
+                                                                        [(ngModel)]="expense.actualTravel">
+                                                                </td>
+                                                                <td>{{expense.Accomodation || 0}}
+                                                                    <br>
+                                                                    <input type="number" placeholder="Actual Amount"
+                                                                        (ngModelChange)="onActualsChanges($event,i,expense,'Accomodation')"
+                                                                        [ngModelOptions]="{standalone: true}"
+                                                                        [(ngModel)]="expense.actualAccomodation">
+                                                                </td>
+                                                                <td>{{expense.LocalConveyance || 0}}
+                                                                    <br>
+                                                                    <input type="number" placeholder="Actual Amount"
+                                                                        (ngModelChange)="onActualsChanges($event,i,expense,'Local')"
+                                                                        [ngModelOptions]="{standalone: true}"
+                                                                        [(ngModel)]="expense.actualLocal">
+                                                                </td>
+                                                                <td>{{expense['Registration Amount'] || 0}}
+                                                                    <br>
+                                                                    <input type="number" placeholder="Actual Amount"
+                                                                        (ngModelChange)="onActualsChanges($event,i,expense,'Registration')"
+                                                                        [ngModelOptions]="{standalone: true}"
+                                                                        [(ngModel)]="expense.actualRegistartion">
+                                                                </td>
+                                                                <td>{{expense.TotalSpend || 0}}</td>
+                                                                <td>
+                                                                    <input type="number" disabled
+                                                                        (ngModelChange)="onExpenseActualAmountChanges($event,i)"
+                                                                        [ngModelOptions]="{standalone: true}"
+                                                                        [(ngModel)]="expense.actualTotal">
+                                                                </td>
+                                                                <td>
+                                                                    <!-- <mat-label>Upload Deviation<span style="color: red;">*</span></mat-label><br> -->
+                                                                    <input type="file"
+                                                                        (change)="onFileSelected($event,'other','signedAgreement')"
+                                                                        [accept]="allowedTypesForHTML"><br>
+                                                                    <span class="text-danger"><small>Allowed File Types
+                                                                            (.png, .jpg, .txt , .doc)</small></span><br>
+                                                                    <span class="text-danger"><small>Size Should be
+                                                                            greater than 0 KB and less than
+                                                                            30MB</small></span>
+                                                                </td>
+                                                                <!-- <td>
+                                                                   
+                                                                    <input type="file"
+                                                                        (change)="onFileSelected($event,'other','invoice')"
+                                                                        [accept]="allowedTypesForHTML"><br>
+                                                                    <span class="text-danger"><small>Allowed File Types
+                                                                            (.png, .jpg, .txt , .doc)</small></span><br>
+                                                                    <span class="text-danger"><small>Size Should be
+                                                                            greater than 0 KB and less than
+                                                                            30MB</small></span>
+                                                                </td> -->
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                                <div class="container" >
+                                                    <div class="row">
+                                                        <div class="col" *ngIf="showAggregateSpendDeviation">
+                                                            <mat-label>Upload Deviation<span style="color: red;">(HCP
+                                                                    Aggregate Spend Exceeds 500000)*</span></mat-label><br>
+                                                            <input type="file"
+                                                                (change)="onFileSelected($event,'deviation','aggregateDeviation')"
+                                                                [accept]="allowedTypesForHTML"
+                                                                formControlName="aggregateDeviation"><br>
+                                                            <span class="text-danger"><small>Allowed File Types (.png,
+                                                                    .jpg,.txt , .doc)</small></span><br>
+                                                            <span class="text-danger"><small>Size Should be greater than 0
+                                                                    KB and less than 30MB</small></span>
+                                                        </div>
+                                                        <div class="col" *ngIf="showFiftyPercentUploadDeviation">
+                                                            <mat-label>Upload Deviation<span style="color: red;">(Exceeded 50% of approved budget)*</span></mat-label><br>
+                                                            <input type="file"
+                                                                (change)="onFileSelected($event,'deviation','fiftyPercentDeviation')"
+                                                                [accept]="allowedTypesForHTML"
+                                                                formControlName="fiftyPercentDeviation"><br>
+                                                            <span class="text-danger"><small>Allowed File Types (.png,
+                                                                    .jpg,.txt , .doc)</small></span><br>
+                                                            <span class="text-danger"><small>Size Should be greater than 0
+                                                                    KB and less than 30MB</small></span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <!-- BTE BTC Summary -->
+                                                <div class="container table-responsive" *ngIf="BTCSummary.length > 0">
+                                                    <div class="col d-flex justify-content-center text-danger">
+                                                        <h4><b>Expense Summary</b></h4>
+                                                    </div>
+                                                    <h5>Expense Summary BTC</h5>
+                                                    <table class="table text-center table-bordered">
+                                                        <thead>
+                                                            <tr>
+                                                                <th><b><small>S.no</small></b></th>
+                                                                <th><b><small>Expense Type</small></b></th>
+                                                                <th><b><small>BTC Amount</small></b></th>
+                                                                <th><b><small>Upload Invoice</small></b></th>
+                                                
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr *ngFor="let expense of BTCSummary; index as i">
+                                                                <th scope="row">{{i+1}}</th>
+                                                                <td>{{expense.expense}}</td>
+                                                                <td>{{expense.amount}}</td>
+                                                                <td>
+                                                                   
+                                                                    <input type="file"
+                                                                       (change)="onFileSelected($event,'other','btcInvoice')" [accept]="allowedTypesForHTML" [ngModelOptions]="{standalone: true}" [(ngModel)]="expense.invoiceFile"><br>
+                                                                    <span class="text-danger"><small>Allowed File Types (.png, .jpg, .txt , .doc)</small></span><br>
+                                                                    <span class="text-danger"><small>Size Should be greater than 0 KB and less than 30MB</small></span>
+                                                                </td>
+                                                            </tr>
+                                                        </tbody>
+                                                        <tfoot>
+                                                            <tr>
+                                                                <td colspan="2" class="text-right"><b><small>Total BTC
+                                                                            Amount</small></b></td>
+                                                                <td>{{BTCSummaryTotal}}</td>
+                                                            </tr>
+                                                        </tfoot>
+                                                
+                                                    </table>
+                                                </div>
+                                                
+                                                <div class="container table-responsive" *ngIf="BTESummary.length > 0">
+                                                    <h5>Expense Summary BTE</h5>
+                                                    <table class="table text-center table-bordered">
+                                                        <thead>
+                                                            <tr>
+                                                                <th><b><small>S.no</small></b></th>
+                                                                <th><b><small>Expense Type</small></b></th>
+                                                                <th><b><small>BTE Amount</small></b></th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr *ngFor="let expense of BTESummary; index as i">
+                                                                <th scope="row">{{i+1}}</th>
+                                                                <td>{{expense.expense}}</td>
+                                                                <td>{{expense.amount}}</td>
+                                                            </tr>
+                                                            <tr>
+                                                            </tr>
+                                                        </tbody>
+                                                        <tfoot>
+                                                            <tr>
+                                                                <td colspan="2" class="text-right"><b><small>Total BTE
+                                                                            Amount</small></b></td>
+                                                                <td>{{BTESummaryTotal}}</td>
+                                                            </tr>
+                                                        </tfoot>
+                                                
+                                                
+                                                    </table>
+                                                    <div>
+                                                        <mat-label>Invoice Upload<span
+                                                            style="color: red;">*</span></mat-label><br>
+                                                        <input  (change)="onFileSelected($event,'other','bteInvoice')" type="file" [accept]="allowedTypesForHTML"><br>
+                                                        <span class="text-danger"><small>Allowed File Types (.png, .jpg, .txt , .doc)</small></span><br>
+                                                        <span class="text-danger"><small>Size Should be greater than 0 KB and less than 30MB</small></span>
+                                                    </div>
+                                                </div>
+
+                                                <div class="container table-responsive">
+                                                    <span class="text-danger text-secondary m-2">
+                                                        <h4><b>Total Expense Details:</b></h4>
+                                                    </span>
+                                                    <table class="table table-striped">
+                                                        <thead>
+                                                            <tr>
+                                                                <th><small>Event ID</small></th>
+                                                                <th><small>Total Budget Amount For The Event</small>
+                                                                </th>
+                                                                <th><small>Actual Budget Amount For The Event</small>
+                                                                </th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr>
+                                                                <td>{{selectedEvendId}}</td>
+                                                                <td>{{totalBudget}}</td>
+                                                                <td>{{totalBudget}}</td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                                <div class="container table-responsive">
+                                                    <span class="text-danger text-secondary m-2">
+                                                        <h4><b>Advance Details:</b></h4>
+                                                    </span>
+                                                    <table class="table table-striped">
+                                                        <thead>
+                                                            <tr>
+                                                                <th><small>Event Id</small></th>
+                                                                <th><small>Advance Provided</small></th>
+                                                                <th><small>Advance Utilized For The Event</small></th>
+                                                                <th><small>Pay Back Amount to company</small></th>
+                                                                <th><small>Additional Amount Needed To Pay For
+                                                                        Initator</small></th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr>
+                                                                <td>{{selectedEvendId}}</td>
+                                                                <td>{{totalBudget}}</td>
+                                                                <td>{{actualBudget}}</td>
+                                                                <td>{{payBackToCompany}}</td>
+                                                                <td>{{amountToPayForInitiator}}</td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                                <div class="container d-flex justify-content-center">
+                                                    <button type="button" class="btn btn-sm btn-primary"> Reset
+                                                    </button>
+                                                    <button type="submit" class="btn btn-sm btn-warning"
+                                                        (click)="onSubmit()"> Submit </button>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                    <div class="card-body" *ngIf="showNoData">
+                                        <span class="text-danger">Sorry, this event type has no events for Event
+                                            Settlement submission</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<app-spinner-loader [isLoading]="loadingIndicator"></app-spinner-loader>

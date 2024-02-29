@@ -1,0 +1,15 @@
+.speakerCriterias-radio-group {
+    display: inline-flex;
+    flex-direction: column;
+  }
+  
+  .speakerCriterias-radio-button {
+    margin: 5px;
+  }
+  ::ng-deep .mat-radio-label {
+    align-items: inherit!important;
+  }
+
+  .download-content {
+    float: right;
+  }

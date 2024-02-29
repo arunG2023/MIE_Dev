@@ -1,0 +1,41 @@
+table.table-bordered > thead > tr > th {
+    border:1px solid black;
+  }
+  table.table-bordered > tbody > tr > th,td {
+    border:1px solid rgb(209, 162, 162);
+  }
+  table.table-striped > thead > tr > th {
+    border:1px solid black;
+  }
+  table.table-striped > tbody > tr > th,td {
+    border:1px solid rgb(209, 162, 162);
+  }
+  .material-icons{
+    cursor: pointer;
+  }
+
+    /* Absolute Center Spinner */
+.loading-indicator {
+  position: fixed;
+  z-index: 1009;
+  height: 2em;
+  width: 2em;
+  overflow: show;
+  margin: auto;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+}
+
+/* Transparent Overlay */
+.loading-indicator:before {
+  content: '';
+  display: block;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(97, 95, 95, 0.3);
+}

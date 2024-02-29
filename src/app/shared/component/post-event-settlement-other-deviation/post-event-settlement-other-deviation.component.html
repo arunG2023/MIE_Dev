@@ -1,0 +1,71 @@
+<div class="container">
+    <h4 class="d-flex justify-content-center">Other Deviations</h4>
+    <div class="row">
+        <form [formGroup]="otherDeviationForm">
+            <mat-label><b>Need any other deviations?</b></mat-label>
+            <mat-radio-group value="No" formControlName="needDeviation">
+                <div class="mt-2 ">
+                    <mat-radio-button value="Yes">Yes</mat-radio-button>
+                    <mat-radio-button value="No" class="m-1">No</mat-radio-button>
+                </div>
+            </mat-radio-group>
+        </form>
+    </div>
+
+
+    <div class="row">
+        <form [formGroup]="deviationForm" *ngIf="showDeviationForm">
+            <div class="col">
+                <mat-form-field color="accent" appearance="outline">
+                    <mat-label>Deviation Types</mat-label>
+                    <mat-select formControlName="deviationType">
+                        <mat-option *ngFor="let deviation of DeviationTypes" [value]="deviation['Deviation Type']">{{deviation['Deviation Type']}}</mat-option>  
+                    </mat-select>
+                </mat-form-field>
+            </div>
+            <div class="col">
+                <mat-form-field color="accent" appearance="outline" *ngIf="showOtherDeviationField">
+                    <mat-label>Enter Deviation Type</mat-label>
+                    <input matInput type="text" formControlName="otherDeviationField">
+                </mat-form-field>
+            </div>
+            <div class="col">
+                <div class="p-2 m-1">
+                    <mat-label><b>Upload Deviation</b> <span style="color: red;">*</span></mat-label><br>
+                    <input type="file" (change)="onFileSelected($event,'other','deviationUpload')"
+                        [accept]="allowedTypesForHTML" formControlName="deviationUpload"><br>
+                    <span class="text-danger"><small>Allowed File Types (.png, .jpg, .txt , .doc)</small></span><br>
+                    <span class="text-danger"><small>Size Should be greater than 0 KB and less than 30MB</small></span>
+                </div>
+            </div>
+
+            <div class="col-12 d-flex justify-content-center">
+                <button type="button" class="btn btn-primary btn-sm" (click)="addDeviation()">Add Deviation</button>
+            </div>
+
+        </form>
+
+        
+    </div>
+
+    <div class="container table-responsive" *ngIf="deviationTableDetails.length > 0">
+        <table class="table text-center table-bordered">
+            <thead>
+                <tr>
+                    <th><b><small>S.no</small></b></th>
+                    <th><b><small>Deviation Type</small></b></th>
+                    <th><b><small>Deviation Files</small></b></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let deviation of deviationTableDetails; index as i">
+                    <td>{{i+1}}</td>
+                    <td>{{deviation.deviationType}}</td>
+                    <td>{{deviation.deviationFile}}</td>
+                </tr>
+            </tbody>
+
+        </table>
+    </div>
+
+</div>

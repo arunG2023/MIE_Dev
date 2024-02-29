@@ -1,0 +1,94 @@
+<div class="main-content">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card">
+          <div class="card-header card-header-danger">
+            <h4 class="card-title">Open Event List</h4>
+          </div>
+          <div class="container table-responsive table-bordered ">
+            <table class="table text-center table-striped overflow-hidden ">
+              <thead>
+                <tr>
+                  <th><small><b>S.no</b></small></th>
+                  <th><small><b>Event ID</b></small></th>
+                  <th><small><b>Event Name</b></small></th>
+                  <th><small><b>Event Type</b></small></th>
+                  <th><small><b>Venue</b></small></th>
+                  <th><small><b>Event Date & Time</b></small></th>
+                  <th><small><b>Event Request Status</b></small></th>
+                  <!-- <th><small><b>Agreement</b></small></th>
+              <th><small><b>View Event Request</b></small></th> -->
+                  <th><small><b>Create Honorarium Request</b></small></th>
+                  <th><small><b>Honorarium Request Status</b></small></th>              
+                  <!-- <th><small><b>View Honorarium Request</b></small></th> -->
+                  <th><small><b>Create Post Event Request</b></small></th>
+                  <th><small><b>Post Event Settlement Status</b></small></th>
+                  <th><small><b>Download Attendence</b></small></th>
+                  <!-- <th><small><b>View Post Event Request</b></small></th> -->
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let events of eventList | paginate: { itemsPerPage: pageRowLimit, currentPage: page }; index as i ">
+                  <th scope="row">{{i+1}}</th>
+                  <td>{{events['EventId/EventRequestId']}}</td>
+                  <td>{{events['Event Topic']}}</td>
+                  <td>{{events.EventType}}</td>
+                  <td>{{events.VenueName}}</td>
+                  <td>{{events.EventDate}}</td>
+                  <td>{{events['Event Request Status']}}</td>
+                  <!-- <td><span class="text-primary">download</span></td>
+              <td><span class="text-primary">View</span></td> -->
+                  <td>
+                    <span *ngIf="events.EventType =='Class I' || events.EventType =='Webinar'">
+                      <span 
+                    *ngIf="events['Event Request Status'] == 'Approved' || events['Event Request Status'] == 'Advance Approved'"
+                      (click)="gotoHonarariumRequest(events['EventId/EventRequestId'],events.EventType,events)"
+                      style="color: blueviolet; cursor: pointer; text-decoration: underline;">Create</span>
+                      <span *ngIf="events['Event Request Status'] !== 'Approved' &&  events['Event Request Status'] !== 'Advance Approved'">Not Enabled</span>
+                    </span>  
+                    <span *ngIf="events.EventType == 'Medical Utility' || events.EventType == 'HCP Consultants' || events.EventType == 'Stall Fabrication'">Not Applicable</span>
+                  </td>
+                 
+                  <td>{{events['Honorarium Request Status']}}</td>
+                  <!-- <td><span class="text-primary">View</span></td> -->
+                  <td>
+                    <span *ngIf="events.EventType =='Class I' || events.EventType =='Webinar'">
+                      <span *ngIf="events['Honorarium Request Status'] == 'Honorarium approved'"
+                      (click)="gotoEvenSettlementRequest(events['EventId/EventRequestId'],events.EventType,events)"
+                      style="color: blueviolet; cursor: pointer; text-decoration: underline;">Create</span>
+                      <span *ngIf="events['Honorarium Request Status'] !== 'Honorarium approved'">Not Enabled</span>
+                    </span>
+                    <span *ngIf="events.EventType == 'Medical Utility' || events.EventType == 'HCP Consultants' || events.EventType == 'Stall Fabrication'">
+                      <span 
+                      *ngIf="events['Event Request Status'] == 'Approved' || events['Event Request Status'] == 'Advance Approved'"
+                        (click)="gotoEvenSettlementRequest(events['EventId/EventRequestId'],events.EventType,events)"
+                        style="color: blueviolet; cursor: pointer; text-decoration: underline;">Create</span>
+                    </span>
+                  </td>
+                  <td>{{events['Post Event Request status']}}</td>
+                  <td>
+                    <span *ngIf="events.EventType =='Class I' || events.EventType =='Webinar'">
+                      <i (click)="downloadAttendenceSheet(events['EventId/EventRequestId'])" class="material-icons downloadStyle">download</i>
+                    </span>
+                    <span *ngIf="events.EventType == 'Medical Utility' || events.EventType == 'HCP Consultants' || events.EventType == 'Stall Fabrication'">
+                     
+                     </span>
+                  </td>
+                </tr>
+                <tr>
+                  <td colspan="12" class="pagination-row"><pagination-controls (pageChange)="pageChanged($event)"></pagination-controls></td>
+                </tr>
+
+              </tbody>
+
+            </table>
+
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<app-spinner-loader [isLoading]="loadingIndicator"></app-spinner-loader>

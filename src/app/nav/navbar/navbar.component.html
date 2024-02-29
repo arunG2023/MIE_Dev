@@ -22,6 +22,7 @@
 
                    <i [matMenuTriggerFor]="menu" class="material-icons pointer">person</i>
                     <mat-menu #menu="matMenu">
+                        <button mat-menu-item>{{username}}<span class="role"> ({{userrole}})</span></button>
                         <button (click)="logOut()" mat-menu-item>Log Out</button>
                        <!-- <span> <i class="material-icons">power_settings_new_icon</i>Log Out</span> -->
                     <!-- <button mat-menu-item>Log Out</button> -->

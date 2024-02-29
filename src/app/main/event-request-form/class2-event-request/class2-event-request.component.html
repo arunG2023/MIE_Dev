@@ -1,0 +1,68 @@
+<mat-stepper [linear]="isLinear" #stepper orientation="{{ orientation }}" labelPosition="bottom">
+    <mat-step [completed]="isStep1Valid" label="Pre Event Check">
+        <app-event-pending></app-event-pending>
+        <form [formGroup]="eventInitiation1">
+            <div class="row">
+              <div class="col">
+                <div class="p-2 m-1">
+                  <mat-label>Upload Deviation <span class="color_red">*</span></mat-label><br />
+                  <input
+                    type="file"
+                    accept=".png, .jpg, .jpeg, .txt , .doc, .pdf"
+                    formControlName="withIn30DaysDeviation"
+                  /><br />
+                  <span class="text-danger"
+                    ><small>Allowed File Types (.png, .jpg, .txt , .doc)</small></span
+                  ><br />
+                  <span class="text-danger"
+                    ><small
+                      >Size Should be greater than 0 KB and less than 30MB</small
+                    ></span
+                  >
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col">
+                <div class="p-2 m-1">
+                  <mat-form-field color="accent" appearance="outline">
+                    <mat-label>Event Date</mat-label>
+                    <input
+                      matInput
+                      type="date"
+                      min="{{ today | date : 'yyyy-MM-dd' }}"
+                      formControlName="eventDate"
+                    />
+                  </mat-form-field>
+                </div>
+              </div>
+              <div class="col">
+                <div class="p-2 m-1" *ngIf="show7DaysUploadDeviation">
+                  <mat-label>Upload Deviation <span class="color_red">*</span></mat-label><br/>
+                  <input type="file" accept=".png, .jpg, .jpeg, .txt , .doc, .pdf" formControlName="next7DaysDeviation"/>
+                  <span class="text-danger"
+                    ><small>Allowed File Types (.png, .jpg, .txt , .doc)</small></span
+                  ><br />
+                  <span class="text-danger"
+                    ><small
+                      >Size Should be greater than 0 KB and less than 30MB</small
+                    ></span
+                  >
+                </div>
+              </div>
+            </div>
+      
+            <div class="d-flex justify-content-end align-items-center">
+              <button
+                mat-raised-button
+                color="primary"
+                [disabled]="!isStep1Valid"
+                matStepperNext
+                class="m-1"
+              >
+                Next
+              </button>
+            </div>
+          </form>
+    </mat-step>
+</mat-stepper>

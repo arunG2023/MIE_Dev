@@ -1,0 +1,19 @@
+.trainerCriterias-radio-group {
+  display: inline-flex;
+  flex-direction: column;
+}
+
+.trainerCriterias-radio-button {
+  margin: 5px;
+}
+::ng-deep .mat-radio-label {
+  align-items: inherit!important;
+}
+.withscrollbar {
+  max-height: 600px; /* Set the maximum height as needed */
+  overflow-y: auto; /* Enable vertical scrollbar if content overflows */
+}
+.invalid-field {
+  border-color: red !important;
+  color: red;
+}
