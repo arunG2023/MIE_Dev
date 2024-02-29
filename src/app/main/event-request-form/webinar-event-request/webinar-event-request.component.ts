@@ -336,7 +336,7 @@ this.utilityService.getExpenseType().subscribe(res => {
       expenseType: new FormControl('', Validators.required),
       expenseAmount: new FormControl('', Validators.required),
       isExcludingTax: new FormControl(''),
-      isExpenseBtc: new FormControl(''),
+      isExpenseBtc: new FormControl('',Validators.required),
       uploadExpenseDeviation: new FormControl(''),
       // isAdvanceRequired : new FormControl('',Validators.required),
 
@@ -2359,9 +2359,10 @@ this.utilityService.getExpenseType().subscribe(res => {
 
     this.expenseSelectionForm.valueChanges.subscribe(
       changes => {
+        console.log('canges',changes);
         if (Boolean(changes.expenseType)) {
-          if (changes.expenseType.includes('Food & Beverages') && changes.isExcludingTax == 'No') {
-            if (changes.expenseAmount / this.inviteeTableDetails.length > 1500) {
+          if (changes.expenseType == 'Food & Beverages Amount') {
+            if (changes.localAmountWithTax / this.inviteeTableDetails.length > 1500) {
               this.showExpenseDeviation = true;
             }
             else {
@@ -2461,8 +2462,11 @@ this.utilityService.getExpenseType().subscribe(res => {
 
   }
 
-  deleteExpense(id: any) {
+    //  added Expenses
+    addedExpense: any[] = [];
+  deleteExpense(id: number, expense:any) {
     this.expenseTableDetails.splice(id, 1);
+    this.expenseType.push(this.deletedExpense.find(exp=>expense.Expense == exp.ExpenseType));
     this.isStep7Valid = (this.expenseTableDetails.length > 0) ? true : false;
   }
 
@@ -2880,10 +2884,8 @@ this.utilityService.getExpenseType().subscribe(res => {
       if (Boolean(changes.expenseType)) {
         this.showexpensetax = true
         if (
-          changes.expenseType.includes('Food & Beverages') &&
-          changes.localAmountWithoutTax > 1500
-        ) {
-          if (changes.expenseAmount / this.inviteeTableDetails.length > 1500) {
+          changes.expenseType == 'Food & Beverages Amount' ) {
+          if (changes.localAmountWithTax / this.inviteeTableDetails.length > 1500) {
             this.showExpenseDeviation = true;
           } else {
             this.showExpenseDeviation = false;
@@ -2895,13 +2897,22 @@ this.utilityService.getExpenseType().subscribe(res => {
     });
   }
 
+  deletedExpense: any[] = [];
   addToExpensetaxTable(){
     // if (this.expenseSelectionForm.valid) {
 
     let formvalidity: number = 0;
+    if(this.showexpensetax &&  !Boolean(this.expenseSelectionForm.value.isExpenseBtc)){
+      formvalidity++;
+      this._snackBarService.showSnackBar(Config.MESSAGE.ERROR.FILL_ALL, Config.SNACK_BAR.DELAY, Config.SNACK_BAR.ERROR);
+    }
     if(this.showexpensetax && (this.expenseSelectionForm.value.localAmountWithoutTax > this.expenseSelectionForm.value.localAmountWithTax)){
       formvalidity++;
       this._snackBarService.showSnackBar(Config.MESSAGE.ERROR.AMOUNT_INCLUDING_TAX, Config.SNACK_BAR.DELAY, Config.SNACK_BAR.ERROR);
+  }
+  if( this.showexpensetax && this.showExpenseDeviation && !Boolean(this.expenseSelectionForm.value.uploadExpenseDeviation)){
+    formvalidity++;
+    this._snackBarService.showSnackBar(Config.MESSAGE.ERROR.FILL_ALL, Config.SNACK_BAR.DELAY, Config.SNACK_BAR.ERROR);
   }
       if (this.expenseSelectionForm.value.isExpenseBtc == 'BTC') {
         this.BTCTotalAmount += this.expenseSelectionForm.value.localAmountWithTax;
@@ -2960,6 +2971,19 @@ this.utilityService.getExpenseType().subscribe(res => {
         this.BudgetAmount = this.BTETotalAmount + this.BTCTotalAmount;
         this.isStep7Valid = this.expenseTableDetails.length > 0 ? true : false;
         this.expenseSelectionForm.reset();
+
+        let index: number = -1;
+      console.log('index of  i is : ',expense)
+      console.log('index of  i is : ',this.expenseType)
+        for (let i = 0; i < this.expenseType.length; i++) {
+          if (this.expenseType[i].ExpenseType == expense.Expense) {
+            console.log('index of  i is : ',index)
+            index = i;
+          }
+        }
+        this.deletedExpense.push(this.expenseType[index]);
+        console.log('hello',this.expenseType[index])
+        this.expenseType.splice(index, 1);
 
       }
       

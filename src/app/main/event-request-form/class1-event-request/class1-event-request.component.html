@@ -40,7 +40,7 @@
             <mat-label><b>Outstanding with intiator for more than 45 days</b><span style="color: red;">*</span></mat-label><br>
             <input type="file" (change)="onFileSelected($event,'deviation','withIn30DaysDeviation')"
               accept=".png, .jpg, .jpeg, .txt , .doc, .pdf" formControlName="withIn30DaysDeviation"><br>
-            <span class="text-danger"><small>Allowed File Types (.png, .jpg, .txt , .doc)</small></span><br>
+            <span class="text-danger"><small>Allowed File Types (.png, .jpg, .txt , .doc, .pdf)</small></span><br>
             <span class="text-danger"><small>Size Should be greater than 0 KB and less than 30MB</small></span>
           </div>
         </div>
@@ -60,7 +60,7 @@
             <mat-label><b>5 days from the Event Date</b><span style="color: red;">*</span></mat-label><br>
             <input type="file" (change)="onFileSelected($event,'deviation','next7DaysDeviation')"
               accept=".png, .jpg, .jpeg, .txt , .doc, .pdf" formControlName="next7DaysDeviation"><br>
-            <span class="text-danger"><small>Allowed File Types (.png, .jpg, .txt , .doc)</small></span><br>
+            <span class="text-danger"><small>Allowed File Types (.png, .jpg, .txt , .doc, .pdf)</small></span><br>
             <span class="text-danger"><small>Size Should be greater than 0 KB and less than 30MB</small></span>
           </div>
         </div>
@@ -88,9 +88,10 @@
             </mat-select>
           </mat-form-field>
 
+          <!-- ngModel pattern="[a-zA-Z]*" -->
           <mat-form-field color="accent" appearance="outline">
             <mat-label>Event Topic</mat-label>
-            <input matInput placeholder="Enter Event Name" formControlName="eventTopic">
+            <input matInput placeholder="Enter Event Name" formControlName="eventTopic" >
           </mat-form-field>
 
           <mat-form-field color="accent" appearance="outline">
@@ -977,7 +978,7 @@
                     <mat-label>Upload Slidekit</mat-label><br>
                     <input type="file" (change)="onFileSelected($event,'other', s.MisCode+i)"
                       accept=".png, .jpg, .jpeg, .txt , .doc, .pdf"><br>
-                    <span class="text-danger"><small>Allowed File Types (.png, .jpg, .txt , .doc)</small></span><br>
+                    <span class="text-danger"><small>Allowed File Types (.png, .jpg, .txt , .doc , .pdf)</small></span><br>
                     <span class="text-danger"><small>Size Should be greater than 0 KB and less than 30MB</small></span>
                   </div>
 
@@ -1418,14 +1419,8 @@
             <input type="number" matInput placeholder="Enter Expense amount" formControlName="expenseAmount">
        
           </mat-form-field> -->
-
-          <div class="m-2" *ngIf="showExpenseDeviation">
-            <mat-label><b>Food and Beverages expense exceeds 1500 (Class I)</b></mat-label><br>
-            <input type="file" (change)="onFileSelected($event,'deviation','uploadExpenseDeviation')"
-              accept=".png, .jpg, .jpeg, .txt , .doc, .pdf" formControlName="uploadExpenseDeviation"><br>
-            <span class="text-danger"><small>Allowed File Types (.png, .jpg, .txt , .doc)</small></span><br>
-            <span class="text-danger"><small>Size Should be greater than 0 KB and less than 30MB</small></span>
-          </div>
+<!-- *ngIf="showExpenseDeviation" -->
+        
           <div class="row" *ngIf="showexpensetax"> 
             <div class="col">
                 <div>
@@ -1437,6 +1432,7 @@
                         </div>
                     </mat-radio-group>
                 </div>
+             
     
                 
             </div>
@@ -1458,6 +1454,13 @@
           </mat-form-field>
           </div>
           
+        </div>
+        <div class="m-2" *ngIf="showExpenseDeviation">
+          <mat-label><b>Food and Beverages expense exceeds 1500 (Class I)</b></mat-label><br>
+          <input type="file" (change)="onFileSelected($event,'deviation','uploadExpenseDeviation')"
+            accept=".png, .jpg, .jpeg, .txt , .doc, .pdf" formControlName="uploadExpenseDeviation"><br>
+          <span class="text-danger"><small>Allowed File Types (.png, .jpg, .txt , .doc , .pdf)</small></span><br>
+          <span class="text-danger"><small>Size Should be greater than 0 KB and less than 30MB</small></span>
         </div>
           
         </div>
@@ -1490,7 +1493,7 @@
             <td>{{expense.BtcorBte}}</td>
             <td style="cursor: pointer;">
               <!-- <i (click)="openExpenseUpdateModal(expense)" class="material-icons" style="margin-right: 5px;">edit</i> -->
-              <i (click)="deleteExpense(i)" class="material-icons">delete</i>
+              <i (click)="deleteExpense(i,expense)" class="material-icons">delete</i>
             </td>
 
           </tr>
@@ -1596,7 +1599,7 @@
       <div class="col">
         <mat-form-field color="accent" appearance="outline">
           <mat-label>Total Attendees</mat-label>
-          <input matInput placeholder="BTE Total Amount" disabled [value]="inviteeTableDetails.length" >
+          <input matInput placeholder="BTE Total Amount" disabled [value]="attendanceCount" >
         </mat-form-field>
       </div>
       </div>

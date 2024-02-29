@@ -1652,7 +1652,7 @@ export class PanelSelectionComponent implements OnInit {
         hcpTier = this.otherForm.value.otherTier || 'NA';
       }
 
-      this._createUpdateVendor();
+     
 
       const HcpData = {
         // For API
@@ -1689,6 +1689,9 @@ export class PanelSelectionComponent implements OnInit {
         FinalAmount: ''
       }
 
+      if(this.showBenificiaryForm || this.showInternationalBenificiaryForm){
+        this._createUpdateVendor();
+      }
 
       HcpData.FinalAmount = (+HcpData.Travel + +HcpData.LocalConveyance + +HcpData.Accomdation + +HcpData.HonarariumAmount) + '';
       HcpData.AgreementAmount = HcpData.HonarariumAmount;

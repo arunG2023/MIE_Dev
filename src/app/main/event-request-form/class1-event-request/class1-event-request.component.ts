@@ -53,7 +53,7 @@ export class Class1EventRequestComponent implements OnInit {
   eventDetails: any;
   hcpRoles: any;
   vendorDetails: any;
-  expenseType: any[] =[] ;
+  expenseType: any[] = [];
 
   // time adding purpose added by karthick
   changestartTime: string;
@@ -78,7 +78,7 @@ export class Class1EventRequestComponent implements OnInit {
   public page: number = 1
   showexpensetax: boolean = false;
 
-  
+
   private _userDetails: any;
 
   constructor(
@@ -208,21 +208,21 @@ export class Class1EventRequestComponent implements OnInit {
     });
 
     // Get Expense Types
-    this.utilityService.getExpenseType().subscribe((res=>{
-   
-      console.log('response event expenses : ',res)
+    this.utilityService.getExpenseType().subscribe((res => {
+
+      console.log('response event expenses : ', res)
       // this.expenseType = res;
       res.forEach(expenseTypes => {
         let supportArr = expenseTypes['Event Type'].split(',');
 
-        if(supportArr.indexOf('Class I')> -1){
+        if (supportArr.indexOf('Class I') > -1) {
           this.expenseType.push(expenseTypes)
         }
       })
-    
 
-      
-      
+
+
+
     }))
 
     this.eventInitiation1 = new FormGroup({
@@ -233,7 +233,7 @@ export class Class1EventRequestComponent implements OnInit {
 
     this.eventInitiation2 = new FormGroup({
       // eventType : new FormControl('EVT1',[Validators.required]),
-      eventTopic: new FormControl('', [Validators.required]),
+      eventTopic: new FormControl('', [Validators.required,Validators.pattern('[a-zA-Z]*')]),
       // eventDate : new FormControl('',[Validators.required]),
       startHours: new FormControl('', [Validators.required]),
       startMinutes: new FormControl(''),
@@ -338,8 +338,8 @@ export class Class1EventRequestComponent implements OnInit {
     this.expenseSelectionForm = new FormGroup({
       expenseType: new FormControl('', Validators.required),
       expenseAmount: new FormControl('', Validators.required),
-      isExcludingTax: new FormControl('', ),
-      isExpenseBtc: new FormControl('', ),
+      isExcludingTax: new FormControl('',),
+      isExpenseBtc: new FormControl('',),
       uploadExpenseDeviation: new FormControl(''),
       // isAdvanceRequired : new FormControl('',Validators.required),
 
@@ -347,7 +347,7 @@ export class Class1EventRequestComponent implements OnInit {
       localAmountWithoutTax: new FormControl(0),
       localAmountWithTax: new FormControl(0)
     });
-    
+
 
     this.event1FormPrepopulate();
     this.event2FormPrepopulate();
@@ -374,13 +374,13 @@ export class Class1EventRequestComponent implements OnInit {
   }
 
   public minutes: any[] = [];
-  private _generateMinutes(){
-    for(let i=0;i<60;i++){
-      if(i < 10){
-        this.minutes.push({minute: '0'+i});
+  private _generateMinutes() {
+    for (let i = 0; i < 60; i++) {
+      if (i < 10) {
+        this.minutes.push({ minute: '0' + i });
       }
-      else{
-        this.minutes.push({minute: i});
+      else {
+        this.minutes.push({ minute: i });
       }
     }
     // console.log(this.minutes)
@@ -456,27 +456,27 @@ export class Class1EventRequestComponent implements OnInit {
       eventList.forEach((event) => {
         let today: any = new Date();
         // console.log(event.EventDate)
-        if(event['Initiator Email'] == this._userDetails.email ){
+        if (event['Initiator Email'] == this._userDetails.email) {
           if (event.EventDate) {
             let eventDate: any = new Date(event.EventDate);
             if (eventDate > today) {
               let Difference_In_Time = eventDate.getTime() - today.getTime();
-  
+
               // To calculate the no. of days between two dates
               let Difference_In_Days = Math.round(
                 Difference_In_Time / (1000 * 3600 * 24)
               );
-  
+
               if (Difference_In_Days <= 45) {
                 event.row = row++
                 this.eventsWithin30Days.push(event);
               }
             }
-            this.eventsWithin30Days.sort((list1,list2)=>{
+            this.eventsWithin30Days.sort((list1, list2) => {
               return list2['EventId/EventRequestId'].localeCompare(list1['EventId/EventRequestId']);
             })
             // console.log(new Date(event.EventDate))
-  
+
             // console.log(event.EventDate)
           }
         }
@@ -589,7 +589,7 @@ export class Class1EventRequestComponent implements OnInit {
     // console.log(this.eventInitiation3.valid)
     if (this.eventInitiation3.valid) {
 
-      this.totalPercent=this.getTotalPercent();
+      this.totalPercent = this.getTotalPercent();
       console.log(this.eventInitiation3.value);
       // this.brandTableDetails.push(this.eventInitiation3.value);
       // this.showBrandTable = true;
@@ -627,7 +627,7 @@ export class Class1EventRequestComponent implements OnInit {
 
         this.slideKitBrandMatch();
       } else {
-        this.totalPercent=this.getTotalPercent();
+        this.totalPercent = this.getTotalPercent();
         this.totalPercent = this.totalPercent - this.percentageAllocation;
         this._snackBarService.showSnackBar(
           Config.MESSAGE.ERROR.BRAND_PERCENT,
@@ -642,15 +642,14 @@ export class Class1EventRequestComponent implements OnInit {
         Config.SNACK_BAR.ERROR
       );
   }
-  getTotalPercent()
-  {
-      this.totalPercent=0;
-      console.log(this.brandTableDetails);
-      this.brandTableDetails.forEach((brand) => {
-         console.log(brand,brand.PercentAllocation);
-          this.totalPercent+=parseFloat(brand.PercentAllocation);
-      });
-      return this.totalPercent;
+  getTotalPercent() {
+    this.totalPercent = 0;
+    console.log(this.brandTableDetails);
+    this.brandTableDetails.forEach((brand) => {
+      console.log(brand, brand.PercentAllocation);
+      this.totalPercent += parseFloat(brand.PercentAllocation);
+    });
+    return this.totalPercent;
   }
 
   event3FormPrepopulate() {
@@ -2456,20 +2455,23 @@ export class Class1EventRequestComponent implements OnInit {
   showExpenseDeviation: boolean = false;
 
   expenseTableDetails: any = [];
-
+// .includes('Food & Beverages')
   expenseSelectionFormPrePopulate() {
     this.expenseSelectionForm.valueChanges.subscribe((changes) => {
+      console.log('expense changes',changes)
       if (Boolean(changes.expenseType)) {
-        if (
-          changes.expenseType.includes('Food & Beverages') &&
-          changes.isExcludingTax == 'No'
-        ) {
-          if (changes.expenseAmount / this.inviteeTableDetails.length > 1500) {
+        if (changes.expenseType == 'Food & Beverages Amount') {
+          console.log('changes.localAmountWithTax',changes.localAmountWithTax);
+          console.log('this.inviteeTableDetails.length',this.inviteeTableDetails.length);
+          console.log('changes.localAmountWithTax / this.inviteeTableDetails.length',changes.localAmountWithTax / this.inviteeTableDetails.length)
+          console.log((changes.localAmountWithTax / this.inviteeTableDetails.length) > 1500 )
+          if ((changes.localAmountWithTax / this.inviteeTableDetails.length) > 1500 ) {
             this.showExpenseDeviation = true;
           } else {
             this.showExpenseDeviation = false;
           }
-        } else {
+        } 
+        else {
           this.showExpenseDeviation = false;
         }
       }
@@ -2554,8 +2556,13 @@ export class Class1EventRequestComponent implements OnInit {
     });
   }
 
-  deleteExpense(id: any) {
+  //  added Expenses
+  addedExpense: any[] = [];
+  deleteExpense(id: number, expense:any) {
+    console.log('delete expense is ',expense)
     this.expenseTableDetails.splice(id, 1);
+    this.expenseType.push(this.deletedExpense.find(exp=>expense.Expense == exp.ExpenseType));
+  
     this.isStep7Valid = this.expenseTableDetails.length > 0 ? true : false;
   }
 
@@ -2786,7 +2793,7 @@ export class Class1EventRequestComponent implements OnInit {
           ComplianceEmail: roleDetails.ComplianceHead,
           FinanceAccountsEmail: roleDetails.FinanceAccounts,
           SalesCoordinatorEmail: roleDetails.SalesCoordinator,
-          EventOpen30dayscount: this.eventsWithin30Days.length+''
+          EventOpen30dayscount: this.eventsWithin30Days.length + ''
         }
 
         const class1 = {
@@ -2913,47 +2920,47 @@ export class Class1EventRequestComponent implements OnInit {
               if (control == 'withIn30DaysDeviation') {
                 // this.thirtyDaysDeviationFile = base64String.split(',')[1];
                 // this.thirtyDaysDeviationFile = file.name+':'+ base64String.split(',')[1];
-                this.thirtyDaysDeviationFile = "30DaysDeviationFile"+extension+':'+ base64String.split(',')[1];
+                this.thirtyDaysDeviationFile = "30DaysDeviationFile" + extension + ':' + base64String.split(',')[1];
 
               } else if (control == 'next7DaysDeviation') {
                 // this.thirtyDaysDeviationFile = base64String.split(',')[1];
                 // this.sevenDaysDeviationFile = file.name+':'+base64String.split(',')[1];
-                this.sevenDaysDeviationFile = "7DaysDeviationFile"+extension+':'+base64String.split(',')[1];
+                this.sevenDaysDeviationFile = "7DaysDeviationFile" + extension + ':' + base64String.split(',')[1];
 
               } else if (control == 'uploadExpenseDeviation') {
                 // this.expenseDeviationFile = base64String.split(',')[1];
                 // this.expenseDeviationFile = file.name+':'+base64String.split(',')[1];
-                this.expenseDeviationFile = "ExpenseExcludingTax"+extension+':'+base64String.split(',')[1];
+                this.expenseDeviationFile = "ExpenseExcludingTax" + extension + ':' + base64String.split(',')[1];
               }
             }
 
             if (type == 'other') {
               if (control == 'uploadNOC') {
                 // this.nocFile = base64String.split(',')[1];
-                this.nocFile = file.name+':'+base64String.split(',')[1];
+                this.nocFile = file.name + ':' + base64String.split(',')[1];
               }
               else if (control == 'uploadFCPA') {
                 // this.fcpaFile = base64String.split(',')[1];
-                this.fcpaFile = file.name+':'+base64String.split(',')[1];
+                this.fcpaFile = file.name + ':' + base64String.split(',')[1];
               }
               else if (control == 'uploadPAN') {
                 // this.uploadPAN = base64String.split(',')[1];
-                this.uploadPAN =  file.name+':'+base64String.split(',')[1];
+                this.uploadPAN = file.name + ':' + base64String.split(',')[1];
               }
               else if (control == 'uploadCheque') {
                 this.chequeFile = base64String.split(',')[1];
               }
               else if (control == 'uploadAgenda') {
                 // this.agendaFile = base64String.split(',')[1];
-                this.agendaFile = file.name+':'+base64String.split(',')[1];
+                this.agendaFile = file.name + ':' + base64String.split(',')[1];
               }
               else if (control == 'uploadInvitation') {
                 // this.invitationFile = base64String.split(',')[1];
-                this.invitationFile = file.name+':'+base64String.split(',')[1];
+                this.invitationFile = file.name + ':' + base64String.split(',')[1];
               }
               else {
                 // this.slideKitFile = base64String.split(',')[1];
-                this.slideKitFile =  file.name+':'+base64String.split(',')[1];
+                this.slideKitFile = file.name + ':' + base64String.split(',')[1];
               }
             }
           };
@@ -3061,6 +3068,8 @@ export class Class1EventRequestComponent implements OnInit {
 
   inviteeBTCSummary: any[] = [];
   inviteeBTESummary: any[] = [];
+
+  attendanceCount: number = 0;
   private _getInviteeData() {
     this.utilityService.data.subscribe(value => {
       if (value.from == 'inviteeComponent') {
@@ -3101,10 +3110,12 @@ export class Class1EventRequestComponent implements OnInit {
         this.totalInviteeBTC = value.btctotal;
         this.totalInviteeBTE = value.btetotal;
 
+        this.attendanceCount = value.attendenceCount
+
         console.log(this.totalInviteeBTC)
         console.log('length of invitee table', this.inviteeTableDetails.length);
         console.log('lwnght of files', this._inviteeFiles.length)
-        this.isStep6Valid = (this.inviteeTableDetails.length > 0 &&  Boolean(this._inviteeFiles[0]) && Boolean(this._inviteeFiles[1])) ? true : false;
+        this.isStep6Valid = (this.inviteeTableDetails.length > 0 && Boolean(this._inviteeFiles[0]) && Boolean(this._inviteeFiles[1])) ? true : false;
       }
       // console.log()
 
@@ -3123,7 +3134,7 @@ export class Class1EventRequestComponent implements OnInit {
 
     let excludingTaxAmount: number = 0;
     let includingTaxAmount: number = 0;
-  
+
     if (control == 'localAmountWithTax') {
       excludingTaxAmount = this.expenseSelectionForm.value.localAmountWithoutTax;
       includingTaxAmount = this.expenseSelectionForm.value.localAmountWithTax;
@@ -3146,11 +3157,8 @@ export class Class1EventRequestComponent implements OnInit {
     this.expenseSelectionForm.valueChanges.subscribe((changes) => {
       if (Boolean(changes.expenseType)) {
         this.showexpensetax = true
-        if (
-          changes.expenseType.includes('Food & Beverages') &&
-          changes.localAmountWithoutTax > 1500
-        ) {
-          if (changes.expenseAmount / this.inviteeTableDetails.length > 1500) {
+        if (changes.expenseType == 'Food & Beverages Amount') {
+          if (changes.localAmountWithTax / this.inviteeTableDetails.length > 1500) {
             this.showExpenseDeviation = true;
           } else {
             this.showExpenseDeviation = false;
@@ -3162,77 +3170,100 @@ export class Class1EventRequestComponent implements OnInit {
     });
   }
 
-  addToExpensetaxTable(){
+  deletedExpense: any[] = [];
+  addToExpensetaxTable() {
     // if (this.expenseSelectionForm.valid) {
-      let formvalidity: number = 0;
-      if(this.showexpensetax && (this.expenseSelectionForm.value.localAmountWithoutTax > this.expenseSelectionForm.value.localAmountWithTax)){
-        formvalidity++;
-        this._snackBarService.showSnackBar(Config.MESSAGE.ERROR.AMOUNT_INCLUDING_TAX, Config.SNACK_BAR.DELAY, Config.SNACK_BAR.ERROR);
+    let formvalidity: number = 0;
+    if(this.showexpensetax &&  !Boolean(this.expenseSelectionForm.value.isExpenseBtc)){
+      formvalidity++;
+      this._snackBarService.showSnackBar(Config.MESSAGE.ERROR.FILL_ALL, Config.SNACK_BAR.DELAY, Config.SNACK_BAR.ERROR);
     }
+    if (this.showexpensetax && (this.expenseSelectionForm.value.localAmountWithoutTax > this.expenseSelectionForm.value.localAmountWithTax)) {
+      formvalidity++;
+      this._snackBarService.showSnackBar(Config.MESSAGE.ERROR.AMOUNT_INCLUDING_TAX, Config.SNACK_BAR.DELAY, Config.SNACK_BAR.ERROR);
+    }
+    if(this.showexpensetax && this.showExpenseDeviation && (!Boolean(this.expenseSelectionForm.value.uploadExpenseDeviation))){
+      formvalidity++;
+      this._snackBarService.showSnackBar(Config.MESSAGE.ERROR.FILL_ALL, Config.SNACK_BAR.DELAY, Config.SNACK_BAR.ERROR);
+    }
+    if (this.expenseSelectionForm.value.isExpenseBtc == 'BTC') {
+      this.BTCTotalAmount += this.expenseSelectionForm.value.localAmountWithTax;
+    } else {
+      this.BTETotalAmount += this.expenseSelectionForm.value.localAmountWithTax;
+    }
+
+    this.BudgetAmount = this.BTCTotalAmount + this.BTETotalAmount;
+
+    if (formvalidity == 0) {
+      const expense = {
+        // For API
+        EventId: ' ',
+        BtcAmount: this.BTCTotalAmount + '',
+        BteAmount: this.BTETotalAmount + '',
+        BudgetAmount: this.BudgetAmount + '',
+
+        // For Table
+        Expense: this.expenseSelectionForm.value.expenseType,
+        Amount: this.expenseSelectionForm.value.localAmountWithTax + '',
+        AmountExcludingTax: this.expenseSelectionForm.value.isExcludingTax,
+        BtcorBte: this.expenseSelectionForm.value.isExpenseBtc,
+      };
+
+      let expenseSummaryBTC = this.BTCSummaryTable.find(summ => summ.expense == expense.Expense);
+      let expenseSummaryBTE = this.BTESummaryTable.find(summ => summ.expense == expense.Expense);
+
       if (this.expenseSelectionForm.value.isExpenseBtc == 'BTC') {
-        this.BTCTotalAmount += this.expenseSelectionForm.value.localAmountWithTax;
-      } else {
-        this.BTETotalAmount += this.expenseSelectionForm.value.localAmountWithTax;
-      }
-
-      this.BudgetAmount = this.BTCTotalAmount + this.BTETotalAmount;
-
-      if(formvalidity == 0){
-        const expense = {
-          // For API
-          EventId: ' ',
-          BtcAmount: this.BTCTotalAmount + '',
-          BteAmount: this.BTETotalAmount + '',
-          BudgetAmount: this.BudgetAmount + '',
-  
-          // For Table
-          Expense: this.expenseSelectionForm.value.expenseType,
-          Amount: this.expenseSelectionForm.value.localAmountWithTax + '',
-          AmountExcludingTax: this.expenseSelectionForm.value.isExcludingTax,
-          BtcorBte: this.expenseSelectionForm.value.isExpenseBtc,
-        };
-        let expenseSummaryBTC = this.BTCSummaryTable.find(summ => summ.expense == expense.Expense);
-        let expenseSummaryBTE = this.BTESummaryTable.find(summ => summ.expense == expense.Expense);
-  
-        if (this.expenseSelectionForm.value.isExpenseBtc == 'BTC') {
-          // this.BTCTotalAmount += this.expenseSelectionForm.value.expenseAmount;
-          if (!expenseSummaryBTC) {
-            this.BTCSummaryTable.push({
-              expense: expense.Expense,
-              amount: +expense.Amount,
-              includingTax: (expense.AmountExcludingTax == 'Yes') ? 'No' : 'Yes'
-            })
-          }
-          else {
-            expenseSummaryBTC.amount += +expense.Amount;
-          }
+        // this.BTCTotalAmount += this.expenseSelectionForm.value.expenseAmount;
+        if (!expenseSummaryBTC) {
+          this.BTCSummaryTable.push({
+            expense: expense.Expense,
+            amount: +expense.Amount,
+            includingTax: (expense.AmountExcludingTax == 'Yes') ? 'No' : 'Yes'
+          })
         }
         else {
-          // this.BTETotalAmount += this.expenseSelectionForm.value.expenseAmount;
-          if (!expenseSummaryBTE) {
-            this.BTESummaryTable.push({
-              expense: expense.Expense,
-              amount: +expense.Amount,
-              includingTax: (expense.AmountExcludingTax == 'Yes') ? 'No' : 'Yes'
-            })
-          }
-          else {
-            expenseSummaryBTE.amount += +expense.Amount;
+          expenseSummaryBTC.amount += +expense.Amount;
+        }
+      }
+      else {
+        // this.BTETotalAmount += this.expenseSelectionForm.value.expenseAmount;
+        if (!expenseSummaryBTE) {
+          this.BTESummaryTable.push({
+            expense: expense.Expense,
+            amount: +expense.Amount,
+            includingTax: (expense.AmountExcludingTax == 'Yes') ? 'No' : 'Yes'
+          })
+        }
+        else {
+          expenseSummaryBTE.amount += +expense.Amount;
+        }
+      }
+
+      this.expenseTableDetails.push(expense);
+      this.BudgetAmount = this.BTETotalAmount + this.BTCTotalAmount;
+      this.isStep7Valid = this.expenseTableDetails.length > 0 ? true : false;
+      this.expenseSelectionForm.reset();
+
+      let index: number = -1;
+      console.log('index of  i is : ',expense)
+      console.log('index of  i is : ',this.expenseType)
+        for (let i = 0; i < this.expenseType.length; i++) {
+          if (this.expenseType[i].ExpenseType == expense.Expense) {
+            console.log('index of  i is : ',index)
+            index = i;
           }
         }
-  
-        this.expenseTableDetails.push(expense);
-        this.BudgetAmount = this.BTETotalAmount + this.BTCTotalAmount;
-        this.isStep7Valid = this.expenseTableDetails.length > 0 ? true : false;
-        this.expenseSelectionForm.reset();
-      }
-     
+        this.deletedExpense.push(this.expenseType[index]);
+        console.log('hello',this.expenseType[index])
+        this.expenseType.splice(index, 1);
+    }
 
 
-     
-      // this._bteBtcCalculation();
-      // this.expenseSelectionForm.controls.isAdvanceRequired.setValue(advanceSelected)
-      // console.log(this.expenseTableDetails);
+
+
+    // this._bteBtcCalculation();
+    // this.expenseSelectionForm.controls.isAdvanceRequired.setValue(advanceSelected)
+    // console.log(this.expenseTableDetails);
     // } else {
     //   // alert("Please Fill all the fields")
     //   this._snackBarService.showSnackBar(
@@ -3242,6 +3273,9 @@ export class Class1EventRequestComponent implements OnInit {
     //   );
     // }
   }
+
+
+  
 }
 
 

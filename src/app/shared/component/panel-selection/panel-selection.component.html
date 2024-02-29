@@ -163,10 +163,10 @@
                     <!-- <mat-option value="NA">NA</mat-option> -->
                 </mat-autocomplete>
             </mat-form-field>
-            <div class="col d-flex align-items-center">
+            <!-- <div class="col d-flex align-items-center">
                 <button *ngIf="showOtherAddButton" type="button" class="btn btn-primary btn-sm"
                     (click)="openMasters('hcp-master')">Add HCP </button>
-            </div>
+            </div> -->
             <mat-form-field color="accent" appearance="outline">
                 <mat-label>HCP Name</mat-label>
                 <input matInput type="text" placeholder="Enter HCP Name" formControlName="otherName"
@@ -585,12 +585,12 @@
 
         </div>
     </div>
-    <div class="row">
+    <!-- <div class="row">
         <div class="col d-flex justify-content-center">
             <button type="button" class="btn btn-danger btn-sm" *ngIf="benificiaryForm.valid" (click)="updateBenificiary('normal')">
                Click Here To Update Benificiary Details</button>
         </div>
-    </div>
+    </div> -->
 </form>
 <form [formGroup]="internationalBenificiaryForm" *ngIf="showInternationalBenificiaryForm">
     <h4 class="d-flex justify-content-center col-12"><b>Benificiary Details</b></h4>

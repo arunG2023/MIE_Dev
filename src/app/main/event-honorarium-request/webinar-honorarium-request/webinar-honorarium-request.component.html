@@ -44,7 +44,7 @@
 
                   <div class="row" *ngIf="show2DaysUpload">
                     <div class="col m-3">
-                      <mat-label><b>Honorarium documentation not uploaded within 2 working days</b><span class="text-danger">*</span></mat-label><br>
+                      <mat-label><b>Honorarium documentation not uploaded within 5 working days</b><span class="text-danger">*</span></mat-label><br>
                       <input type="file" (change)="onFileSelected($event,'deviation','twoDaysDeviation')"
                         [accept]="allowedTypesForHTML" formControlName="twoDaysDeviation"><br>
                       <span class="text-danger"><small>Allowed File Types (.png, .jpg, .txt , .doc)</small></span><br>
@@ -98,8 +98,8 @@
                           <th><small>Agreement Amount</small></th>
                           <th><small>Is it including GST?</small></th>
                          
-                          <th><small>Upload Speaker agreement</small></th>
                           <th><small>Upload Honorarium invoice</small></th>
+                          <th><small>Upload Speaker agreement</small></th>
                           <!-- <th><small>Actions</small></th> -->
                         </tr>
                       </thead>

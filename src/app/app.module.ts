@@ -41,7 +41,8 @@ import { ApiInterceptor } from './shared/interceptors/api.interceptor';
     LoginComponent,
 
     // Added by Sunil
-    SnackBarComponent,
+    SnackBarComponent
+      
     
 
   ],

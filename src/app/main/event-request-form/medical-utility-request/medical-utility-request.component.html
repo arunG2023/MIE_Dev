@@ -42,7 +42,7 @@
             <input type="file" (change)="
                 onFileSelected($event, 'deviation', 'withIn30DaysDeviation')
               " accept=".png, .jpg, .jpeg, .txt , .doc, .pdf" formControlName="withIn30DaysDeviation" /><br />
-            <span class="text-danger"><small>Allowed File Types (.png, .jpg, .txt , .doc)</small></span><br />
+            <span class="text-danger"><small>Allowed File Types (.png, .jpg, .txt , .doc , .pdf)</small></span><br />
             <span class="text-danger"><small>Size Should be greater than 0 KB and less than 30MB</small></span>
           </div>
         </div>
@@ -62,7 +62,7 @@
             <input type="file" (change)="
                 onFileSelected($event, 'deviation', 'next7DaysDeviation')
               " accept=".png, .jpg, .jpeg, .txt , .doc, .pdf" formControlName="next7DaysDeviation" /><br />
-            <span class="text-danger"><small>Allowed File Types (.png, .jpg, .txt , .doc)</small></span><br />
+            <span class="text-danger"><small>Allowed File Types (.png, .jpg, .txt , .doc , .pdf)</small></span><br />
             <span class="text-danger"><small>Size Should be greater than 0 KB and less than 30MB</small></span>
           </div>
         </div>
@@ -484,13 +484,22 @@
             <mat-label><b>Upload Deviation</b></mat-label><br />
             <input type="file" (change)="
 		                onuploadHcpExpenseDeviationSelected($event)
-		              " accept=".png, .jpg, .jpeg, .txt , .doc, .pdf" formControlName="uploadHcpExpenseDeviation"
-              id="uploadHcpExpenseDeviation"/><br />
-            <span class="text-danger"><small>Allowed File Types (.png, .jpg, .txt , .doc)</small></span><br />
-            <span class="text-danger"><small>Size Should be greater than 0 KB and less than 30MB</small></span>
-          </div>
-        </div>
-      </div>
+		              "
+		              accept=".png, .jpg, .jpeg, .txt , .doc, .pdf"
+		              formControlName="uploadHcpExpenseDeviation"
+		              id="uploadHcpExpenseDeviation"
+		            />
+		            <span class="text-danger"
+		              ><small>Allowed File Types (.png, .jpg, .txt , .doc , .pdf)</small></span
+		            ><br />
+		            <span class="text-danger"
+		              ><small
+		                >Size Should be greater than 0 KB and less than 30MB</small
+		              ></span
+		            >
+		          </div>
+		      </div>
+		  </div>
     </form>
     <div class="col-12 d-flex justify-content-center">
       <button [disabled]="!isAddNewHcpPanel" (click)="addToHcpTable()" mat-raised-button color="primary">

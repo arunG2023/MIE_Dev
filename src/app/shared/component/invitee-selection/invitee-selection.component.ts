@@ -283,6 +283,103 @@ export class InviteeSelectionComponent implements OnInit {
   public bteTotal: number = 0;
   public bteSummary: any[] = [];
 
+  private _BTEBTCSummary(){
+    if(this.showLCFormForHcp){
+      let localAmount = this.inviteeLCFormForHcp.value.inviteeLocalConveyanceAmountIncludingTax;
+      let localTravelSummaryBTC = this.btcSummary.find(data => data.expense == 'Local Convenyence');
+      let localTravelSummaryBTE = this.bteSummary.find(data => data.expense == 'Local Convenyence');
+      if(this.inviteeLCFormForHcp.value.inviteeBTC == 'BTC'){
+        this.btcTotal += localAmount;
+        if(!localTravelSummaryBTC){
+          this.btcSummary.push({
+            expense: 'Local Convenyence',
+            amount: +localAmount,
+            includingTax: (this.inviteeLCFormForHcp.value.inviteeLocalConveyanceAmountIncludingTax > 0) ? 'Yes' : 'No'
+          })
+        }
+        else{
+          localTravelSummaryBTC.amount += +localAmount;
+        }
+      }
+      else{
+        this.bteTotal += localAmount
+        if (!localTravelSummaryBTE) {
+          this.bteSummary.push({
+            expense: 'Local Convenyence',
+            amount: localAmount,
+            includingTax: 'No'
+          })
+        }
+        else {
+          localTravelSummaryBTE.amount += localAmount
+        }
+      }
+
+    }
+    if(this.showLCFormMenarini){
+      let localAmount = this.inviteeLCFormForMenarini.value.inviteeLocalConveyanceAmountIncludingTaxForMeanrini;
+      let localTravelSummaryBTC = this.btcSummary.find(data => data.expense == 'Local Convenyence');
+      let localTravelSummaryBTE = this.bteSummary.find(data => data.expense == 'Local Convenyence');
+      if(this.inviteeLCFormForMenarini.value.inviteeBTCForMenarini == 'BTC'){
+        this.btcTotal += localAmount;
+        if(!localTravelSummaryBTC){
+          this.btcSummary.push({
+            expense: 'Local Convenyence',
+            amount: +localAmount,
+            includingTax: (this.inviteeLCFormForMenarini.value.inviteeLocalConveyanceAmountIncludingTaxForMeanrini > 0) ? 'Yes' : 'No'
+          })
+        }
+        else{
+          localTravelSummaryBTC.amount += +localAmount;
+        }
+      }
+      else{
+        this.bteTotal += localAmount
+        if (!localTravelSummaryBTE) {
+          this.bteSummary.push({
+            expense: 'Local Convenyence',
+            amount: localAmount,
+            includingTax: 'No'
+          })
+        }
+        else {
+          localTravelSummaryBTE.amount += localAmount
+        }
+      }
+    }
+    if(this.showLCFormNonHcp){
+      let localAmount = this.inviteeLCFormForNonHcp.value.inviteeLocalConveyanceAmountIncludingTaxForNonHcp;
+      let localTravelSummaryBTC = this.btcSummary.find(data => data.expense == 'Local Convenyence');
+      let localTravelSummaryBTE = this.bteSummary.find(data => data.expense == 'Local Convenyence');
+      if(this.inviteeLCFormForNonHcp.value.inviteeBTCForNonHcp == 'BTC'){
+        this.btcTotal += localAmount;
+        if(!localTravelSummaryBTC){
+          this.btcSummary.push({
+            expense: 'Local Convenyence',
+            amount: +localAmount,
+            includingTax: (this.inviteeLCFormForNonHcp.value.inviteeLocalConveyanceAmountIncludingTaxForNonHcp > 0) ? 'Yes' : 'No'
+          })
+        }
+        else{
+          localTravelSummaryBTC.amount += +localAmount;
+        }
+      }
+      else{
+        this.bteTotal += localAmount
+        if (!localTravelSummaryBTE) {
+          this.bteSummary.push({
+            expense: 'Local Convenyence',
+            amount: localAmount,
+            includingTax: 'No'
+          })
+        }
+        else {
+          localTravelSummaryBTE.amount += localAmount
+        }
+      }
+    }
+  }
+
   public addToInviteeTableForHcp() {
     console.log('this.hcpMasterForm.value.inviteeName',Boolean(this.hcpMasterForm.value.inviteeName))
     let formValidity: number = 0;
@@ -319,28 +416,30 @@ export class InviteeSelectionComponent implements OnInit {
         forHcp: true
       }
       this.inviteeTableDetailsForHcp.push(dataForHcp);
+      this._BTEBTCSummary();
+    
 
-      if (dataForHcp.btcBte == 'BTE') {
-        let summaryBTE = {
-          expense: (this.showLCFormForHcp) ? 'Local Convenyence' : 'Nil',
-          includingTax: (+dataForHcp.localAmountIncludingtax > 0) ? 'Yes' : 'No',
-          amount: (this.inviteeLCFormForHcp.value.inviteeLocalConveyanceAmountIncludingTax > 0)?this.inviteeLCFormForHcp.value.inviteeLocalConveyanceAmountIncludingTax + '' :'0',
-          localAmountExcludingTax: (this.inviteeLCFormForHcp.value.inviteeLocalConveyanceAmountExcludingTax > 0)?this.inviteeLCFormForHcp.value.inviteeLocalConveyanceAmountExcludingTax + '' :'0',
-        }
-        this.bteSummary.push(summaryBTE);
-        this.bteTotal += +summaryBTE.amount;
+      // if (dataForHcp.btcBte == 'BTE') {
+      //   let summaryBTE = {
+      //     expense: (this.showLCFormForHcp) ? 'Local Convenyence' : 'Nil',
+      //     includingTax: (+dataForHcp.localAmountIncludingtax > 0) ? 'Yes' : 'No',
+      //     amount: (this.inviteeLCFormForHcp.value.inviteeLocalConveyanceAmountIncludingTax > 0)?this.inviteeLCFormForHcp.value.inviteeLocalConveyanceAmountIncludingTax + '' :'0',
+      //     localAmountExcludingTax: (this.inviteeLCFormForHcp.value.inviteeLocalConveyanceAmountExcludingTax > 0)?this.inviteeLCFormForHcp.value.inviteeLocalConveyanceAmountExcludingTax + '' :'0',
+      //   }
+      //   this.bteSummary.push(summaryBTE);
+      //   this.bteTotal += +summaryBTE.amount;
 
-      }
-      else if (dataForHcp.btcBte == 'BTC') {
-        let summaryBTC = {
-          expense: (this.showLCFormForHcp) ? 'Local Convenyence' : 'Nil',
-          includingTax: (+dataForHcp.localAmountIncludingtax > 0) ? 'Yes' : 'No',
-          amount:( this.inviteeLCFormForHcp.value.inviteeLocalConveyanceAmountIncludingTax > 0)? this.inviteeLCFormForHcp.value.inviteeLocalConveyanceAmountIncludingTax + '' :'0',
-          localAmountExcludingTax: (this.inviteeLCFormForHcp.value.inviteeLocalConveyanceAmountExcludingTax > 0)?this.inviteeLCFormForHcp.value.inviteeLocalConveyanceAmountExcludingTax + '':'0',
-        }
-        this.btcSummary.push(summaryBTC);
-        this.btcTotal += +summaryBTC.amount;
-      }
+      // }
+      // else if (dataForHcp.btcBte == 'BTC') {
+      //   let summaryBTC = {
+      //     expense: (this.showLCFormForHcp) ? 'Local Convenyence' : 'Nil',
+      //     includingTax: (+dataForHcp.localAmountIncludingtax > 0) ? 'Yes' : 'No',
+      //     amount:( this.inviteeLCFormForHcp.value.inviteeLocalConveyanceAmountIncludingTax > 0)? this.inviteeLCFormForHcp.value.inviteeLocalConveyanceAmountIncludingTax + '' :'0',
+      //     localAmountExcludingTax: (this.inviteeLCFormForHcp.value.inviteeLocalConveyanceAmountExcludingTax > 0)?this.inviteeLCFormForHcp.value.inviteeLocalConveyanceAmountExcludingTax + '':'0',
+      //   }
+      //   this.btcSummary.push(summaryBTC);
+      //   this.btcTotal += +summaryBTC.amount;
+      // }
 
       this.inviteeTableDetailsForHcp.forEach(hcp => {
         console.log(hcp);
@@ -392,6 +491,8 @@ export class InviteeSelectionComponent implements OnInit {
       return inv1.HCPName.localeCompare(inv2.HCPName)
     })
 
+    this.clicksNext();
+
   }
 
   public addToInviteeTableForMenarini() {
@@ -427,29 +528,30 @@ export class InviteeSelectionComponent implements OnInit {
         forMenariniData: true
       }
       this.inviteeTableDetailsForMenarini.push(dataForMenarini);
+      this._BTEBTCSummary();
 
-      if (dataForMenarini.btcBte == 'BTE') {
-        let summaryBTE = {
-          expense: (this.showLCFormMenarini) ? 'Local Convenyence' : 'Nil',
-          includingTax: (+dataForMenarini.localAmountIncludingtax > 0) ? 'Yes' : 'No',
-          amount: (this.inviteeLCFormForMenarini.value.inviteeLocalConveyanceAmountIncludingTaxForMeanrini > 0)?this.inviteeLCFormForMenarini.value.inviteeLocalConveyanceAmountIncludingTaxForMeanrini + '' :'0',
-          localAmountExcludingTax: (this.inviteeLCFormForMenarini.value.inviteeLocalConveyanceAmountExcludingTaxForMenarini > 0)?this.inviteeLCFormForMenarini.value.inviteeLocalConveyanceAmountExcludingTaxForMenarini + '' : '0',
-        }
-        this.bteSummary.push(summaryBTE);
-        this.bteTotal += +summaryBTE.amount;
+      // if (dataForMenarini.btcBte == 'BTE') {
+      //   let summaryBTE = {
+      //     expense: (this.showLCFormMenarini) ? 'Local Convenyence' : 'Nil',
+      //     includingTax: (+dataForMenarini.localAmountIncludingtax > 0) ? 'Yes' : 'No',
+      //     amount: (this.inviteeLCFormForMenarini.value.inviteeLocalConveyanceAmountIncludingTaxForMeanrini > 0)?this.inviteeLCFormForMenarini.value.inviteeLocalConveyanceAmountIncludingTaxForMeanrini + '' :'0',
+      //     localAmountExcludingTax: (this.inviteeLCFormForMenarini.value.inviteeLocalConveyanceAmountExcludingTaxForMenarini > 0)?this.inviteeLCFormForMenarini.value.inviteeLocalConveyanceAmountExcludingTaxForMenarini + '' : '0',
+      //   }
+      //   this.bteSummary.push(summaryBTE);
+      //   this.bteTotal += +summaryBTE.amount;
 
-      }
-      else if (dataForMenarini.btcBte == 'BTC') {
-        let summaryBTC = {
-          expense: (this.showLCFormMenarini) ? 'Local Convenyence' : 'Nil',
-          includingTax: (+dataForMenarini.localAmountIncludingtax > 0) ? 'Yes' : 'No',
-          amount: (this.inviteeLCFormForMenarini.value.inviteeLocalConveyanceAmountIncludingTaxForMeanrini > 0)?this.inviteeLCFormForMenarini.value.inviteeLocalConveyanceAmountIncludingTaxForMeanrini + '': '0',
-          localAmountExcludingTax:( this.inviteeLCFormForMenarini.value.inviteeLocalConveyanceAmountExcludingTaxForMenarini > 0) ?this.inviteeLCFormForMenarini.value.inviteeLocalConveyanceAmountExcludingTaxForMenarini + '' : '0',
-        }
-        this.btcSummary.push(summaryBTC);
-        this.btcTotal += +summaryBTC.amount;
+      // }
+      // else if (dataForMenarini.btcBte == 'BTC') {
+      //   let summaryBTC = {
+      //     expense: (this.showLCFormMenarini) ? 'Local Convenyence' : 'Nil',
+      //     includingTax: (+dataForMenarini.localAmountIncludingtax > 0) ? 'Yes' : 'No',
+      //     amount: (this.inviteeLCFormForMenarini.value.inviteeLocalConveyanceAmountIncludingTaxForMeanrini > 0)?this.inviteeLCFormForMenarini.value.inviteeLocalConveyanceAmountIncludingTaxForMeanrini + '': '0',
+      //     localAmountExcludingTax:( this.inviteeLCFormForMenarini.value.inviteeLocalConveyanceAmountExcludingTaxForMenarini > 0) ?this.inviteeLCFormForMenarini.value.inviteeLocalConveyanceAmountExcludingTaxForMenarini + '' : '0',
+      //   }
+      //   this.btcSummary.push(summaryBTC);
+      //   this.btcTotal += +summaryBTC.amount;
 
-      }
+      // }
       this.menariniForm.reset();
       this.inviteeLCFormForMenarini.reset();
       this.localForMenarini.reset();
@@ -496,6 +598,7 @@ export class InviteeSelectionComponent implements OnInit {
     this._hcpDataFromHcpMaster.sort((inv1, inv2) => {
       return inv1.HCPName.localeCompare(inv2.HCPName)
     })
+    this.clicksNext();
 
   }
 
@@ -535,29 +638,30 @@ export class InviteeSelectionComponent implements OnInit {
       }
       this.inviteeTableDetailsForNonHcp.push(dataForNonHcp);
 
-      if (dataForNonHcp.btcBte == 'BTE') {
-        let summaryBTE = {
-          hcpName: dataForNonHcp.hcpName,
-          expense: (this.showLCFormNonHcp) ? 'Local Convenyence' : 'Nil',
-          includingTax: (+dataForNonHcp.localAmountIncludingtax > 0) ? 'Yes' : 'No',
-          amount: (this.inviteeLCFormForNonHcp.value.inviteeLocalConveyanceAmountIncludingTaxForNonHcp > 0)?this.inviteeLCFormForNonHcp.value.inviteeLocalConveyanceAmountIncludingTaxForNonHcp + '' : '0',
-          localAmountExcludingTax: (this.inviteeLCFormForNonHcp.value.inviteeLocalConveyanceAmountExcludingTaxForNonHcp > 0)?this.inviteeLCFormForNonHcp.value.inviteeLocalConveyanceAmountExcludingTaxForNonHcp + '' : '0',
-        }
-        this.bteSummary.push(summaryBTE);
-        this.bteTotal += +this.inviteeLCFormForNonHcp.value.inviteeLocalConveyanceAmountIncludingTaxForNonHcp;
+      this._BTEBTCSummary();
+      // if (dataForNonHcp.btcBte == 'BTE') {
+      //   let summaryBTE = {
+      //     hcpName: dataForNonHcp.hcpName,
+      //     expense: (this.showLCFormNonHcp) ? 'Local Convenyence' : 'Nil',
+      //     includingTax: (+dataForNonHcp.localAmountIncludingtax > 0) ? 'Yes' : 'No',
+      //     amount: (this.inviteeLCFormForNonHcp.value.inviteeLocalConveyanceAmountIncludingTaxForNonHcp > 0)?this.inviteeLCFormForNonHcp.value.inviteeLocalConveyanceAmountIncludingTaxForNonHcp + '' : '0',
+      //     localAmountExcludingTax: (this.inviteeLCFormForNonHcp.value.inviteeLocalConveyanceAmountExcludingTaxForNonHcp > 0)?this.inviteeLCFormForNonHcp.value.inviteeLocalConveyanceAmountExcludingTaxForNonHcp + '' : '0',
+      //   }
+      //   this.bteSummary.push(summaryBTE);
+      //   this.bteTotal += +this.inviteeLCFormForNonHcp.value.inviteeLocalConveyanceAmountIncludingTaxForNonHcp;
 
-      }
-      else if (dataForNonHcp.btcBte == 'BTC') {
-        let summaryBTC = {
-          expense: (this.showLCFormNonHcp) ? 'Local Convenyence' : 'Nil',
-          includingTax: (+dataForNonHcp.localAmountIncludingtax > 0) ? 'Yes' : 'No',
-          amount: (this.inviteeLCFormForNonHcp.value.inviteeLocalConveyanceAmountIncludingTaxForNonHcp > 0 )?this.inviteeLCFormForNonHcp.value.inviteeLocalConveyanceAmountIncludingTaxForNonHcp + '' : '0',
-          localAmountExcludingTax: (this.inviteeLCFormForNonHcp.value.inviteeLocalConveyanceAmountExcludingTaxForNonHcp > 0)?this.inviteeLCFormForNonHcp.value.inviteeLocalConveyanceAmountExcludingTaxForNonHcp + '' : '0',
-        }
-        this.btcSummary.push(summaryBTC);
-        this.btcTotal += +this.inviteeLCFormForNonHcp.value.inviteeLocalConveyanceAmountIncludingTaxForNonHcp;
+      // }
+      // else if (dataForNonHcp.btcBte == 'BTC') {
+      //   let summaryBTC = {
+      //     expense: (this.showLCFormNonHcp) ? 'Local Convenyence' : 'Nil',
+      //     includingTax: (+dataForNonHcp.localAmountIncludingtax > 0) ? 'Yes' : 'No',
+      //     amount: (this.inviteeLCFormForNonHcp.value.inviteeLocalConveyanceAmountIncludingTaxForNonHcp > 0 )?this.inviteeLCFormForNonHcp.value.inviteeLocalConveyanceAmountIncludingTaxForNonHcp + '' : '0',
+      //     localAmountExcludingTax: (this.inviteeLCFormForNonHcp.value.inviteeLocalConveyanceAmountExcludingTaxForNonHcp > 0)?this.inviteeLCFormForNonHcp.value.inviteeLocalConveyanceAmountExcludingTaxForNonHcp + '' : '0',
+      //   }
+      //   this.btcSummary.push(summaryBTC);
+      //   this.btcTotal += +this.inviteeLCFormForNonHcp.value.inviteeLocalConveyanceAmountIncludingTaxForNonHcp;
 
-      }
+      // }
 
       this.inviteeTableDetailsForNonHcp.forEach(nonhcp => {
         console.log('non hcp data', nonhcp)
@@ -605,6 +709,7 @@ export class InviteeSelectionComponent implements OnInit {
     this._hcpDataFromHcpMaster.sort((inv1, inv2) => {
       return inv1.HCPName.localeCompare(inv2.HCPName)
     })
+    this.clicksNext();
     console.log('deleted invitee', invitee)
     //     this.bteSummary.forEach(remove=>{
     //       if(remove.hcpName == invitee.hcpName){
@@ -625,7 +730,8 @@ export class InviteeSelectionComponent implements OnInit {
       bteSummary: this.bteSummary,
       btcSummary: this.btcSummary,
       btctotal: this.btcTotal,
-      btetotal: this.bteTotal
+      btetotal: this.bteTotal,
+      attendenceCount: this.inviteeTableDetailsForHcp.length + this.inviteeTableDetailsForMenarini.length + this.inviteeTableDetailsForNonHcp.length
     }
 
     this._sendDataToParent(dataToSend);

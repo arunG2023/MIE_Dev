@@ -149,8 +149,8 @@ export class WebinarHonorariumRequestComponent implements OnInit {
   private isAfterTwoDays(date: string) {
     let today: any = new Date();
     let eventDate: any = new Date(date);
-    const twodays = 2 * 24 * 60 * 60 * 1000;
-    if (today.getTime() - eventDate.getTime() > twodays) {
+    const twodays = 5 * 24 * 60 * 60 * 1000;
+    if (today.getTime() - eventDate.getTime() > twodays){
       return true;
     }
     else {

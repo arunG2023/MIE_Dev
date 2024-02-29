@@ -97,6 +97,4 @@ export const Config = {
     EVENT_CODE: {
         CLASS_II: 'EVTC2'
     }
-
-
 }
